@@ -82,7 +82,7 @@ var SolicitationParser = (function () {
 /***/ "../../../../../src/app/pdf-reader/pdf-reader.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<input class=\"mat-raised-button\" type=\"file\" name=\"file\" ngModel (change)=\"getFile($event)\">\r\n\r\n\r\n<!--<button mat-button class=\"mat-raised-button\" (click)=\"processString()\"> Registrar </button>-->\r\n"
+module.exports = "<div *ngIf=\"!isLoadingPDF; else Loading\">\n    <input #fileInput type=\"file\" accept=\"application/pdf\" (change)=\"getFile($event)\" style=\"display:none\"/>\n    <button class=\"mat-button\" mat-fab color=\"primary\" (click)=\"fileInput.click()\"><mat-icon>add</mat-icon></button>\n</div>\n<ng-template #Loading>\n    <mat-spinner color=\"primary\"></mat-spinner>\n</ng-template>\n<!--<button mat-button class=\"mat-raised-button\" (click)=\"processString()\"> Registrar </button>-->\n"
 
 /***/ }),
 
@@ -94,7 +94,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, "#fileInput {\n  display: none; }\n\n.mat-button {\n  position: fixed;\n  bottom: 50px;\n  right: 50px; }\n\nmat-spinner {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  margin-top: -50px;\n  margin-left: -50px; }\n", ""]);
 
 // exports
 
@@ -127,6 +127,7 @@ var PdfReaderComponent = (function () {
         this.formService = formService;
         this.metadata = {};
         this.text = '';
+        this.isLoadingPDF = false;
     }
     PdfReaderComponent.prototype.ngOnInit = function () {
     };
@@ -408,6 +409,13 @@ var CrudService = (function () {
             .map(function (res) { return res.json(); })
             .catch(function (error) { return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].throw(error.json() || 'Server error'); });
     };
+    CrudService.prototype.getWithParameter = function (url, obj) {
+        var headers = this.interceptor();
+        var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({ headers: headers, params: obj });
+        return this.http.get(url, options)
+            .map(function (res) { return res.json(); })
+            .catch(function (error) { return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].throw(error.json() || 'Server error'); });
+    };
     CrudService.prototype.postMultiPart = function (url, formData) {
         var headers = this.interceptor('multipart/form-data');
         var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({ headers: headers });
@@ -435,6 +443,8 @@ var _a;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__crud_service__ = __webpack_require__("../../../../../src/app/services/crud.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__parsers_solicitation_parser__ = __webpack_require__("../../../../../src/app/parsers/solicitation.parser.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_throw__ = __webpack_require__("../../../../rxjs/add/observable/throw.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_throw__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FormService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -445,6 +455,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -494,7 +505,7 @@ var _a, _b;
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("../../../common/@angular/common.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_flex_layout__ = __webpack_require__("../../../flex-layout/esm5/flex-layout.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_flex_layout__ = __webpack_require__("../../../flex-layout/@angular/flex-layout.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_material_form_field__ = __webpack_require__("../../../material/esm5/form-field.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_material_datepicker__ = __webpack_require__("../../../material/esm5/datepicker.es5.js");
@@ -561,175 +572,6 @@ SharedModule = __decorate([
 
 /***/ }),
 
-/***/ "../../../../rxjs/AsyncSubject.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subject_1 = __webpack_require__("../../../../rxjs/Subject.js");
-var Subscription_1 = __webpack_require__("../../../../rxjs/Subscription.js");
-/**
- * @class AsyncSubject<T>
- */
-var AsyncSubject = (function (_super) {
-    __extends(AsyncSubject, _super);
-    function AsyncSubject() {
-        _super.apply(this, arguments);
-        this.value = null;
-        this.hasNext = false;
-        this.hasCompleted = false;
-    }
-    AsyncSubject.prototype._subscribe = function (subscriber) {
-        if (this.hasError) {
-            subscriber.error(this.thrownError);
-            return Subscription_1.Subscription.EMPTY;
-        }
-        else if (this.hasCompleted && this.hasNext) {
-            subscriber.next(this.value);
-            subscriber.complete();
-            return Subscription_1.Subscription.EMPTY;
-        }
-        return _super.prototype._subscribe.call(this, subscriber);
-    };
-    AsyncSubject.prototype.next = function (value) {
-        if (!this.hasCompleted) {
-            this.value = value;
-            this.hasNext = true;
-        }
-    };
-    AsyncSubject.prototype.error = function (error) {
-        if (!this.hasCompleted) {
-            _super.prototype.error.call(this, error);
-        }
-    };
-    AsyncSubject.prototype.complete = function () {
-        this.hasCompleted = true;
-        if (this.hasNext) {
-            _super.prototype.next.call(this, this.value);
-        }
-        _super.prototype.complete.call(this);
-    };
-    return AsyncSubject;
-}(Subject_1.Subject));
-exports.AsyncSubject = AsyncSubject;
-//# sourceMappingURL=AsyncSubject.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/ReplaySubject.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subject_1 = __webpack_require__("../../../../rxjs/Subject.js");
-var queue_1 = __webpack_require__("../../../../rxjs/scheduler/queue.js");
-var Subscription_1 = __webpack_require__("../../../../rxjs/Subscription.js");
-var observeOn_1 = __webpack_require__("../../../../rxjs/operators/observeOn.js");
-var ObjectUnsubscribedError_1 = __webpack_require__("../../../../rxjs/util/ObjectUnsubscribedError.js");
-var SubjectSubscription_1 = __webpack_require__("../../../../rxjs/SubjectSubscription.js");
-/**
- * @class ReplaySubject<T>
- */
-var ReplaySubject = (function (_super) {
-    __extends(ReplaySubject, _super);
-    function ReplaySubject(bufferSize, windowTime, scheduler) {
-        if (bufferSize === void 0) { bufferSize = Number.POSITIVE_INFINITY; }
-        if (windowTime === void 0) { windowTime = Number.POSITIVE_INFINITY; }
-        _super.call(this);
-        this.scheduler = scheduler;
-        this._events = [];
-        this._bufferSize = bufferSize < 1 ? 1 : bufferSize;
-        this._windowTime = windowTime < 1 ? 1 : windowTime;
-    }
-    ReplaySubject.prototype.next = function (value) {
-        var now = this._getNow();
-        this._events.push(new ReplayEvent(now, value));
-        this._trimBufferThenGetEvents();
-        _super.prototype.next.call(this, value);
-    };
-    ReplaySubject.prototype._subscribe = function (subscriber) {
-        var _events = this._trimBufferThenGetEvents();
-        var scheduler = this.scheduler;
-        var subscription;
-        if (this.closed) {
-            throw new ObjectUnsubscribedError_1.ObjectUnsubscribedError();
-        }
-        else if (this.hasError) {
-            subscription = Subscription_1.Subscription.EMPTY;
-        }
-        else if (this.isStopped) {
-            subscription = Subscription_1.Subscription.EMPTY;
-        }
-        else {
-            this.observers.push(subscriber);
-            subscription = new SubjectSubscription_1.SubjectSubscription(this, subscriber);
-        }
-        if (scheduler) {
-            subscriber.add(subscriber = new observeOn_1.ObserveOnSubscriber(subscriber, scheduler));
-        }
-        var len = _events.length;
-        for (var i = 0; i < len && !subscriber.closed; i++) {
-            subscriber.next(_events[i].value);
-        }
-        if (this.hasError) {
-            subscriber.error(this.thrownError);
-        }
-        else if (this.isStopped) {
-            subscriber.complete();
-        }
-        return subscription;
-    };
-    ReplaySubject.prototype._getNow = function () {
-        return (this.scheduler || queue_1.queue).now();
-    };
-    ReplaySubject.prototype._trimBufferThenGetEvents = function () {
-        var now = this._getNow();
-        var _bufferSize = this._bufferSize;
-        var _windowTime = this._windowTime;
-        var _events = this._events;
-        var eventsCount = _events.length;
-        var spliceCount = 0;
-        // Trim events that fall out of the time window.
-        // Start at the front of the list. Break early once
-        // we encounter an event that falls within the window.
-        while (spliceCount < eventsCount) {
-            if ((now - _events[spliceCount].time) < _windowTime) {
-                break;
-            }
-            spliceCount++;
-        }
-        if (eventsCount > _bufferSize) {
-            spliceCount = Math.max(spliceCount, eventsCount - _bufferSize);
-        }
-        if (spliceCount > 0) {
-            _events.splice(0, spliceCount);
-        }
-        return _events;
-    };
-    return ReplaySubject;
-}(Subject_1.Subject));
-exports.ReplaySubject = ReplaySubject;
-var ReplayEvent = (function () {
-    function ReplayEvent(time, value) {
-        this.time = time;
-        this.value = value;
-    }
-    return ReplayEvent;
-}());
-//# sourceMappingURL=ReplaySubject.js.map
-
-/***/ }),
-
 /***/ "../../../../rxjs/Scheduler.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -783,6 +625,18 @@ var Scheduler = (function () {
 }());
 exports.Scheduler = Scheduler;
 //# sourceMappingURL=Scheduler.js.map
+
+/***/ }),
+
+/***/ "../../../../rxjs/add/observable/throw.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var Observable_1 = __webpack_require__("../../../../rxjs/Observable.js");
+var throw_1 = __webpack_require__("../../../../rxjs/observable/throw.js");
+Observable_1.Observable.throw = throw_1._throw;
+//# sourceMappingURL=throw.js.map
 
 /***/ }),
 
@@ -1704,102 +1558,6 @@ exports.fromEvent = FromEventObservable_1.FromEventObservable.create;
 
 /***/ }),
 
-/***/ "../../../../rxjs/observable/race.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var isArray_1 = __webpack_require__("../../../../rxjs/util/isArray.js");
-var ArrayObservable_1 = __webpack_require__("../../../../rxjs/observable/ArrayObservable.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-function race() {
-    var observables = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        observables[_i - 0] = arguments[_i];
-    }
-    // if the only argument is an array, it was most likely called with
-    // `race([obs1, obs2, ...])`
-    if (observables.length === 1) {
-        if (isArray_1.isArray(observables[0])) {
-            observables = observables[0];
-        }
-        else {
-            return observables[0];
-        }
-    }
-    return new ArrayObservable_1.ArrayObservable(observables).lift(new RaceOperator());
-}
-exports.race = race;
-var RaceOperator = (function () {
-    function RaceOperator() {
-    }
-    RaceOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new RaceSubscriber(subscriber));
-    };
-    return RaceOperator;
-}());
-exports.RaceOperator = RaceOperator;
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var RaceSubscriber = (function (_super) {
-    __extends(RaceSubscriber, _super);
-    function RaceSubscriber(destination) {
-        _super.call(this, destination);
-        this.hasFirst = false;
-        this.observables = [];
-        this.subscriptions = [];
-    }
-    RaceSubscriber.prototype._next = function (observable) {
-        this.observables.push(observable);
-    };
-    RaceSubscriber.prototype._complete = function () {
-        var observables = this.observables;
-        var len = observables.length;
-        if (len === 0) {
-            this.destination.complete();
-        }
-        else {
-            for (var i = 0; i < len && !this.hasFirst; i++) {
-                var observable = observables[i];
-                var subscription = subscribeToResult_1.subscribeToResult(this, observable, observable, i);
-                if (this.subscriptions) {
-                    this.subscriptions.push(subscription);
-                }
-                this.add(subscription);
-            }
-            this.observables = null;
-        }
-    };
-    RaceSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        if (!this.hasFirst) {
-            this.hasFirst = true;
-            for (var i = 0; i < this.subscriptions.length; i++) {
-                if (i !== outerIndex) {
-                    var subscription = this.subscriptions[i];
-                    subscription.unsubscribe();
-                    this.remove(subscription);
-                }
-            }
-            this.subscriptions = null;
-        }
-        this.destination.next(innerValue);
-    };
-    return RaceSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-exports.RaceSubscriber = RaceSubscriber;
-//# sourceMappingURL=race.js.map
-
-/***/ }),
-
 /***/ "../../../../rxjs/observable/throw.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2403,1303 +2161,6 @@ exports.auditTime = auditTime;
 
 /***/ }),
 
-/***/ "../../../../rxjs/operators/buffer.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/**
- * Buffers the source Observable values until `closingNotifier` emits.
- *
- * <span class="informal">Collects values from the past as an array, and emits
- * that array only when another Observable emits.</span>
- *
- * <img src="./img/buffer.png" width="100%">
- *
- * Buffers the incoming Observable values until the given `closingNotifier`
- * Observable emits a value, at which point it emits the buffer on the output
- * Observable and starts a new buffer internally, awaiting the next time
- * `closingNotifier` emits.
- *
- * @example <caption>On every click, emit array of most recent interval events</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var interval = Rx.Observable.interval(1000);
- * var buffered = interval.buffer(clicks);
- * buffered.subscribe(x => console.log(x));
- *
- * @see {@link bufferCount}
- * @see {@link bufferTime}
- * @see {@link bufferToggle}
- * @see {@link bufferWhen}
- * @see {@link window}
- *
- * @param {Observable<any>} closingNotifier An Observable that signals the
- * buffer to be emitted on the output Observable.
- * @return {Observable<T[]>} An Observable of buffers, which are arrays of
- * values.
- * @method buffer
- * @owner Observable
- */
-function buffer(closingNotifier) {
-    return function bufferOperatorFunction(source) {
-        return source.lift(new BufferOperator(closingNotifier));
-    };
-}
-exports.buffer = buffer;
-var BufferOperator = (function () {
-    function BufferOperator(closingNotifier) {
-        this.closingNotifier = closingNotifier;
-    }
-    BufferOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new BufferSubscriber(subscriber, this.closingNotifier));
-    };
-    return BufferOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var BufferSubscriber = (function (_super) {
-    __extends(BufferSubscriber, _super);
-    function BufferSubscriber(destination, closingNotifier) {
-        _super.call(this, destination);
-        this.buffer = [];
-        this.add(subscribeToResult_1.subscribeToResult(this, closingNotifier));
-    }
-    BufferSubscriber.prototype._next = function (value) {
-        this.buffer.push(value);
-    };
-    BufferSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        var buffer = this.buffer;
-        this.buffer = [];
-        this.destination.next(buffer);
-    };
-    return BufferSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=buffer.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/bufferCount.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-/**
- * Buffers the source Observable values until the size hits the maximum
- * `bufferSize` given.
- *
- * <span class="informal">Collects values from the past as an array, and emits
- * that array only when its size reaches `bufferSize`.</span>
- *
- * <img src="./img/bufferCount.png" width="100%">
- *
- * Buffers a number of values from the source Observable by `bufferSize` then
- * emits the buffer and clears it, and starts a new buffer each
- * `startBufferEvery` values. If `startBufferEvery` is not provided or is
- * `null`, then new buffers are started immediately at the start of the source
- * and when each buffer closes and is emitted.
- *
- * @example <caption>Emit the last two click events as an array</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var buffered = clicks.bufferCount(2);
- * buffered.subscribe(x => console.log(x));
- *
- * @example <caption>On every click, emit the last two click events as an array</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var buffered = clicks.bufferCount(2, 1);
- * buffered.subscribe(x => console.log(x));
- *
- * @see {@link buffer}
- * @see {@link bufferTime}
- * @see {@link bufferToggle}
- * @see {@link bufferWhen}
- * @see {@link pairwise}
- * @see {@link windowCount}
- *
- * @param {number} bufferSize The maximum size of the buffer emitted.
- * @param {number} [startBufferEvery] Interval at which to start a new buffer.
- * For example if `startBufferEvery` is `2`, then a new buffer will be started
- * on every other value from the source. A new buffer is started at the
- * beginning of the source by default.
- * @return {Observable<T[]>} An Observable of arrays of buffered values.
- * @method bufferCount
- * @owner Observable
- */
-function bufferCount(bufferSize, startBufferEvery) {
-    if (startBufferEvery === void 0) { startBufferEvery = null; }
-    return function bufferCountOperatorFunction(source) {
-        return source.lift(new BufferCountOperator(bufferSize, startBufferEvery));
-    };
-}
-exports.bufferCount = bufferCount;
-var BufferCountOperator = (function () {
-    function BufferCountOperator(bufferSize, startBufferEvery) {
-        this.bufferSize = bufferSize;
-        this.startBufferEvery = startBufferEvery;
-        if (!startBufferEvery || bufferSize === startBufferEvery) {
-            this.subscriberClass = BufferCountSubscriber;
-        }
-        else {
-            this.subscriberClass = BufferSkipCountSubscriber;
-        }
-    }
-    BufferCountOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new this.subscriberClass(subscriber, this.bufferSize, this.startBufferEvery));
-    };
-    return BufferCountOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var BufferCountSubscriber = (function (_super) {
-    __extends(BufferCountSubscriber, _super);
-    function BufferCountSubscriber(destination, bufferSize) {
-        _super.call(this, destination);
-        this.bufferSize = bufferSize;
-        this.buffer = [];
-    }
-    BufferCountSubscriber.prototype._next = function (value) {
-        var buffer = this.buffer;
-        buffer.push(value);
-        if (buffer.length == this.bufferSize) {
-            this.destination.next(buffer);
-            this.buffer = [];
-        }
-    };
-    BufferCountSubscriber.prototype._complete = function () {
-        var buffer = this.buffer;
-        if (buffer.length > 0) {
-            this.destination.next(buffer);
-        }
-        _super.prototype._complete.call(this);
-    };
-    return BufferCountSubscriber;
-}(Subscriber_1.Subscriber));
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var BufferSkipCountSubscriber = (function (_super) {
-    __extends(BufferSkipCountSubscriber, _super);
-    function BufferSkipCountSubscriber(destination, bufferSize, startBufferEvery) {
-        _super.call(this, destination);
-        this.bufferSize = bufferSize;
-        this.startBufferEvery = startBufferEvery;
-        this.buffers = [];
-        this.count = 0;
-    }
-    BufferSkipCountSubscriber.prototype._next = function (value) {
-        var _a = this, bufferSize = _a.bufferSize, startBufferEvery = _a.startBufferEvery, buffers = _a.buffers, count = _a.count;
-        this.count++;
-        if (count % startBufferEvery === 0) {
-            buffers.push([]);
-        }
-        for (var i = buffers.length; i--;) {
-            var buffer = buffers[i];
-            buffer.push(value);
-            if (buffer.length === bufferSize) {
-                buffers.splice(i, 1);
-                this.destination.next(buffer);
-            }
-        }
-    };
-    BufferSkipCountSubscriber.prototype._complete = function () {
-        var _a = this, buffers = _a.buffers, destination = _a.destination;
-        while (buffers.length > 0) {
-            var buffer = buffers.shift();
-            if (buffer.length > 0) {
-                destination.next(buffer);
-            }
-        }
-        _super.prototype._complete.call(this);
-    };
-    return BufferSkipCountSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=bufferCount.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/bufferTime.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var async_1 = __webpack_require__("../../../../rxjs/scheduler/async.js");
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var isScheduler_1 = __webpack_require__("../../../../rxjs/util/isScheduler.js");
-/* tslint:enable:max-line-length */
-/**
- * Buffers the source Observable values for a specific time period.
- *
- * <span class="informal">Collects values from the past as an array, and emits
- * those arrays periodically in time.</span>
- *
- * <img src="./img/bufferTime.png" width="100%">
- *
- * Buffers values from the source for a specific time duration `bufferTimeSpan`.
- * Unless the optional argument `bufferCreationInterval` is given, it emits and
- * resets the buffer every `bufferTimeSpan` milliseconds. If
- * `bufferCreationInterval` is given, this operator opens the buffer every
- * `bufferCreationInterval` milliseconds and closes (emits and resets) the
- * buffer every `bufferTimeSpan` milliseconds. When the optional argument
- * `maxBufferSize` is specified, the buffer will be closed either after
- * `bufferTimeSpan` milliseconds or when it contains `maxBufferSize` elements.
- *
- * @example <caption>Every second, emit an array of the recent click events</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var buffered = clicks.bufferTime(1000);
- * buffered.subscribe(x => console.log(x));
- *
- * @example <caption>Every 5 seconds, emit the click events from the next 2 seconds</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var buffered = clicks.bufferTime(2000, 5000);
- * buffered.subscribe(x => console.log(x));
- *
- * @see {@link buffer}
- * @see {@link bufferCount}
- * @see {@link bufferToggle}
- * @see {@link bufferWhen}
- * @see {@link windowTime}
- *
- * @param {number} bufferTimeSpan The amount of time to fill each buffer array.
- * @param {number} [bufferCreationInterval] The interval at which to start new
- * buffers.
- * @param {number} [maxBufferSize] The maximum buffer size.
- * @param {Scheduler} [scheduler=async] The scheduler on which to schedule the
- * intervals that determine buffer boundaries.
- * @return {Observable<T[]>} An observable of arrays of buffered values.
- * @method bufferTime
- * @owner Observable
- */
-function bufferTime(bufferTimeSpan) {
-    var length = arguments.length;
-    var scheduler = async_1.async;
-    if (isScheduler_1.isScheduler(arguments[arguments.length - 1])) {
-        scheduler = arguments[arguments.length - 1];
-        length--;
-    }
-    var bufferCreationInterval = null;
-    if (length >= 2) {
-        bufferCreationInterval = arguments[1];
-    }
-    var maxBufferSize = Number.POSITIVE_INFINITY;
-    if (length >= 3) {
-        maxBufferSize = arguments[2];
-    }
-    return function bufferTimeOperatorFunction(source) {
-        return source.lift(new BufferTimeOperator(bufferTimeSpan, bufferCreationInterval, maxBufferSize, scheduler));
-    };
-}
-exports.bufferTime = bufferTime;
-var BufferTimeOperator = (function () {
-    function BufferTimeOperator(bufferTimeSpan, bufferCreationInterval, maxBufferSize, scheduler) {
-        this.bufferTimeSpan = bufferTimeSpan;
-        this.bufferCreationInterval = bufferCreationInterval;
-        this.maxBufferSize = maxBufferSize;
-        this.scheduler = scheduler;
-    }
-    BufferTimeOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new BufferTimeSubscriber(subscriber, this.bufferTimeSpan, this.bufferCreationInterval, this.maxBufferSize, this.scheduler));
-    };
-    return BufferTimeOperator;
-}());
-var Context = (function () {
-    function Context() {
-        this.buffer = [];
-    }
-    return Context;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var BufferTimeSubscriber = (function (_super) {
-    __extends(BufferTimeSubscriber, _super);
-    function BufferTimeSubscriber(destination, bufferTimeSpan, bufferCreationInterval, maxBufferSize, scheduler) {
-        _super.call(this, destination);
-        this.bufferTimeSpan = bufferTimeSpan;
-        this.bufferCreationInterval = bufferCreationInterval;
-        this.maxBufferSize = maxBufferSize;
-        this.scheduler = scheduler;
-        this.contexts = [];
-        var context = this.openContext();
-        this.timespanOnly = bufferCreationInterval == null || bufferCreationInterval < 0;
-        if (this.timespanOnly) {
-            var timeSpanOnlyState = { subscriber: this, context: context, bufferTimeSpan: bufferTimeSpan };
-            this.add(context.closeAction = scheduler.schedule(dispatchBufferTimeSpanOnly, bufferTimeSpan, timeSpanOnlyState));
-        }
-        else {
-            var closeState = { subscriber: this, context: context };
-            var creationState = { bufferTimeSpan: bufferTimeSpan, bufferCreationInterval: bufferCreationInterval, subscriber: this, scheduler: scheduler };
-            this.add(context.closeAction = scheduler.schedule(dispatchBufferClose, bufferTimeSpan, closeState));
-            this.add(scheduler.schedule(dispatchBufferCreation, bufferCreationInterval, creationState));
-        }
-    }
-    BufferTimeSubscriber.prototype._next = function (value) {
-        var contexts = this.contexts;
-        var len = contexts.length;
-        var filledBufferContext;
-        for (var i = 0; i < len; i++) {
-            var context = contexts[i];
-            var buffer = context.buffer;
-            buffer.push(value);
-            if (buffer.length == this.maxBufferSize) {
-                filledBufferContext = context;
-            }
-        }
-        if (filledBufferContext) {
-            this.onBufferFull(filledBufferContext);
-        }
-    };
-    BufferTimeSubscriber.prototype._error = function (err) {
-        this.contexts.length = 0;
-        _super.prototype._error.call(this, err);
-    };
-    BufferTimeSubscriber.prototype._complete = function () {
-        var _a = this, contexts = _a.contexts, destination = _a.destination;
-        while (contexts.length > 0) {
-            var context = contexts.shift();
-            destination.next(context.buffer);
-        }
-        _super.prototype._complete.call(this);
-    };
-    BufferTimeSubscriber.prototype._unsubscribe = function () {
-        this.contexts = null;
-    };
-    BufferTimeSubscriber.prototype.onBufferFull = function (context) {
-        this.closeContext(context);
-        var closeAction = context.closeAction;
-        closeAction.unsubscribe();
-        this.remove(closeAction);
-        if (!this.closed && this.timespanOnly) {
-            context = this.openContext();
-            var bufferTimeSpan = this.bufferTimeSpan;
-            var timeSpanOnlyState = { subscriber: this, context: context, bufferTimeSpan: bufferTimeSpan };
-            this.add(context.closeAction = this.scheduler.schedule(dispatchBufferTimeSpanOnly, bufferTimeSpan, timeSpanOnlyState));
-        }
-    };
-    BufferTimeSubscriber.prototype.openContext = function () {
-        var context = new Context();
-        this.contexts.push(context);
-        return context;
-    };
-    BufferTimeSubscriber.prototype.closeContext = function (context) {
-        this.destination.next(context.buffer);
-        var contexts = this.contexts;
-        var spliceIndex = contexts ? contexts.indexOf(context) : -1;
-        if (spliceIndex >= 0) {
-            contexts.splice(contexts.indexOf(context), 1);
-        }
-    };
-    return BufferTimeSubscriber;
-}(Subscriber_1.Subscriber));
-function dispatchBufferTimeSpanOnly(state) {
-    var subscriber = state.subscriber;
-    var prevContext = state.context;
-    if (prevContext) {
-        subscriber.closeContext(prevContext);
-    }
-    if (!subscriber.closed) {
-        state.context = subscriber.openContext();
-        state.context.closeAction = this.schedule(state, state.bufferTimeSpan);
-    }
-}
-function dispatchBufferCreation(state) {
-    var bufferCreationInterval = state.bufferCreationInterval, bufferTimeSpan = state.bufferTimeSpan, subscriber = state.subscriber, scheduler = state.scheduler;
-    var context = subscriber.openContext();
-    var action = this;
-    if (!subscriber.closed) {
-        subscriber.add(context.closeAction = scheduler.schedule(dispatchBufferClose, bufferTimeSpan, { subscriber: subscriber, context: context }));
-        action.schedule(state, bufferCreationInterval);
-    }
-}
-function dispatchBufferClose(arg) {
-    var subscriber = arg.subscriber, context = arg.context;
-    subscriber.closeContext(context);
-}
-//# sourceMappingURL=bufferTime.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/bufferToggle.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscription_1 = __webpack_require__("../../../../rxjs/Subscription.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-/**
- * Buffers the source Observable values starting from an emission from
- * `openings` and ending when the output of `closingSelector` emits.
- *
- * <span class="informal">Collects values from the past as an array. Starts
- * collecting only when `opening` emits, and calls the `closingSelector`
- * function to get an Observable that tells when to close the buffer.</span>
- *
- * <img src="./img/bufferToggle.png" width="100%">
- *
- * Buffers values from the source by opening the buffer via signals from an
- * Observable provided to `openings`, and closing and sending the buffers when
- * a Subscribable or Promise returned by the `closingSelector` function emits.
- *
- * @example <caption>Every other second, emit the click events from the next 500ms</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var openings = Rx.Observable.interval(1000);
- * var buffered = clicks.bufferToggle(openings, i =>
- *   i % 2 ? Rx.Observable.interval(500) : Rx.Observable.empty()
- * );
- * buffered.subscribe(x => console.log(x));
- *
- * @see {@link buffer}
- * @see {@link bufferCount}
- * @see {@link bufferTime}
- * @see {@link bufferWhen}
- * @see {@link windowToggle}
- *
- * @param {SubscribableOrPromise<O>} openings A Subscribable or Promise of notifications to start new
- * buffers.
- * @param {function(value: O): SubscribableOrPromise} closingSelector A function that takes
- * the value emitted by the `openings` observable and returns a Subscribable or Promise,
- * which, when it emits, signals that the associated buffer should be emitted
- * and cleared.
- * @return {Observable<T[]>} An observable of arrays of buffered values.
- * @method bufferToggle
- * @owner Observable
- */
-function bufferToggle(openings, closingSelector) {
-    return function bufferToggleOperatorFunction(source) {
-        return source.lift(new BufferToggleOperator(openings, closingSelector));
-    };
-}
-exports.bufferToggle = bufferToggle;
-var BufferToggleOperator = (function () {
-    function BufferToggleOperator(openings, closingSelector) {
-        this.openings = openings;
-        this.closingSelector = closingSelector;
-    }
-    BufferToggleOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new BufferToggleSubscriber(subscriber, this.openings, this.closingSelector));
-    };
-    return BufferToggleOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var BufferToggleSubscriber = (function (_super) {
-    __extends(BufferToggleSubscriber, _super);
-    function BufferToggleSubscriber(destination, openings, closingSelector) {
-        _super.call(this, destination);
-        this.openings = openings;
-        this.closingSelector = closingSelector;
-        this.contexts = [];
-        this.add(subscribeToResult_1.subscribeToResult(this, openings));
-    }
-    BufferToggleSubscriber.prototype._next = function (value) {
-        var contexts = this.contexts;
-        var len = contexts.length;
-        for (var i = 0; i < len; i++) {
-            contexts[i].buffer.push(value);
-        }
-    };
-    BufferToggleSubscriber.prototype._error = function (err) {
-        var contexts = this.contexts;
-        while (contexts.length > 0) {
-            var context = contexts.shift();
-            context.subscription.unsubscribe();
-            context.buffer = null;
-            context.subscription = null;
-        }
-        this.contexts = null;
-        _super.prototype._error.call(this, err);
-    };
-    BufferToggleSubscriber.prototype._complete = function () {
-        var contexts = this.contexts;
-        while (contexts.length > 0) {
-            var context = contexts.shift();
-            this.destination.next(context.buffer);
-            context.subscription.unsubscribe();
-            context.buffer = null;
-            context.subscription = null;
-        }
-        this.contexts = null;
-        _super.prototype._complete.call(this);
-    };
-    BufferToggleSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        outerValue ? this.closeBuffer(outerValue) : this.openBuffer(innerValue);
-    };
-    BufferToggleSubscriber.prototype.notifyComplete = function (innerSub) {
-        this.closeBuffer(innerSub.context);
-    };
-    BufferToggleSubscriber.prototype.openBuffer = function (value) {
-        try {
-            var closingSelector = this.closingSelector;
-            var closingNotifier = closingSelector.call(this, value);
-            if (closingNotifier) {
-                this.trySubscribe(closingNotifier);
-            }
-        }
-        catch (err) {
-            this._error(err);
-        }
-    };
-    BufferToggleSubscriber.prototype.closeBuffer = function (context) {
-        var contexts = this.contexts;
-        if (contexts && context) {
-            var buffer = context.buffer, subscription = context.subscription;
-            this.destination.next(buffer);
-            contexts.splice(contexts.indexOf(context), 1);
-            this.remove(subscription);
-            subscription.unsubscribe();
-        }
-    };
-    BufferToggleSubscriber.prototype.trySubscribe = function (closingNotifier) {
-        var contexts = this.contexts;
-        var buffer = [];
-        var subscription = new Subscription_1.Subscription();
-        var context = { buffer: buffer, subscription: subscription };
-        contexts.push(context);
-        var innerSubscription = subscribeToResult_1.subscribeToResult(this, closingNotifier, context);
-        if (!innerSubscription || innerSubscription.closed) {
-            this.closeBuffer(context);
-        }
-        else {
-            innerSubscription.context = context;
-            this.add(innerSubscription);
-            subscription.add(innerSubscription);
-        }
-    };
-    return BufferToggleSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=bufferToggle.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/bufferWhen.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscription_1 = __webpack_require__("../../../../rxjs/Subscription.js");
-var tryCatch_1 = __webpack_require__("../../../../rxjs/util/tryCatch.js");
-var errorObject_1 = __webpack_require__("../../../../rxjs/util/errorObject.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/**
- * Buffers the source Observable values, using a factory function of closing
- * Observables to determine when to close, emit, and reset the buffer.
- *
- * <span class="informal">Collects values from the past as an array. When it
- * starts collecting values, it calls a function that returns an Observable that
- * tells when to close the buffer and restart collecting.</span>
- *
- * <img src="./img/bufferWhen.png" width="100%">
- *
- * Opens a buffer immediately, then closes the buffer when the observable
- * returned by calling `closingSelector` function emits a value. When it closes
- * the buffer, it immediately opens a new buffer and repeats the process.
- *
- * @example <caption>Emit an array of the last clicks every [1-5] random seconds</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var buffered = clicks.bufferWhen(() =>
- *   Rx.Observable.interval(1000 + Math.random() * 4000)
- * );
- * buffered.subscribe(x => console.log(x));
- *
- * @see {@link buffer}
- * @see {@link bufferCount}
- * @see {@link bufferTime}
- * @see {@link bufferToggle}
- * @see {@link windowWhen}
- *
- * @param {function(): Observable} closingSelector A function that takes no
- * arguments and returns an Observable that signals buffer closure.
- * @return {Observable<T[]>} An observable of arrays of buffered values.
- * @method bufferWhen
- * @owner Observable
- */
-function bufferWhen(closingSelector) {
-    return function (source) {
-        return source.lift(new BufferWhenOperator(closingSelector));
-    };
-}
-exports.bufferWhen = bufferWhen;
-var BufferWhenOperator = (function () {
-    function BufferWhenOperator(closingSelector) {
-        this.closingSelector = closingSelector;
-    }
-    BufferWhenOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new BufferWhenSubscriber(subscriber, this.closingSelector));
-    };
-    return BufferWhenOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var BufferWhenSubscriber = (function (_super) {
-    __extends(BufferWhenSubscriber, _super);
-    function BufferWhenSubscriber(destination, closingSelector) {
-        _super.call(this, destination);
-        this.closingSelector = closingSelector;
-        this.subscribing = false;
-        this.openBuffer();
-    }
-    BufferWhenSubscriber.prototype._next = function (value) {
-        this.buffer.push(value);
-    };
-    BufferWhenSubscriber.prototype._complete = function () {
-        var buffer = this.buffer;
-        if (buffer) {
-            this.destination.next(buffer);
-        }
-        _super.prototype._complete.call(this);
-    };
-    BufferWhenSubscriber.prototype._unsubscribe = function () {
-        this.buffer = null;
-        this.subscribing = false;
-    };
-    BufferWhenSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        this.openBuffer();
-    };
-    BufferWhenSubscriber.prototype.notifyComplete = function () {
-        if (this.subscribing) {
-            this.complete();
-        }
-        else {
-            this.openBuffer();
-        }
-    };
-    BufferWhenSubscriber.prototype.openBuffer = function () {
-        var closingSubscription = this.closingSubscription;
-        if (closingSubscription) {
-            this.remove(closingSubscription);
-            closingSubscription.unsubscribe();
-        }
-        var buffer = this.buffer;
-        if (this.buffer) {
-            this.destination.next(buffer);
-        }
-        this.buffer = [];
-        var closingNotifier = tryCatch_1.tryCatch(this.closingSelector)();
-        if (closingNotifier === errorObject_1.errorObject) {
-            this.error(errorObject_1.errorObject.e);
-        }
-        else {
-            closingSubscription = new Subscription_1.Subscription();
-            this.closingSubscription = closingSubscription;
-            this.add(closingSubscription);
-            this.subscribing = true;
-            closingSubscription.add(subscribeToResult_1.subscribeToResult(this, closingNotifier));
-            this.subscribing = false;
-        }
-    };
-    return BufferWhenSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=bufferWhen.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/combineAll.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var combineLatest_1 = __webpack_require__("../../../../rxjs/operators/combineLatest.js");
-function combineAll(project) {
-    return function (source) { return source.lift(new combineLatest_1.CombineLatestOperator(project)); };
-}
-exports.combineAll = combineAll;
-//# sourceMappingURL=combineAll.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/combineLatest.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var ArrayObservable_1 = __webpack_require__("../../../../rxjs/observable/ArrayObservable.js");
-var isArray_1 = __webpack_require__("../../../../rxjs/util/isArray.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-var none = {};
-/* tslint:enable:max-line-length */
-/**
- * Combines multiple Observables to create an Observable whose values are
- * calculated from the latest values of each of its input Observables.
- *
- * <span class="informal">Whenever any input Observable emits a value, it
- * computes a formula using the latest values from all the inputs, then emits
- * the output of that formula.</span>
- *
- * <img src="./img/combineLatest.png" width="100%">
- *
- * `combineLatest` combines the values from this Observable with values from
- * Observables passed as arguments. This is done by subscribing to each
- * Observable, in order, and collecting an array of each of the most recent
- * values any time any of the input Observables emits, then either taking that
- * array and passing it as arguments to an optional `project` function and
- * emitting the return value of that, or just emitting the array of recent
- * values directly if there is no `project` function.
- *
- * @example <caption>Dynamically calculate the Body-Mass Index from an Observable of weight and one for height</caption>
- * var weight = Rx.Observable.of(70, 72, 76, 79, 75);
- * var height = Rx.Observable.of(1.76, 1.77, 1.78);
- * var bmi = weight.combineLatest(height, (w, h) => w / (h * h));
- * bmi.subscribe(x => console.log('BMI is ' + x));
- *
- * // With output to console:
- * // BMI is 24.212293388429753
- * // BMI is 23.93948099205209
- * // BMI is 23.671253629592222
- *
- * @see {@link combineAll}
- * @see {@link merge}
- * @see {@link withLatestFrom}
- *
- * @param {ObservableInput} other An input Observable to combine with the source
- * Observable. More than one input Observables may be given as argument.
- * @param {function} [project] An optional function to project the values from
- * the combined latest values into a new value on the output Observable.
- * @return {Observable} An Observable of projected values from the most recent
- * values from each input Observable, or an array of the most recent values from
- * each input Observable.
- * @method combineLatest
- * @owner Observable
- */
-function combineLatest() {
-    var observables = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        observables[_i - 0] = arguments[_i];
-    }
-    var project = null;
-    if (typeof observables[observables.length - 1] === 'function') {
-        project = observables.pop();
-    }
-    // if the first and only other argument besides the resultSelector is an array
-    // assume it's been called with `combineLatest([obs1, obs2, obs3], project)`
-    if (observables.length === 1 && isArray_1.isArray(observables[0])) {
-        observables = observables[0].slice();
-    }
-    return function (source) { return source.lift.call(new ArrayObservable_1.ArrayObservable([source].concat(observables)), new CombineLatestOperator(project)); };
-}
-exports.combineLatest = combineLatest;
-var CombineLatestOperator = (function () {
-    function CombineLatestOperator(project) {
-        this.project = project;
-    }
-    CombineLatestOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new CombineLatestSubscriber(subscriber, this.project));
-    };
-    return CombineLatestOperator;
-}());
-exports.CombineLatestOperator = CombineLatestOperator;
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var CombineLatestSubscriber = (function (_super) {
-    __extends(CombineLatestSubscriber, _super);
-    function CombineLatestSubscriber(destination, project) {
-        _super.call(this, destination);
-        this.project = project;
-        this.active = 0;
-        this.values = [];
-        this.observables = [];
-    }
-    CombineLatestSubscriber.prototype._next = function (observable) {
-        this.values.push(none);
-        this.observables.push(observable);
-    };
-    CombineLatestSubscriber.prototype._complete = function () {
-        var observables = this.observables;
-        var len = observables.length;
-        if (len === 0) {
-            this.destination.complete();
-        }
-        else {
-            this.active = len;
-            this.toRespond = len;
-            for (var i = 0; i < len; i++) {
-                var observable = observables[i];
-                this.add(subscribeToResult_1.subscribeToResult(this, observable, observable, i));
-            }
-        }
-    };
-    CombineLatestSubscriber.prototype.notifyComplete = function (unused) {
-        if ((this.active -= 1) === 0) {
-            this.destination.complete();
-        }
-    };
-    CombineLatestSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        var values = this.values;
-        var oldVal = values[outerIndex];
-        var toRespond = !this.toRespond
-            ? 0
-            : oldVal === none ? --this.toRespond : this.toRespond;
-        values[outerIndex] = innerValue;
-        if (toRespond === 0) {
-            if (this.project) {
-                this._tryProject(values);
-            }
-            else {
-                this.destination.next(values.slice());
-            }
-        }
-    };
-    CombineLatestSubscriber.prototype._tryProject = function (values) {
-        var result;
-        try {
-            result = this.project.apply(this, values);
-        }
-        catch (err) {
-            this.destination.error(err);
-            return;
-        }
-        this.destination.next(result);
-    };
-    return CombineLatestSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-exports.CombineLatestSubscriber = CombineLatestSubscriber;
-//# sourceMappingURL=combineLatest.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/concat.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var concat_1 = __webpack_require__("../../../../rxjs/observable/concat.js");
-/* tslint:enable:max-line-length */
-/**
- * Creates an output Observable which sequentially emits all values from every
- * given input Observable after the current Observable.
- *
- * <span class="informal">Concatenates multiple Observables together by
- * sequentially emitting their values, one Observable after the other.</span>
- *
- * <img src="./img/concat.png" width="100%">
- *
- * Joins this Observable with multiple other Observables by subscribing to them
- * one at a time, starting with the source, and merging their results into the
- * output Observable. Will wait for each Observable to complete before moving
- * on to the next.
- *
- * @example <caption>Concatenate a timer counting from 0 to 3 with a synchronous sequence from 1 to 10</caption>
- * var timer = Rx.Observable.interval(1000).take(4);
- * var sequence = Rx.Observable.range(1, 10);
- * var result = timer.concat(sequence);
- * result.subscribe(x => console.log(x));
- *
- * // results in:
- * // 1000ms-> 0 -1000ms-> 1 -1000ms-> 2 -1000ms-> 3 -immediate-> 1 ... 10
- *
- * @example <caption>Concatenate 3 Observables</caption>
- * var timer1 = Rx.Observable.interval(1000).take(10);
- * var timer2 = Rx.Observable.interval(2000).take(6);
- * var timer3 = Rx.Observable.interval(500).take(10);
- * var result = timer1.concat(timer2, timer3);
- * result.subscribe(x => console.log(x));
- *
- * // results in the following:
- * // (Prints to console sequentially)
- * // -1000ms-> 0 -1000ms-> 1 -1000ms-> ... 9
- * // -2000ms-> 0 -2000ms-> 1 -2000ms-> ... 5
- * // -500ms-> 0 -500ms-> 1 -500ms-> ... 9
- *
- * @see {@link concatAll}
- * @see {@link concatMap}
- * @see {@link concatMapTo}
- *
- * @param {ObservableInput} other An input Observable to concatenate after the source
- * Observable. More than one input Observables may be given as argument.
- * @param {Scheduler} [scheduler=null] An optional IScheduler to schedule each
- * Observable subscription on.
- * @return {Observable} All values of each passed Observable merged into a
- * single Observable, in order, in serial fashion.
- * @method concat
- * @owner Observable
- */
-function concat() {
-    var observables = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        observables[_i - 0] = arguments[_i];
-    }
-    return function (source) { return source.lift.call(concat_1.concat.apply(void 0, [source].concat(observables))); };
-}
-exports.concat = concat;
-//# sourceMappingURL=concat.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/concatMapTo.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var concatMap_1 = __webpack_require__("../../../../rxjs/operators/concatMap.js");
-/* tslint:enable:max-line-length */
-/**
- * Projects each source value to the same Observable which is merged multiple
- * times in a serialized fashion on the output Observable.
- *
- * <span class="informal">It's like {@link concatMap}, but maps each value
- * always to the same inner Observable.</span>
- *
- * <img src="./img/concatMapTo.png" width="100%">
- *
- * Maps each source value to the given Observable `innerObservable` regardless
- * of the source value, and then flattens those resulting Observables into one
- * single Observable, which is the output Observable. Each new `innerObservable`
- * instance emitted on the output Observable is concatenated with the previous
- * `innerObservable` instance.
- *
- * __Warning:__ if source values arrive endlessly and faster than their
- * corresponding inner Observables can complete, it will result in memory issues
- * as inner Observables amass in an unbounded buffer waiting for their turn to
- * be subscribed to.
- *
- * Note: `concatMapTo` is equivalent to `mergeMapTo` with concurrency parameter
- * set to `1`.
- *
- * @example <caption>For each click event, tick every second from 0 to 3, with no concurrency</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks.concatMapTo(Rx.Observable.interval(1000).take(4));
- * result.subscribe(x => console.log(x));
- *
- * // Results in the following:
- * // (results are not concurrent)
- * // For every click on the "document" it will emit values 0 to 3 spaced
- * // on a 1000ms interval
- * // one click = 1000ms-> 0 -1000ms-> 1 -1000ms-> 2 -1000ms-> 3
- *
- * @see {@link concat}
- * @see {@link concatAll}
- * @see {@link concatMap}
- * @see {@link mergeMapTo}
- * @see {@link switchMapTo}
- *
- * @param {ObservableInput} innerObservable An Observable to replace each value from
- * the source Observable.
- * @param {function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any} [resultSelector]
- * A function to produce the value on the output Observable based on the values
- * and the indices of the source (outer) emission and the inner Observable
- * emission. The arguments passed to this function are:
- * - `outerValue`: the value that came from the source
- * - `innerValue`: the value that came from the projected Observable
- * - `outerIndex`: the "index" of the value that came from the source
- * - `innerIndex`: the "index" of the value from the projected Observable
- * @return {Observable} An observable of values merged together by joining the
- * passed observable with itself, one after the other, for each value emitted
- * from the source.
- * @method concatMapTo
- * @owner Observable
- */
-function concatMapTo(innerObservable, resultSelector) {
-    return concatMap_1.concatMap(function () { return innerObservable; }, resultSelector);
-}
-exports.concatMapTo = concatMapTo;
-//# sourceMappingURL=concatMapTo.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/count.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-/**
- * Counts the number of emissions on the source and emits that number when the
- * source completes.
- *
- * <span class="informal">Tells how many values were emitted, when the source
- * completes.</span>
- *
- * <img src="./img/count.png" width="100%">
- *
- * `count` transforms an Observable that emits values into an Observable that
- * emits a single value that represents the number of values emitted by the
- * source Observable. If the source Observable terminates with an error, `count`
- * will pass this error notification along without emitting a value first. If
- * the source Observable does not terminate at all, `count` will neither emit
- * a value nor terminate. This operator takes an optional `predicate` function
- * as argument, in which case the output emission will represent the number of
- * source values that matched `true` with the `predicate`.
- *
- * @example <caption>Counts how many seconds have passed before the first click happened</caption>
- * var seconds = Rx.Observable.interval(1000);
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var secondsBeforeClick = seconds.takeUntil(clicks);
- * var result = secondsBeforeClick.count();
- * result.subscribe(x => console.log(x));
- *
- * @example <caption>Counts how many odd numbers are there between 1 and 7</caption>
- * var numbers = Rx.Observable.range(1, 7);
- * var result = numbers.count(i => i % 2 === 1);
- * result.subscribe(x => console.log(x));
- *
- * // Results in:
- * // 4
- *
- * @see {@link max}
- * @see {@link min}
- * @see {@link reduce}
- *
- * @param {function(value: T, i: number, source: Observable<T>): boolean} [predicate] A
- * boolean function to select what values are to be counted. It is provided with
- * arguments of:
- * - `value`: the value from the source Observable.
- * - `index`: the (zero-based) "index" of the value from the source Observable.
- * - `source`: the source Observable instance itself.
- * @return {Observable} An Observable of one number that represents the count as
- * described above.
- * @method count
- * @owner Observable
- */
-function count(predicate) {
-    return function (source) { return source.lift(new CountOperator(predicate, source)); };
-}
-exports.count = count;
-var CountOperator = (function () {
-    function CountOperator(predicate, source) {
-        this.predicate = predicate;
-        this.source = source;
-    }
-    CountOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new CountSubscriber(subscriber, this.predicate, this.source));
-    };
-    return CountOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var CountSubscriber = (function (_super) {
-    __extends(CountSubscriber, _super);
-    function CountSubscriber(destination, predicate, source) {
-        _super.call(this, destination);
-        this.predicate = predicate;
-        this.source = source;
-        this.count = 0;
-        this.index = 0;
-    }
-    CountSubscriber.prototype._next = function (value) {
-        if (this.predicate) {
-            this._tryPredicate(value);
-        }
-        else {
-            this.count++;
-        }
-    };
-    CountSubscriber.prototype._tryPredicate = function (value) {
-        var result;
-        try {
-            result = this.predicate(value, this.index++, this.source);
-        }
-        catch (err) {
-            this.destination.error(err);
-            return;
-        }
-        if (result) {
-            this.count++;
-        }
-    };
-    CountSubscriber.prototype._complete = function () {
-        this.destination.next(this.count);
-        this.destination.complete();
-    };
-    return CountSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=count.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/debounce.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/**
- * Emits a value from the source Observable only after a particular time span
- * determined by another Observable has passed without another source emission.
- *
- * <span class="informal">It's like {@link debounceTime}, but the time span of
- * emission silence is determined by a second Observable.</span>
- *
- * <img src="./img/debounce.png" width="100%">
- *
- * `debounce` delays values emitted by the source Observable, but drops previous
- * pending delayed emissions if a new value arrives on the source Observable.
- * This operator keeps track of the most recent value from the source
- * Observable, and spawns a duration Observable by calling the
- * `durationSelector` function. The value is emitted only when the duration
- * Observable emits a value or completes, and if no other value was emitted on
- * the source Observable since the duration Observable was spawned. If a new
- * value appears before the duration Observable emits, the previous value will
- * be dropped and will not be emitted on the output Observable.
- *
- * Like {@link debounceTime}, this is a rate-limiting operator, and also a
- * delay-like operator since output emissions do not necessarily occur at the
- * same time as they did on the source Observable.
- *
- * @example <caption>Emit the most recent click after a burst of clicks</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks.debounce(() => Rx.Observable.interval(1000));
- * result.subscribe(x => console.log(x));
- *
- * @see {@link audit}
- * @see {@link debounceTime}
- * @see {@link delayWhen}
- * @see {@link throttle}
- *
- * @param {function(value: T): SubscribableOrPromise} durationSelector A function
- * that receives a value from the source Observable, for computing the timeout
- * duration for each source value, returned as an Observable or a Promise.
- * @return {Observable} An Observable that delays the emissions of the source
- * Observable by the specified duration Observable returned by
- * `durationSelector`, and may drop some values if they occur too frequently.
- * @method debounce
- * @owner Observable
- */
-function debounce(durationSelector) {
-    return function (source) { return source.lift(new DebounceOperator(durationSelector)); };
-}
-exports.debounce = debounce;
-var DebounceOperator = (function () {
-    function DebounceOperator(durationSelector) {
-        this.durationSelector = durationSelector;
-    }
-    DebounceOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new DebounceSubscriber(subscriber, this.durationSelector));
-    };
-    return DebounceOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var DebounceSubscriber = (function (_super) {
-    __extends(DebounceSubscriber, _super);
-    function DebounceSubscriber(destination, durationSelector) {
-        _super.call(this, destination);
-        this.durationSelector = durationSelector;
-        this.hasValue = false;
-        this.durationSubscription = null;
-    }
-    DebounceSubscriber.prototype._next = function (value) {
-        try {
-            var result = this.durationSelector.call(this, value);
-            if (result) {
-                this._tryNext(value, result);
-            }
-        }
-        catch (err) {
-            this.destination.error(err);
-        }
-    };
-    DebounceSubscriber.prototype._complete = function () {
-        this.emitValue();
-        this.destination.complete();
-    };
-    DebounceSubscriber.prototype._tryNext = function (value, duration) {
-        var subscription = this.durationSubscription;
-        this.value = value;
-        this.hasValue = true;
-        if (subscription) {
-            subscription.unsubscribe();
-            this.remove(subscription);
-        }
-        subscription = subscribeToResult_1.subscribeToResult(this, duration);
-        if (!subscription.closed) {
-            this.add(this.durationSubscription = subscription);
-        }
-    };
-    DebounceSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        this.emitValue();
-    };
-    DebounceSubscriber.prototype.notifyComplete = function () {
-        this.emitValue();
-    };
-    DebounceSubscriber.prototype.emitValue = function () {
-        if (this.hasValue) {
-            var value = this.value;
-            var subscription = this.durationSubscription;
-            if (subscription) {
-                this.durationSubscription = null;
-                subscription.unsubscribe();
-                this.remove(subscription);
-            }
-            this.value = null;
-            this.hasValue = false;
-            _super.prototype._next.call(this, value);
-        }
-    };
-    return DebounceSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=debounce.js.map
-
-/***/ }),
-
 /***/ "../../../../rxjs/operators/debounceTime.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3965,1111 +2426,6 @@ var DelayMessage = (function () {
 
 /***/ }),
 
-/***/ "../../../../rxjs/operators/delayWhen.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var Observable_1 = __webpack_require__("../../../../rxjs/Observable.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/**
- * Delays the emission of items from the source Observable by a given time span
- * determined by the emissions of another Observable.
- *
- * <span class="informal">It's like {@link delay}, but the time span of the
- * delay duration is determined by a second Observable.</span>
- *
- * <img src="./img/delayWhen.png" width="100%">
- *
- * `delayWhen` time shifts each emitted value from the source Observable by a
- * time span determined by another Observable. When the source emits a value,
- * the `delayDurationSelector` function is called with the source value as
- * argument, and should return an Observable, called the "duration" Observable.
- * The source value is emitted on the output Observable only when the duration
- * Observable emits a value or completes.
- *
- * Optionally, `delayWhen` takes a second argument, `subscriptionDelay`, which
- * is an Observable. When `subscriptionDelay` emits its first value or
- * completes, the source Observable is subscribed to and starts behaving like
- * described in the previous paragraph. If `subscriptionDelay` is not provided,
- * `delayWhen` will subscribe to the source Observable as soon as the output
- * Observable is subscribed.
- *
- * @example <caption>Delay each click by a random amount of time, between 0 and 5 seconds</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var delayedClicks = clicks.delayWhen(event =>
- *   Rx.Observable.interval(Math.random() * 5000)
- * );
- * delayedClicks.subscribe(x => console.log(x));
- *
- * @see {@link debounce}
- * @see {@link delay}
- *
- * @param {function(value: T): Observable} delayDurationSelector A function that
- * returns an Observable for each value emitted by the source Observable, which
- * is then used to delay the emission of that item on the output Observable
- * until the Observable returned from this function emits a value.
- * @param {Observable} subscriptionDelay An Observable that triggers the
- * subscription to the source Observable once it emits any value.
- * @return {Observable} An Observable that delays the emissions of the source
- * Observable by an amount of time specified by the Observable returned by
- * `delayDurationSelector`.
- * @method delayWhen
- * @owner Observable
- */
-function delayWhen(delayDurationSelector, subscriptionDelay) {
-    if (subscriptionDelay) {
-        return function (source) {
-            return new SubscriptionDelayObservable(source, subscriptionDelay)
-                .lift(new DelayWhenOperator(delayDurationSelector));
-        };
-    }
-    return function (source) { return source.lift(new DelayWhenOperator(delayDurationSelector)); };
-}
-exports.delayWhen = delayWhen;
-var DelayWhenOperator = (function () {
-    function DelayWhenOperator(delayDurationSelector) {
-        this.delayDurationSelector = delayDurationSelector;
-    }
-    DelayWhenOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new DelayWhenSubscriber(subscriber, this.delayDurationSelector));
-    };
-    return DelayWhenOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var DelayWhenSubscriber = (function (_super) {
-    __extends(DelayWhenSubscriber, _super);
-    function DelayWhenSubscriber(destination, delayDurationSelector) {
-        _super.call(this, destination);
-        this.delayDurationSelector = delayDurationSelector;
-        this.completed = false;
-        this.delayNotifierSubscriptions = [];
-        this.values = [];
-    }
-    DelayWhenSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        this.destination.next(outerValue);
-        this.removeSubscription(innerSub);
-        this.tryComplete();
-    };
-    DelayWhenSubscriber.prototype.notifyError = function (error, innerSub) {
-        this._error(error);
-    };
-    DelayWhenSubscriber.prototype.notifyComplete = function (innerSub) {
-        var value = this.removeSubscription(innerSub);
-        if (value) {
-            this.destination.next(value);
-        }
-        this.tryComplete();
-    };
-    DelayWhenSubscriber.prototype._next = function (value) {
-        try {
-            var delayNotifier = this.delayDurationSelector(value);
-            if (delayNotifier) {
-                this.tryDelay(delayNotifier, value);
-            }
-        }
-        catch (err) {
-            this.destination.error(err);
-        }
-    };
-    DelayWhenSubscriber.prototype._complete = function () {
-        this.completed = true;
-        this.tryComplete();
-    };
-    DelayWhenSubscriber.prototype.removeSubscription = function (subscription) {
-        subscription.unsubscribe();
-        var subscriptionIdx = this.delayNotifierSubscriptions.indexOf(subscription);
-        var value = null;
-        if (subscriptionIdx !== -1) {
-            value = this.values[subscriptionIdx];
-            this.delayNotifierSubscriptions.splice(subscriptionIdx, 1);
-            this.values.splice(subscriptionIdx, 1);
-        }
-        return value;
-    };
-    DelayWhenSubscriber.prototype.tryDelay = function (delayNotifier, value) {
-        var notifierSubscription = subscribeToResult_1.subscribeToResult(this, delayNotifier, value);
-        if (notifierSubscription && !notifierSubscription.closed) {
-            this.add(notifierSubscription);
-            this.delayNotifierSubscriptions.push(notifierSubscription);
-        }
-        this.values.push(value);
-    };
-    DelayWhenSubscriber.prototype.tryComplete = function () {
-        if (this.completed && this.delayNotifierSubscriptions.length === 0) {
-            this.destination.complete();
-        }
-    };
-    return DelayWhenSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var SubscriptionDelayObservable = (function (_super) {
-    __extends(SubscriptionDelayObservable, _super);
-    function SubscriptionDelayObservable(source, subscriptionDelay) {
-        _super.call(this);
-        this.source = source;
-        this.subscriptionDelay = subscriptionDelay;
-    }
-    SubscriptionDelayObservable.prototype._subscribe = function (subscriber) {
-        this.subscriptionDelay.subscribe(new SubscriptionDelaySubscriber(subscriber, this.source));
-    };
-    return SubscriptionDelayObservable;
-}(Observable_1.Observable));
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var SubscriptionDelaySubscriber = (function (_super) {
-    __extends(SubscriptionDelaySubscriber, _super);
-    function SubscriptionDelaySubscriber(parent, source) {
-        _super.call(this);
-        this.parent = parent;
-        this.source = source;
-        this.sourceSubscribed = false;
-    }
-    SubscriptionDelaySubscriber.prototype._next = function (unused) {
-        this.subscribeToSource();
-    };
-    SubscriptionDelaySubscriber.prototype._error = function (err) {
-        this.unsubscribe();
-        this.parent.error(err);
-    };
-    SubscriptionDelaySubscriber.prototype._complete = function () {
-        this.subscribeToSource();
-    };
-    SubscriptionDelaySubscriber.prototype.subscribeToSource = function () {
-        if (!this.sourceSubscribed) {
-            this.sourceSubscribed = true;
-            this.unsubscribe();
-            this.source.subscribe(this.parent);
-        }
-    };
-    return SubscriptionDelaySubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=delayWhen.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/dematerialize.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-/**
- * Converts an Observable of {@link Notification} objects into the emissions
- * that they represent.
- *
- * <span class="informal">Unwraps {@link Notification} objects as actual `next`,
- * `error` and `complete` emissions. The opposite of {@link materialize}.</span>
- *
- * <img src="./img/dematerialize.png" width="100%">
- *
- * `dematerialize` is assumed to operate an Observable that only emits
- * {@link Notification} objects as `next` emissions, and does not emit any
- * `error`. Such Observable is the output of a `materialize` operation. Those
- * notifications are then unwrapped using the metadata they contain, and emitted
- * as `next`, `error`, and `complete` on the output Observable.
- *
- * Use this operator in conjunction with {@link materialize}.
- *
- * @example <caption>Convert an Observable of Notifications to an actual Observable</caption>
- * var notifA = new Rx.Notification('N', 'A');
- * var notifB = new Rx.Notification('N', 'B');
- * var notifE = new Rx.Notification('E', void 0,
- *   new TypeError('x.toUpperCase is not a function')
- * );
- * var materialized = Rx.Observable.of(notifA, notifB, notifE);
- * var upperCase = materialized.dematerialize();
- * upperCase.subscribe(x => console.log(x), e => console.error(e));
- *
- * // Results in:
- * // A
- * // B
- * // TypeError: x.toUpperCase is not a function
- *
- * @see {@link Notification}
- * @see {@link materialize}
- *
- * @return {Observable} An Observable that emits items and notifications
- * embedded in Notification objects emitted by the source Observable.
- * @method dematerialize
- * @owner Observable
- */
-function dematerialize() {
-    return function dematerializeOperatorFunction(source) {
-        return source.lift(new DeMaterializeOperator());
-    };
-}
-exports.dematerialize = dematerialize;
-var DeMaterializeOperator = (function () {
-    function DeMaterializeOperator() {
-    }
-    DeMaterializeOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new DeMaterializeSubscriber(subscriber));
-    };
-    return DeMaterializeOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var DeMaterializeSubscriber = (function (_super) {
-    __extends(DeMaterializeSubscriber, _super);
-    function DeMaterializeSubscriber(destination) {
-        _super.call(this, destination);
-    }
-    DeMaterializeSubscriber.prototype._next = function (value) {
-        value.observe(this.destination);
-    };
-    return DeMaterializeSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=dematerialize.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/distinct.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-var Set_1 = __webpack_require__("../../../../rxjs/util/Set.js");
-/**
- * Returns an Observable that emits all items emitted by the source Observable that are distinct by comparison from previous items.
- *
- * If a keySelector function is provided, then it will project each value from the source observable into a new value that it will
- * check for equality with previously projected values. If a keySelector function is not provided, it will use each value from the
- * source observable directly with an equality check against previous values.
- *
- * In JavaScript runtimes that support `Set`, this operator will use a `Set` to improve performance of the distinct value checking.
- *
- * In other runtimes, this operator will use a minimal implementation of `Set` that relies on an `Array` and `indexOf` under the
- * hood, so performance will degrade as more values are checked for distinction. Even in newer browsers, a long-running `distinct`
- * use might result in memory leaks. To help alleviate this in some scenarios, an optional `flushes` parameter is also provided so
- * that the internal `Set` can be "flushed", basically clearing it of values.
- *
- * @example <caption>A simple example with numbers</caption>
- * Observable.of(1, 1, 2, 2, 2, 1, 2, 3, 4, 3, 2, 1)
- *   .distinct()
- *   .subscribe(x => console.log(x)); // 1, 2, 3, 4
- *
- * @example <caption>An example using a keySelector function</caption>
- * interface Person {
- *    age: number,
- *    name: string
- * }
- *
- * Observable.of<Person>(
- *     { age: 4, name: 'Foo'},
- *     { age: 7, name: 'Bar'},
- *     { age: 5, name: 'Foo'})
- *     .distinct((p: Person) => p.name)
- *     .subscribe(x => console.log(x));
- *
- * // displays:
- * // { age: 4, name: 'Foo' }
- * // { age: 7, name: 'Bar' }
- *
- * @see {@link distinctUntilChanged}
- * @see {@link distinctUntilKeyChanged}
- *
- * @param {function} [keySelector] Optional function to select which value you want to check as distinct.
- * @param {Observable} [flushes] Optional Observable for flushing the internal HashSet of the operator.
- * @return {Observable} An Observable that emits items from the source Observable with distinct values.
- * @method distinct
- * @owner Observable
- */
-function distinct(keySelector, flushes) {
-    return function (source) { return source.lift(new DistinctOperator(keySelector, flushes)); };
-}
-exports.distinct = distinct;
-var DistinctOperator = (function () {
-    function DistinctOperator(keySelector, flushes) {
-        this.keySelector = keySelector;
-        this.flushes = flushes;
-    }
-    DistinctOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new DistinctSubscriber(subscriber, this.keySelector, this.flushes));
-    };
-    return DistinctOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var DistinctSubscriber = (function (_super) {
-    __extends(DistinctSubscriber, _super);
-    function DistinctSubscriber(destination, keySelector, flushes) {
-        _super.call(this, destination);
-        this.keySelector = keySelector;
-        this.values = new Set_1.Set();
-        if (flushes) {
-            this.add(subscribeToResult_1.subscribeToResult(this, flushes));
-        }
-    }
-    DistinctSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        this.values.clear();
-    };
-    DistinctSubscriber.prototype.notifyError = function (error, innerSub) {
-        this._error(error);
-    };
-    DistinctSubscriber.prototype._next = function (value) {
-        if (this.keySelector) {
-            this._useKeySelector(value);
-        }
-        else {
-            this._finalizeNext(value, value);
-        }
-    };
-    DistinctSubscriber.prototype._useKeySelector = function (value) {
-        var key;
-        var destination = this.destination;
-        try {
-            key = this.keySelector(value);
-        }
-        catch (err) {
-            destination.error(err);
-            return;
-        }
-        this._finalizeNext(key, value);
-    };
-    DistinctSubscriber.prototype._finalizeNext = function (key, value) {
-        var values = this.values;
-        if (!values.has(key)) {
-            values.add(key);
-            this.destination.next(value);
-        }
-    };
-    return DistinctSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-exports.DistinctSubscriber = DistinctSubscriber;
-//# sourceMappingURL=distinct.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/distinctUntilChanged.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var tryCatch_1 = __webpack_require__("../../../../rxjs/util/tryCatch.js");
-var errorObject_1 = __webpack_require__("../../../../rxjs/util/errorObject.js");
-/* tslint:enable:max-line-length */
-/**
- * Returns an Observable that emits all items emitted by the source Observable that are distinct by comparison from the previous item.
- *
- * If a comparator function is provided, then it will be called for each item to test for whether or not that value should be emitted.
- *
- * If a comparator function is not provided, an equality check is used by default.
- *
- * @example <caption>A simple example with numbers</caption>
- * Observable.of(1, 1, 2, 2, 2, 1, 1, 2, 3, 3, 4)
- *   .distinctUntilChanged()
- *   .subscribe(x => console.log(x)); // 1, 2, 1, 2, 3, 4
- *
- * @example <caption>An example using a compare function</caption>
- * interface Person {
- *    age: number,
- *    name: string
- * }
- *
- * Observable.of<Person>(
- *     { age: 4, name: 'Foo'},
- *     { age: 7, name: 'Bar'},
- *     { age: 5, name: 'Foo'})
- *     { age: 6, name: 'Foo'})
- *     .distinctUntilChanged((p: Person, q: Person) => p.name === q.name)
- *     .subscribe(x => console.log(x));
- *
- * // displays:
- * // { age: 4, name: 'Foo' }
- * // { age: 7, name: 'Bar' }
- * // { age: 5, name: 'Foo' }
- *
- * @see {@link distinct}
- * @see {@link distinctUntilKeyChanged}
- *
- * @param {function} [compare] Optional comparison function called to test if an item is distinct from the previous item in the source.
- * @return {Observable} An Observable that emits items from the source Observable with distinct values.
- * @method distinctUntilChanged
- * @owner Observable
- */
-function distinctUntilChanged(compare, keySelector) {
-    return function (source) { return source.lift(new DistinctUntilChangedOperator(compare, keySelector)); };
-}
-exports.distinctUntilChanged = distinctUntilChanged;
-var DistinctUntilChangedOperator = (function () {
-    function DistinctUntilChangedOperator(compare, keySelector) {
-        this.compare = compare;
-        this.keySelector = keySelector;
-    }
-    DistinctUntilChangedOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new DistinctUntilChangedSubscriber(subscriber, this.compare, this.keySelector));
-    };
-    return DistinctUntilChangedOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var DistinctUntilChangedSubscriber = (function (_super) {
-    __extends(DistinctUntilChangedSubscriber, _super);
-    function DistinctUntilChangedSubscriber(destination, compare, keySelector) {
-        _super.call(this, destination);
-        this.keySelector = keySelector;
-        this.hasKey = false;
-        if (typeof compare === 'function') {
-            this.compare = compare;
-        }
-    }
-    DistinctUntilChangedSubscriber.prototype.compare = function (x, y) {
-        return x === y;
-    };
-    DistinctUntilChangedSubscriber.prototype._next = function (value) {
-        var keySelector = this.keySelector;
-        var key = value;
-        if (keySelector) {
-            key = tryCatch_1.tryCatch(this.keySelector)(value);
-            if (key === errorObject_1.errorObject) {
-                return this.destination.error(errorObject_1.errorObject.e);
-            }
-        }
-        var result = false;
-        if (this.hasKey) {
-            result = tryCatch_1.tryCatch(this.compare)(this.key, key);
-            if (result === errorObject_1.errorObject) {
-                return this.destination.error(errorObject_1.errorObject.e);
-            }
-        }
-        else {
-            this.hasKey = true;
-        }
-        if (Boolean(result) === false) {
-            this.key = key;
-            this.destination.next(value);
-        }
-    };
-    return DistinctUntilChangedSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=distinctUntilChanged.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/distinctUntilKeyChanged.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var distinctUntilChanged_1 = __webpack_require__("../../../../rxjs/operators/distinctUntilChanged.js");
-/* tslint:enable:max-line-length */
-/**
- * Returns an Observable that emits all items emitted by the source Observable that are distinct by comparison from the previous item,
- * using a property accessed by using the key provided to check if the two items are distinct.
- *
- * If a comparator function is provided, then it will be called for each item to test for whether or not that value should be emitted.
- *
- * If a comparator function is not provided, an equality check is used by default.
- *
- * @example <caption>An example comparing the name of persons</caption>
- *
- *  interface Person {
- *     age: number,
- *     name: string
- *  }
- *
- * Observable.of<Person>(
- *     { age: 4, name: 'Foo'},
- *     { age: 7, name: 'Bar'},
- *     { age: 5, name: 'Foo'},
- *     { age: 6, name: 'Foo'})
- *     .distinctUntilKeyChanged('name')
- *     .subscribe(x => console.log(x));
- *
- * // displays:
- * // { age: 4, name: 'Foo' }
- * // { age: 7, name: 'Bar' }
- * // { age: 5, name: 'Foo' }
- *
- * @example <caption>An example comparing the first letters of the name</caption>
- *
- * interface Person {
- *     age: number,
- *     name: string
- *  }
- *
- * Observable.of<Person>(
- *     { age: 4, name: 'Foo1'},
- *     { age: 7, name: 'Bar'},
- *     { age: 5, name: 'Foo2'},
- *     { age: 6, name: 'Foo3'})
- *     .distinctUntilKeyChanged('name', (x: string, y: string) => x.substring(0, 3) === y.substring(0, 3))
- *     .subscribe(x => console.log(x));
- *
- * // displays:
- * // { age: 4, name: 'Foo1' }
- * // { age: 7, name: 'Bar' }
- * // { age: 5, name: 'Foo2' }
- *
- * @see {@link distinct}
- * @see {@link distinctUntilChanged}
- *
- * @param {string} key String key for object property lookup on each item.
- * @param {function} [compare] Optional comparison function called to test if an item is distinct from the previous item in the source.
- * @return {Observable} An Observable that emits items from the source Observable with distinct values based on the key specified.
- * @method distinctUntilKeyChanged
- * @owner Observable
- */
-function distinctUntilKeyChanged(key, compare) {
-    return distinctUntilChanged_1.distinctUntilChanged(function (x, y) { return compare ? compare(x[key], y[key]) : x[key] === y[key]; });
-}
-exports.distinctUntilKeyChanged = distinctUntilKeyChanged;
-//# sourceMappingURL=distinctUntilKeyChanged.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/elementAt.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var ArgumentOutOfRangeError_1 = __webpack_require__("../../../../rxjs/util/ArgumentOutOfRangeError.js");
-/**
- * Emits the single value at the specified `index` in a sequence of emissions
- * from the source Observable.
- *
- * <span class="informal">Emits only the i-th value, then completes.</span>
- *
- * <img src="./img/elementAt.png" width="100%">
- *
- * `elementAt` returns an Observable that emits the item at the specified
- * `index` in the source Observable, or a default value if that `index` is out
- * of range and the `default` argument is provided. If the `default` argument is
- * not given and the `index` is out of range, the output Observable will emit an
- * `ArgumentOutOfRangeError` error.
- *
- * @example <caption>Emit only the third click event</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks.elementAt(2);
- * result.subscribe(x => console.log(x));
- *
- * // Results in:
- * // click 1 = nothing
- * // click 2 = nothing
- * // click 3 = MouseEvent object logged to console
- *
- * @see {@link first}
- * @see {@link last}
- * @see {@link skip}
- * @see {@link single}
- * @see {@link take}
- *
- * @throws {ArgumentOutOfRangeError} When using `elementAt(i)`, it delivers an
- * ArgumentOutOrRangeError to the Observer's `error` callback if `i < 0` or the
- * Observable has completed before emitting the i-th `next` notification.
- *
- * @param {number} index Is the number `i` for the i-th source emission that has
- * happened since the subscription, starting from the number `0`.
- * @param {T} [defaultValue] The default value returned for missing indices.
- * @return {Observable} An Observable that emits a single item, if it is found.
- * Otherwise, will emit the default value if given. If not, then emits an error.
- * @method elementAt
- * @owner Observable
- */
-function elementAt(index, defaultValue) {
-    return function (source) { return source.lift(new ElementAtOperator(index, defaultValue)); };
-}
-exports.elementAt = elementAt;
-var ElementAtOperator = (function () {
-    function ElementAtOperator(index, defaultValue) {
-        this.index = index;
-        this.defaultValue = defaultValue;
-        if (index < 0) {
-            throw new ArgumentOutOfRangeError_1.ArgumentOutOfRangeError;
-        }
-    }
-    ElementAtOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new ElementAtSubscriber(subscriber, this.index, this.defaultValue));
-    };
-    return ElementAtOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var ElementAtSubscriber = (function (_super) {
-    __extends(ElementAtSubscriber, _super);
-    function ElementAtSubscriber(destination, index, defaultValue) {
-        _super.call(this, destination);
-        this.index = index;
-        this.defaultValue = defaultValue;
-    }
-    ElementAtSubscriber.prototype._next = function (x) {
-        if (this.index-- === 0) {
-            this.destination.next(x);
-            this.destination.complete();
-        }
-    };
-    ElementAtSubscriber.prototype._complete = function () {
-        var destination = this.destination;
-        if (this.index >= 0) {
-            if (typeof this.defaultValue !== 'undefined') {
-                destination.next(this.defaultValue);
-            }
-            else {
-                destination.error(new ArgumentOutOfRangeError_1.ArgumentOutOfRangeError);
-            }
-        }
-        destination.complete();
-    };
-    return ElementAtSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=elementAt.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/exhaust.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/**
- * Converts a higher-order Observable into a first-order Observable by dropping
- * inner Observables while the previous inner Observable has not yet completed.
- *
- * <span class="informal">Flattens an Observable-of-Observables by dropping the
- * next inner Observables while the current inner is still executing.</span>
- *
- * <img src="./img/exhaust.png" width="100%">
- *
- * `exhaust` subscribes to an Observable that emits Observables, also known as a
- * higher-order Observable. Each time it observes one of these emitted inner
- * Observables, the output Observable begins emitting the items emitted by that
- * inner Observable. So far, it behaves like {@link mergeAll}. However,
- * `exhaust` ignores every new inner Observable if the previous Observable has
- * not yet completed. Once that one completes, it will accept and flatten the
- * next inner Observable and repeat this process.
- *
- * @example <caption>Run a finite timer for each click, only if there is no currently active timer</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var higherOrder = clicks.map((ev) => Rx.Observable.interval(1000).take(5));
- * var result = higherOrder.exhaust();
- * result.subscribe(x => console.log(x));
- *
- * @see {@link combineAll}
- * @see {@link concatAll}
- * @see {@link switch}
- * @see {@link mergeAll}
- * @see {@link exhaustMap}
- * @see {@link zipAll}
- *
- * @return {Observable} An Observable that takes a source of Observables and propagates the first observable
- * exclusively until it completes before subscribing to the next.
- * @method exhaust
- * @owner Observable
- */
-function exhaust() {
-    return function (source) { return source.lift(new SwitchFirstOperator()); };
-}
-exports.exhaust = exhaust;
-var SwitchFirstOperator = (function () {
-    function SwitchFirstOperator() {
-    }
-    SwitchFirstOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new SwitchFirstSubscriber(subscriber));
-    };
-    return SwitchFirstOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var SwitchFirstSubscriber = (function (_super) {
-    __extends(SwitchFirstSubscriber, _super);
-    function SwitchFirstSubscriber(destination) {
-        _super.call(this, destination);
-        this.hasCompleted = false;
-        this.hasSubscription = false;
-    }
-    SwitchFirstSubscriber.prototype._next = function (value) {
-        if (!this.hasSubscription) {
-            this.hasSubscription = true;
-            this.add(subscribeToResult_1.subscribeToResult(this, value));
-        }
-    };
-    SwitchFirstSubscriber.prototype._complete = function () {
-        this.hasCompleted = true;
-        if (!this.hasSubscription) {
-            this.destination.complete();
-        }
-    };
-    SwitchFirstSubscriber.prototype.notifyComplete = function (innerSub) {
-        this.remove(innerSub);
-        this.hasSubscription = false;
-        if (this.hasCompleted) {
-            this.destination.complete();
-        }
-    };
-    return SwitchFirstSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=exhaust.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/exhaustMap.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/* tslint:enable:max-line-length */
-/**
- * Projects each source value to an Observable which is merged in the output
- * Observable only if the previous projected Observable has completed.
- *
- * <span class="informal">Maps each value to an Observable, then flattens all of
- * these inner Observables using {@link exhaust}.</span>
- *
- * <img src="./img/exhaustMap.png" width="100%">
- *
- * Returns an Observable that emits items based on applying a function that you
- * supply to each item emitted by the source Observable, where that function
- * returns an (so-called "inner") Observable. When it projects a source value to
- * an Observable, the output Observable begins emitting the items emitted by
- * that projected Observable. However, `exhaustMap` ignores every new projected
- * Observable if the previous projected Observable has not yet completed. Once
- * that one completes, it will accept and flatten the next projected Observable
- * and repeat this process.
- *
- * @example <caption>Run a finite timer for each click, only if there is no currently active timer</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks.exhaustMap((ev) => Rx.Observable.interval(1000).take(5));
- * result.subscribe(x => console.log(x));
- *
- * @see {@link concatMap}
- * @see {@link exhaust}
- * @see {@link mergeMap}
- * @see {@link switchMap}
- *
- * @param {function(value: T, ?index: number): ObservableInput} project A function
- * that, when applied to an item emitted by the source Observable, returns an
- * Observable.
- * @param {function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any} [resultSelector]
- * A function to produce the value on the output Observable based on the values
- * and the indices of the source (outer) emission and the inner Observable
- * emission. The arguments passed to this function are:
- * - `outerValue`: the value that came from the source
- * - `innerValue`: the value that came from the projected Observable
- * - `outerIndex`: the "index" of the value that came from the source
- * - `innerIndex`: the "index" of the value from the projected Observable
- * @return {Observable} An Observable containing projected Observables
- * of each item of the source, ignoring projected Observables that start before
- * their preceding Observable has completed.
- * @method exhaustMap
- * @owner Observable
- */
-function exhaustMap(project, resultSelector) {
-    return function (source) { return source.lift(new SwitchFirstMapOperator(project, resultSelector)); };
-}
-exports.exhaustMap = exhaustMap;
-var SwitchFirstMapOperator = (function () {
-    function SwitchFirstMapOperator(project, resultSelector) {
-        this.project = project;
-        this.resultSelector = resultSelector;
-    }
-    SwitchFirstMapOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new SwitchFirstMapSubscriber(subscriber, this.project, this.resultSelector));
-    };
-    return SwitchFirstMapOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var SwitchFirstMapSubscriber = (function (_super) {
-    __extends(SwitchFirstMapSubscriber, _super);
-    function SwitchFirstMapSubscriber(destination, project, resultSelector) {
-        _super.call(this, destination);
-        this.project = project;
-        this.resultSelector = resultSelector;
-        this.hasSubscription = false;
-        this.hasCompleted = false;
-        this.index = 0;
-    }
-    SwitchFirstMapSubscriber.prototype._next = function (value) {
-        if (!this.hasSubscription) {
-            this.tryNext(value);
-        }
-    };
-    SwitchFirstMapSubscriber.prototype.tryNext = function (value) {
-        var index = this.index++;
-        var destination = this.destination;
-        try {
-            var result = this.project(value, index);
-            this.hasSubscription = true;
-            this.add(subscribeToResult_1.subscribeToResult(this, result, value, index));
-        }
-        catch (err) {
-            destination.error(err);
-        }
-    };
-    SwitchFirstMapSubscriber.prototype._complete = function () {
-        this.hasCompleted = true;
-        if (!this.hasSubscription) {
-            this.destination.complete();
-        }
-    };
-    SwitchFirstMapSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        var _a = this, resultSelector = _a.resultSelector, destination = _a.destination;
-        if (resultSelector) {
-            this.trySelectResult(outerValue, innerValue, outerIndex, innerIndex);
-        }
-        else {
-            destination.next(innerValue);
-        }
-    };
-    SwitchFirstMapSubscriber.prototype.trySelectResult = function (outerValue, innerValue, outerIndex, innerIndex) {
-        var _a = this, resultSelector = _a.resultSelector, destination = _a.destination;
-        try {
-            var result = resultSelector(outerValue, innerValue, outerIndex, innerIndex);
-            destination.next(result);
-        }
-        catch (err) {
-            destination.error(err);
-        }
-    };
-    SwitchFirstMapSubscriber.prototype.notifyError = function (err) {
-        this.destination.error(err);
-    };
-    SwitchFirstMapSubscriber.prototype.notifyComplete = function (innerSub) {
-        this.remove(innerSub);
-        this.hasSubscription = false;
-        if (this.hasCompleted) {
-            this.destination.complete();
-        }
-    };
-    return SwitchFirstMapSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=exhaustMap.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/expand.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var tryCatch_1 = __webpack_require__("../../../../rxjs/util/tryCatch.js");
-var errorObject_1 = __webpack_require__("../../../../rxjs/util/errorObject.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/* tslint:enable:max-line-length */
-/**
- * Recursively projects each source value to an Observable which is merged in
- * the output Observable.
- *
- * <span class="informal">It's similar to {@link mergeMap}, but applies the
- * projection function to every source value as well as every output value.
- * It's recursive.</span>
- *
- * <img src="./img/expand.png" width="100%">
- *
- * Returns an Observable that emits items based on applying a function that you
- * supply to each item emitted by the source Observable, where that function
- * returns an Observable, and then merging those resulting Observables and
- * emitting the results of this merger. *Expand* will re-emit on the output
- * Observable every source value. Then, each output value is given to the
- * `project` function which returns an inner Observable to be merged on the
- * output Observable. Those output values resulting from the projection are also
- * given to the `project` function to produce new output values. This is how
- * *expand* behaves recursively.
- *
- * @example <caption>Start emitting the powers of two on every click, at most 10 of them</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var powersOfTwo = clicks
- *   .mapTo(1)
- *   .expand(x => Rx.Observable.of(2 * x).delay(1000))
- *   .take(10);
- * powersOfTwo.subscribe(x => console.log(x));
- *
- * @see {@link mergeMap}
- * @see {@link mergeScan}
- *
- * @param {function(value: T, index: number) => Observable} project A function
- * that, when applied to an item emitted by the source or the output Observable,
- * returns an Observable.
- * @param {number} [concurrent=Number.POSITIVE_INFINITY] Maximum number of input
- * Observables being subscribed to concurrently.
- * @param {Scheduler} [scheduler=null] The IScheduler to use for subscribing to
- * each projected inner Observable.
- * @return {Observable} An Observable that emits the source values and also
- * result of applying the projection function to each value emitted on the
- * output Observable and and merging the results of the Observables obtained
- * from this transformation.
- * @method expand
- * @owner Observable
- */
-function expand(project, concurrent, scheduler) {
-    if (concurrent === void 0) { concurrent = Number.POSITIVE_INFINITY; }
-    if (scheduler === void 0) { scheduler = undefined; }
-    concurrent = (concurrent || 0) < 1 ? Number.POSITIVE_INFINITY : concurrent;
-    return function (source) { return source.lift(new ExpandOperator(project, concurrent, scheduler)); };
-}
-exports.expand = expand;
-var ExpandOperator = (function () {
-    function ExpandOperator(project, concurrent, scheduler) {
-        this.project = project;
-        this.concurrent = concurrent;
-        this.scheduler = scheduler;
-    }
-    ExpandOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new ExpandSubscriber(subscriber, this.project, this.concurrent, this.scheduler));
-    };
-    return ExpandOperator;
-}());
-exports.ExpandOperator = ExpandOperator;
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var ExpandSubscriber = (function (_super) {
-    __extends(ExpandSubscriber, _super);
-    function ExpandSubscriber(destination, project, concurrent, scheduler) {
-        _super.call(this, destination);
-        this.project = project;
-        this.concurrent = concurrent;
-        this.scheduler = scheduler;
-        this.index = 0;
-        this.active = 0;
-        this.hasCompleted = false;
-        if (concurrent < Number.POSITIVE_INFINITY) {
-            this.buffer = [];
-        }
-    }
-    ExpandSubscriber.dispatch = function (arg) {
-        var subscriber = arg.subscriber, result = arg.result, value = arg.value, index = arg.index;
-        subscriber.subscribeToProjection(result, value, index);
-    };
-    ExpandSubscriber.prototype._next = function (value) {
-        var destination = this.destination;
-        if (destination.closed) {
-            this._complete();
-            return;
-        }
-        var index = this.index++;
-        if (this.active < this.concurrent) {
-            destination.next(value);
-            var result = tryCatch_1.tryCatch(this.project)(value, index);
-            if (result === errorObject_1.errorObject) {
-                destination.error(errorObject_1.errorObject.e);
-            }
-            else if (!this.scheduler) {
-                this.subscribeToProjection(result, value, index);
-            }
-            else {
-                var state = { subscriber: this, result: result, value: value, index: index };
-                this.add(this.scheduler.schedule(ExpandSubscriber.dispatch, 0, state));
-            }
-        }
-        else {
-            this.buffer.push(value);
-        }
-    };
-    ExpandSubscriber.prototype.subscribeToProjection = function (result, value, index) {
-        this.active++;
-        this.add(subscribeToResult_1.subscribeToResult(this, result, value, index));
-    };
-    ExpandSubscriber.prototype._complete = function () {
-        this.hasCompleted = true;
-        if (this.hasCompleted && this.active === 0) {
-            this.destination.complete();
-        }
-    };
-    ExpandSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        this._next(innerValue);
-    };
-    ExpandSubscriber.prototype.notifyComplete = function (innerSub) {
-        var buffer = this.buffer;
-        this.remove(innerSub);
-        this.active--;
-        if (buffer && buffer.length > 0) {
-            this._next(buffer.shift());
-        }
-        if (this.hasCompleted && this.active === 0) {
-            this.destination.complete();
-        }
-    };
-    return ExpandSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-exports.ExpandSubscriber = ExpandSubscriber;
-//# sourceMappingURL=expand.js.map
-
-/***/ }),
-
 /***/ "../../../../rxjs/operators/finalize.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5117,3003 +2473,6 @@ var FinallySubscriber = (function (_super) {
     return FinallySubscriber;
 }(Subscriber_1.Subscriber));
 //# sourceMappingURL=finalize.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/find.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-/**
- * Emits only the first value emitted by the source Observable that meets some
- * condition.
- *
- * <span class="informal">Finds the first value that passes some test and emits
- * that.</span>
- *
- * <img src="./img/find.png" width="100%">
- *
- * `find` searches for the first item in the source Observable that matches the
- * specified condition embodied by the `predicate`, and returns the first
- * occurrence in the source. Unlike {@link first}, the `predicate` is required
- * in `find`, and does not emit an error if a valid value is not found.
- *
- * @example <caption>Find and emit the first click that happens on a DIV element</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks.find(ev => ev.target.tagName === 'DIV');
- * result.subscribe(x => console.log(x));
- *
- * @see {@link filter}
- * @see {@link first}
- * @see {@link findIndex}
- * @see {@link take}
- *
- * @param {function(value: T, index: number, source: Observable<T>): boolean} predicate
- * A function called with each item to test for condition matching.
- * @param {any} [thisArg] An optional argument to determine the value of `this`
- * in the `predicate` function.
- * @return {Observable<T>} An Observable of the first item that matches the
- * condition.
- * @method find
- * @owner Observable
- */
-function find(predicate, thisArg) {
-    if (typeof predicate !== 'function') {
-        throw new TypeError('predicate is not a function');
-    }
-    return function (source) { return source.lift(new FindValueOperator(predicate, source, false, thisArg)); };
-}
-exports.find = find;
-var FindValueOperator = (function () {
-    function FindValueOperator(predicate, source, yieldIndex, thisArg) {
-        this.predicate = predicate;
-        this.source = source;
-        this.yieldIndex = yieldIndex;
-        this.thisArg = thisArg;
-    }
-    FindValueOperator.prototype.call = function (observer, source) {
-        return source.subscribe(new FindValueSubscriber(observer, this.predicate, this.source, this.yieldIndex, this.thisArg));
-    };
-    return FindValueOperator;
-}());
-exports.FindValueOperator = FindValueOperator;
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var FindValueSubscriber = (function (_super) {
-    __extends(FindValueSubscriber, _super);
-    function FindValueSubscriber(destination, predicate, source, yieldIndex, thisArg) {
-        _super.call(this, destination);
-        this.predicate = predicate;
-        this.source = source;
-        this.yieldIndex = yieldIndex;
-        this.thisArg = thisArg;
-        this.index = 0;
-    }
-    FindValueSubscriber.prototype.notifyComplete = function (value) {
-        var destination = this.destination;
-        destination.next(value);
-        destination.complete();
-    };
-    FindValueSubscriber.prototype._next = function (value) {
-        var _a = this, predicate = _a.predicate, thisArg = _a.thisArg;
-        var index = this.index++;
-        try {
-            var result = predicate.call(thisArg || this, value, index, this.source);
-            if (result) {
-                this.notifyComplete(this.yieldIndex ? index : value);
-            }
-        }
-        catch (err) {
-            this.destination.error(err);
-        }
-    };
-    FindValueSubscriber.prototype._complete = function () {
-        this.notifyComplete(this.yieldIndex ? -1 : undefined);
-    };
-    return FindValueSubscriber;
-}(Subscriber_1.Subscriber));
-exports.FindValueSubscriber = FindValueSubscriber;
-//# sourceMappingURL=find.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/findIndex.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var find_1 = __webpack_require__("../../../../rxjs/operators/find.js");
-/**
- * Emits only the index of the first value emitted by the source Observable that
- * meets some condition.
- *
- * <span class="informal">It's like {@link find}, but emits the index of the
- * found value, not the value itself.</span>
- *
- * <img src="./img/findIndex.png" width="100%">
- *
- * `findIndex` searches for the first item in the source Observable that matches
- * the specified condition embodied by the `predicate`, and returns the
- * (zero-based) index of the first occurrence in the source. Unlike
- * {@link first}, the `predicate` is required in `findIndex`, and does not emit
- * an error if a valid value is not found.
- *
- * @example <caption>Emit the index of first click that happens on a DIV element</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks.findIndex(ev => ev.target.tagName === 'DIV');
- * result.subscribe(x => console.log(x));
- *
- * @see {@link filter}
- * @see {@link find}
- * @see {@link first}
- * @see {@link take}
- *
- * @param {function(value: T, index: number, source: Observable<T>): boolean} predicate
- * A function called with each item to test for condition matching.
- * @param {any} [thisArg] An optional argument to determine the value of `this`
- * in the `predicate` function.
- * @return {Observable} An Observable of the index of the first item that
- * matches the condition.
- * @method find
- * @owner Observable
- */
-function findIndex(predicate, thisArg) {
-    return function (source) { return source.lift(new find_1.FindValueOperator(predicate, source, true, thisArg)); };
-}
-exports.findIndex = findIndex;
-//# sourceMappingURL=findIndex.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/groupBy.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var Subscription_1 = __webpack_require__("../../../../rxjs/Subscription.js");
-var Observable_1 = __webpack_require__("../../../../rxjs/Observable.js");
-var Subject_1 = __webpack_require__("../../../../rxjs/Subject.js");
-var Map_1 = __webpack_require__("../../../../rxjs/util/Map.js");
-var FastMap_1 = __webpack_require__("../../../../rxjs/util/FastMap.js");
-/* tslint:enable:max-line-length */
-/**
- * Groups the items emitted by an Observable according to a specified criterion,
- * and emits these grouped items as `GroupedObservables`, one
- * {@link GroupedObservable} per group.
- *
- * <img src="./img/groupBy.png" width="100%">
- *
- * @example <caption>Group objects by id and return as array</caption>
- * Observable.of<Obj>({id: 1, name: 'aze1'},
- *                    {id: 2, name: 'sf2'},
- *                    {id: 2, name: 'dg2'},
- *                    {id: 1, name: 'erg1'},
- *                    {id: 1, name: 'df1'},
- *                    {id: 2, name: 'sfqfb2'},
- *                    {id: 3, name: 'qfs3'},
- *                    {id: 2, name: 'qsgqsfg2'}
- *     )
- *     .groupBy(p => p.id)
- *     .flatMap( (group$) => group$.reduce((acc, cur) => [...acc, cur], []))
- *     .subscribe(p => console.log(p));
- *
- * // displays:
- * // [ { id: 1, name: 'aze1' },
- * //   { id: 1, name: 'erg1' },
- * //   { id: 1, name: 'df1' } ]
- * //
- * // [ { id: 2, name: 'sf2' },
- * //   { id: 2, name: 'dg2' },
- * //   { id: 2, name: 'sfqfb2' },
- * //   { id: 2, name: 'qsgqsfg2' } ]
- * //
- * // [ { id: 3, name: 'qfs3' } ]
- *
- * @example <caption>Pivot data on the id field</caption>
- * Observable.of<Obj>({id: 1, name: 'aze1'},
- *                    {id: 2, name: 'sf2'},
- *                    {id: 2, name: 'dg2'},
- *                    {id: 1, name: 'erg1'},
- *                    {id: 1, name: 'df1'},
- *                    {id: 2, name: 'sfqfb2'},
- *                    {id: 3, name: 'qfs1'},
- *                    {id: 2, name: 'qsgqsfg2'}
- *                   )
- *     .groupBy(p => p.id, p => p.name)
- *     .flatMap( (group$) => group$.reduce((acc, cur) => [...acc, cur], ["" + group$.key]))
- *     .map(arr => ({'id': parseInt(arr[0]), 'values': arr.slice(1)}))
- *     .subscribe(p => console.log(p));
- *
- * // displays:
- * // { id: 1, values: [ 'aze1', 'erg1', 'df1' ] }
- * // { id: 2, values: [ 'sf2', 'dg2', 'sfqfb2', 'qsgqsfg2' ] }
- * // { id: 3, values: [ 'qfs1' ] }
- *
- * @param {function(value: T): K} keySelector A function that extracts the key
- * for each item.
- * @param {function(value: T): R} [elementSelector] A function that extracts the
- * return element for each item.
- * @param {function(grouped: GroupedObservable<K,R>): Observable<any>} [durationSelector]
- * A function that returns an Observable to determine how long each group should
- * exist.
- * @return {Observable<GroupedObservable<K,R>>} An Observable that emits
- * GroupedObservables, each of which corresponds to a unique key value and each
- * of which emits those items from the source Observable that share that key
- * value.
- * @method groupBy
- * @owner Observable
- */
-function groupBy(keySelector, elementSelector, durationSelector, subjectSelector) {
-    return function (source) {
-        return source.lift(new GroupByOperator(keySelector, elementSelector, durationSelector, subjectSelector));
-    };
-}
-exports.groupBy = groupBy;
-var GroupByOperator = (function () {
-    function GroupByOperator(keySelector, elementSelector, durationSelector, subjectSelector) {
-        this.keySelector = keySelector;
-        this.elementSelector = elementSelector;
-        this.durationSelector = durationSelector;
-        this.subjectSelector = subjectSelector;
-    }
-    GroupByOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new GroupBySubscriber(subscriber, this.keySelector, this.elementSelector, this.durationSelector, this.subjectSelector));
-    };
-    return GroupByOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var GroupBySubscriber = (function (_super) {
-    __extends(GroupBySubscriber, _super);
-    function GroupBySubscriber(destination, keySelector, elementSelector, durationSelector, subjectSelector) {
-        _super.call(this, destination);
-        this.keySelector = keySelector;
-        this.elementSelector = elementSelector;
-        this.durationSelector = durationSelector;
-        this.subjectSelector = subjectSelector;
-        this.groups = null;
-        this.attemptedToUnsubscribe = false;
-        this.count = 0;
-    }
-    GroupBySubscriber.prototype._next = function (value) {
-        var key;
-        try {
-            key = this.keySelector(value);
-        }
-        catch (err) {
-            this.error(err);
-            return;
-        }
-        this._group(value, key);
-    };
-    GroupBySubscriber.prototype._group = function (value, key) {
-        var groups = this.groups;
-        if (!groups) {
-            groups = this.groups = typeof key === 'string' ? new FastMap_1.FastMap() : new Map_1.Map();
-        }
-        var group = groups.get(key);
-        var element;
-        if (this.elementSelector) {
-            try {
-                element = this.elementSelector(value);
-            }
-            catch (err) {
-                this.error(err);
-            }
-        }
-        else {
-            element = value;
-        }
-        if (!group) {
-            group = this.subjectSelector ? this.subjectSelector() : new Subject_1.Subject();
-            groups.set(key, group);
-            var groupedObservable = new GroupedObservable(key, group, this);
-            this.destination.next(groupedObservable);
-            if (this.durationSelector) {
-                var duration = void 0;
-                try {
-                    duration = this.durationSelector(new GroupedObservable(key, group));
-                }
-                catch (err) {
-                    this.error(err);
-                    return;
-                }
-                this.add(duration.subscribe(new GroupDurationSubscriber(key, group, this)));
-            }
-        }
-        if (!group.closed) {
-            group.next(element);
-        }
-    };
-    GroupBySubscriber.prototype._error = function (err) {
-        var groups = this.groups;
-        if (groups) {
-            groups.forEach(function (group, key) {
-                group.error(err);
-            });
-            groups.clear();
-        }
-        this.destination.error(err);
-    };
-    GroupBySubscriber.prototype._complete = function () {
-        var groups = this.groups;
-        if (groups) {
-            groups.forEach(function (group, key) {
-                group.complete();
-            });
-            groups.clear();
-        }
-        this.destination.complete();
-    };
-    GroupBySubscriber.prototype.removeGroup = function (key) {
-        this.groups.delete(key);
-    };
-    GroupBySubscriber.prototype.unsubscribe = function () {
-        if (!this.closed) {
-            this.attemptedToUnsubscribe = true;
-            if (this.count === 0) {
-                _super.prototype.unsubscribe.call(this);
-            }
-        }
-    };
-    return GroupBySubscriber;
-}(Subscriber_1.Subscriber));
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var GroupDurationSubscriber = (function (_super) {
-    __extends(GroupDurationSubscriber, _super);
-    function GroupDurationSubscriber(key, group, parent) {
-        _super.call(this, group);
-        this.key = key;
-        this.group = group;
-        this.parent = parent;
-    }
-    GroupDurationSubscriber.prototype._next = function (value) {
-        this.complete();
-    };
-    GroupDurationSubscriber.prototype._unsubscribe = function () {
-        var _a = this, parent = _a.parent, key = _a.key;
-        this.key = this.parent = null;
-        if (parent) {
-            parent.removeGroup(key);
-        }
-    };
-    return GroupDurationSubscriber;
-}(Subscriber_1.Subscriber));
-/**
- * An Observable representing values belonging to the same group represented by
- * a common key. The values emitted by a GroupedObservable come from the source
- * Observable. The common key is available as the field `key` on a
- * GroupedObservable instance.
- *
- * @class GroupedObservable<K, T>
- */
-var GroupedObservable = (function (_super) {
-    __extends(GroupedObservable, _super);
-    function GroupedObservable(key, groupSubject, refCountSubscription) {
-        _super.call(this);
-        this.key = key;
-        this.groupSubject = groupSubject;
-        this.refCountSubscription = refCountSubscription;
-    }
-    GroupedObservable.prototype._subscribe = function (subscriber) {
-        var subscription = new Subscription_1.Subscription();
-        var _a = this, refCountSubscription = _a.refCountSubscription, groupSubject = _a.groupSubject;
-        if (refCountSubscription && !refCountSubscription.closed) {
-            subscription.add(new InnerRefCountSubscription(refCountSubscription));
-        }
-        subscription.add(groupSubject.subscribe(subscriber));
-        return subscription;
-    };
-    return GroupedObservable;
-}(Observable_1.Observable));
-exports.GroupedObservable = GroupedObservable;
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var InnerRefCountSubscription = (function (_super) {
-    __extends(InnerRefCountSubscription, _super);
-    function InnerRefCountSubscription(parent) {
-        _super.call(this);
-        this.parent = parent;
-        parent.count++;
-    }
-    InnerRefCountSubscription.prototype.unsubscribe = function () {
-        var parent = this.parent;
-        if (!parent.closed && !this.closed) {
-            _super.prototype.unsubscribe.call(this);
-            parent.count -= 1;
-            if (parent.count === 0 && parent.attemptedToUnsubscribe) {
-                parent.unsubscribe();
-            }
-        }
-    };
-    return InnerRefCountSubscription;
-}(Subscription_1.Subscription));
-//# sourceMappingURL=groupBy.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/ignoreElements.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var noop_1 = __webpack_require__("../../../../rxjs/util/noop.js");
-/**
- * Ignores all items emitted by the source Observable and only passes calls of `complete` or `error`.
- *
- * <img src="./img/ignoreElements.png" width="100%">
- *
- * @return {Observable} An empty Observable that only calls `complete`
- * or `error`, based on which one is called by the source Observable.
- * @method ignoreElements
- * @owner Observable
- */
-function ignoreElements() {
-    return function ignoreElementsOperatorFunction(source) {
-        return source.lift(new IgnoreElementsOperator());
-    };
-}
-exports.ignoreElements = ignoreElements;
-var IgnoreElementsOperator = (function () {
-    function IgnoreElementsOperator() {
-    }
-    IgnoreElementsOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new IgnoreElementsSubscriber(subscriber));
-    };
-    return IgnoreElementsOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var IgnoreElementsSubscriber = (function (_super) {
-    __extends(IgnoreElementsSubscriber, _super);
-    function IgnoreElementsSubscriber() {
-        _super.apply(this, arguments);
-    }
-    IgnoreElementsSubscriber.prototype._next = function (unused) {
-        noop_1.noop();
-    };
-    return IgnoreElementsSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=ignoreElements.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/index.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var audit_1 = __webpack_require__("../../../../rxjs/operators/audit.js");
-exports.audit = audit_1.audit;
-var auditTime_1 = __webpack_require__("../../../../rxjs/operators/auditTime.js");
-exports.auditTime = auditTime_1.auditTime;
-var buffer_1 = __webpack_require__("../../../../rxjs/operators/buffer.js");
-exports.buffer = buffer_1.buffer;
-var bufferCount_1 = __webpack_require__("../../../../rxjs/operators/bufferCount.js");
-exports.bufferCount = bufferCount_1.bufferCount;
-var bufferTime_1 = __webpack_require__("../../../../rxjs/operators/bufferTime.js");
-exports.bufferTime = bufferTime_1.bufferTime;
-var bufferToggle_1 = __webpack_require__("../../../../rxjs/operators/bufferToggle.js");
-exports.bufferToggle = bufferToggle_1.bufferToggle;
-var bufferWhen_1 = __webpack_require__("../../../../rxjs/operators/bufferWhen.js");
-exports.bufferWhen = bufferWhen_1.bufferWhen;
-var catchError_1 = __webpack_require__("../../../../rxjs/operators/catchError.js");
-exports.catchError = catchError_1.catchError;
-var combineAll_1 = __webpack_require__("../../../../rxjs/operators/combineAll.js");
-exports.combineAll = combineAll_1.combineAll;
-var combineLatest_1 = __webpack_require__("../../../../rxjs/operators/combineLatest.js");
-exports.combineLatest = combineLatest_1.combineLatest;
-var concat_1 = __webpack_require__("../../../../rxjs/operators/concat.js");
-exports.concat = concat_1.concat;
-var concatAll_1 = __webpack_require__("../../../../rxjs/operators/concatAll.js");
-exports.concatAll = concatAll_1.concatAll;
-var concatMap_1 = __webpack_require__("../../../../rxjs/operators/concatMap.js");
-exports.concatMap = concatMap_1.concatMap;
-var concatMapTo_1 = __webpack_require__("../../../../rxjs/operators/concatMapTo.js");
-exports.concatMapTo = concatMapTo_1.concatMapTo;
-var count_1 = __webpack_require__("../../../../rxjs/operators/count.js");
-exports.count = count_1.count;
-var debounce_1 = __webpack_require__("../../../../rxjs/operators/debounce.js");
-exports.debounce = debounce_1.debounce;
-var debounceTime_1 = __webpack_require__("../../../../rxjs/operators/debounceTime.js");
-exports.debounceTime = debounceTime_1.debounceTime;
-var defaultIfEmpty_1 = __webpack_require__("../../../../rxjs/operators/defaultIfEmpty.js");
-exports.defaultIfEmpty = defaultIfEmpty_1.defaultIfEmpty;
-var delay_1 = __webpack_require__("../../../../rxjs/operators/delay.js");
-exports.delay = delay_1.delay;
-var delayWhen_1 = __webpack_require__("../../../../rxjs/operators/delayWhen.js");
-exports.delayWhen = delayWhen_1.delayWhen;
-var dematerialize_1 = __webpack_require__("../../../../rxjs/operators/dematerialize.js");
-exports.dematerialize = dematerialize_1.dematerialize;
-var distinct_1 = __webpack_require__("../../../../rxjs/operators/distinct.js");
-exports.distinct = distinct_1.distinct;
-var distinctUntilChanged_1 = __webpack_require__("../../../../rxjs/operators/distinctUntilChanged.js");
-exports.distinctUntilChanged = distinctUntilChanged_1.distinctUntilChanged;
-var distinctUntilKeyChanged_1 = __webpack_require__("../../../../rxjs/operators/distinctUntilKeyChanged.js");
-exports.distinctUntilKeyChanged = distinctUntilKeyChanged_1.distinctUntilKeyChanged;
-var elementAt_1 = __webpack_require__("../../../../rxjs/operators/elementAt.js");
-exports.elementAt = elementAt_1.elementAt;
-var every_1 = __webpack_require__("../../../../rxjs/operators/every.js");
-exports.every = every_1.every;
-var exhaust_1 = __webpack_require__("../../../../rxjs/operators/exhaust.js");
-exports.exhaust = exhaust_1.exhaust;
-var exhaustMap_1 = __webpack_require__("../../../../rxjs/operators/exhaustMap.js");
-exports.exhaustMap = exhaustMap_1.exhaustMap;
-var expand_1 = __webpack_require__("../../../../rxjs/operators/expand.js");
-exports.expand = expand_1.expand;
-var filter_1 = __webpack_require__("../../../../rxjs/operators/filter.js");
-exports.filter = filter_1.filter;
-var finalize_1 = __webpack_require__("../../../../rxjs/operators/finalize.js");
-exports.finalize = finalize_1.finalize;
-var find_1 = __webpack_require__("../../../../rxjs/operators/find.js");
-exports.find = find_1.find;
-var findIndex_1 = __webpack_require__("../../../../rxjs/operators/findIndex.js");
-exports.findIndex = findIndex_1.findIndex;
-var first_1 = __webpack_require__("../../../../rxjs/operators/first.js");
-exports.first = first_1.first;
-var groupBy_1 = __webpack_require__("../../../../rxjs/operators/groupBy.js");
-exports.groupBy = groupBy_1.groupBy;
-var ignoreElements_1 = __webpack_require__("../../../../rxjs/operators/ignoreElements.js");
-exports.ignoreElements = ignoreElements_1.ignoreElements;
-var isEmpty_1 = __webpack_require__("../../../../rxjs/operators/isEmpty.js");
-exports.isEmpty = isEmpty_1.isEmpty;
-var last_1 = __webpack_require__("../../../../rxjs/operators/last.js");
-exports.last = last_1.last;
-var map_1 = __webpack_require__("../../../../rxjs/operators/map.js");
-exports.map = map_1.map;
-var mapTo_1 = __webpack_require__("../../../../rxjs/operators/mapTo.js");
-exports.mapTo = mapTo_1.mapTo;
-var materialize_1 = __webpack_require__("../../../../rxjs/operators/materialize.js");
-exports.materialize = materialize_1.materialize;
-var max_1 = __webpack_require__("../../../../rxjs/operators/max.js");
-exports.max = max_1.max;
-var merge_1 = __webpack_require__("../../../../rxjs/operators/merge.js");
-exports.merge = merge_1.merge;
-var mergeAll_1 = __webpack_require__("../../../../rxjs/operators/mergeAll.js");
-exports.mergeAll = mergeAll_1.mergeAll;
-var mergeMap_1 = __webpack_require__("../../../../rxjs/operators/mergeMap.js");
-exports.mergeMap = mergeMap_1.mergeMap;
-var mergeMap_2 = __webpack_require__("../../../../rxjs/operators/mergeMap.js");
-exports.flatMap = mergeMap_2.mergeMap;
-var mergeMapTo_1 = __webpack_require__("../../../../rxjs/operators/mergeMapTo.js");
-exports.mergeMapTo = mergeMapTo_1.mergeMapTo;
-var mergeScan_1 = __webpack_require__("../../../../rxjs/operators/mergeScan.js");
-exports.mergeScan = mergeScan_1.mergeScan;
-var min_1 = __webpack_require__("../../../../rxjs/operators/min.js");
-exports.min = min_1.min;
-var multicast_1 = __webpack_require__("../../../../rxjs/operators/multicast.js");
-exports.multicast = multicast_1.multicast;
-var observeOn_1 = __webpack_require__("../../../../rxjs/operators/observeOn.js");
-exports.observeOn = observeOn_1.observeOn;
-var onErrorResumeNext_1 = __webpack_require__("../../../../rxjs/operators/onErrorResumeNext.js");
-exports.onErrorResumeNext = onErrorResumeNext_1.onErrorResumeNext;
-var pairwise_1 = __webpack_require__("../../../../rxjs/operators/pairwise.js");
-exports.pairwise = pairwise_1.pairwise;
-var partition_1 = __webpack_require__("../../../../rxjs/operators/partition.js");
-exports.partition = partition_1.partition;
-var pluck_1 = __webpack_require__("../../../../rxjs/operators/pluck.js");
-exports.pluck = pluck_1.pluck;
-var publish_1 = __webpack_require__("../../../../rxjs/operators/publish.js");
-exports.publish = publish_1.publish;
-var publishBehavior_1 = __webpack_require__("../../../../rxjs/operators/publishBehavior.js");
-exports.publishBehavior = publishBehavior_1.publishBehavior;
-var publishLast_1 = __webpack_require__("../../../../rxjs/operators/publishLast.js");
-exports.publishLast = publishLast_1.publishLast;
-var publishReplay_1 = __webpack_require__("../../../../rxjs/operators/publishReplay.js");
-exports.publishReplay = publishReplay_1.publishReplay;
-var race_1 = __webpack_require__("../../../../rxjs/operators/race.js");
-exports.race = race_1.race;
-var reduce_1 = __webpack_require__("../../../../rxjs/operators/reduce.js");
-exports.reduce = reduce_1.reduce;
-var repeat_1 = __webpack_require__("../../../../rxjs/operators/repeat.js");
-exports.repeat = repeat_1.repeat;
-var repeatWhen_1 = __webpack_require__("../../../../rxjs/operators/repeatWhen.js");
-exports.repeatWhen = repeatWhen_1.repeatWhen;
-var retry_1 = __webpack_require__("../../../../rxjs/operators/retry.js");
-exports.retry = retry_1.retry;
-var retryWhen_1 = __webpack_require__("../../../../rxjs/operators/retryWhen.js");
-exports.retryWhen = retryWhen_1.retryWhen;
-var refCount_1 = __webpack_require__("../../../../rxjs/operators/refCount.js");
-exports.refCount = refCount_1.refCount;
-var sample_1 = __webpack_require__("../../../../rxjs/operators/sample.js");
-exports.sample = sample_1.sample;
-var sampleTime_1 = __webpack_require__("../../../../rxjs/operators/sampleTime.js");
-exports.sampleTime = sampleTime_1.sampleTime;
-var scan_1 = __webpack_require__("../../../../rxjs/operators/scan.js");
-exports.scan = scan_1.scan;
-var sequenceEqual_1 = __webpack_require__("../../../../rxjs/operators/sequenceEqual.js");
-exports.sequenceEqual = sequenceEqual_1.sequenceEqual;
-var share_1 = __webpack_require__("../../../../rxjs/operators/share.js");
-exports.share = share_1.share;
-var shareReplay_1 = __webpack_require__("../../../../rxjs/operators/shareReplay.js");
-exports.shareReplay = shareReplay_1.shareReplay;
-var single_1 = __webpack_require__("../../../../rxjs/operators/single.js");
-exports.single = single_1.single;
-var skip_1 = __webpack_require__("../../../../rxjs/operators/skip.js");
-exports.skip = skip_1.skip;
-var skipLast_1 = __webpack_require__("../../../../rxjs/operators/skipLast.js");
-exports.skipLast = skipLast_1.skipLast;
-var skipUntil_1 = __webpack_require__("../../../../rxjs/operators/skipUntil.js");
-exports.skipUntil = skipUntil_1.skipUntil;
-var skipWhile_1 = __webpack_require__("../../../../rxjs/operators/skipWhile.js");
-exports.skipWhile = skipWhile_1.skipWhile;
-var startWith_1 = __webpack_require__("../../../../rxjs/operators/startWith.js");
-exports.startWith = startWith_1.startWith;
-/**
- * TODO(https://github.com/ReactiveX/rxjs/issues/2900): Add back subscribeOn once it can be
- * treeshaken. Currently if this export is added back, it
- * forces apps to bring in asap scheduler along with
- * Immediate, root, and other supporting code.
- */
-// export { subscribeOn } from './subscribeOn';
-var switchAll_1 = __webpack_require__("../../../../rxjs/operators/switchAll.js");
-exports.switchAll = switchAll_1.switchAll;
-var switchMap_1 = __webpack_require__("../../../../rxjs/operators/switchMap.js");
-exports.switchMap = switchMap_1.switchMap;
-var switchMapTo_1 = __webpack_require__("../../../../rxjs/operators/switchMapTo.js");
-exports.switchMapTo = switchMapTo_1.switchMapTo;
-var take_1 = __webpack_require__("../../../../rxjs/operators/take.js");
-exports.take = take_1.take;
-var takeLast_1 = __webpack_require__("../../../../rxjs/operators/takeLast.js");
-exports.takeLast = takeLast_1.takeLast;
-var takeUntil_1 = __webpack_require__("../../../../rxjs/operators/takeUntil.js");
-exports.takeUntil = takeUntil_1.takeUntil;
-var takeWhile_1 = __webpack_require__("../../../../rxjs/operators/takeWhile.js");
-exports.takeWhile = takeWhile_1.takeWhile;
-var tap_1 = __webpack_require__("../../../../rxjs/operators/tap.js");
-exports.tap = tap_1.tap;
-var throttle_1 = __webpack_require__("../../../../rxjs/operators/throttle.js");
-exports.throttle = throttle_1.throttle;
-var throttleTime_1 = __webpack_require__("../../../../rxjs/operators/throttleTime.js");
-exports.throttleTime = throttleTime_1.throttleTime;
-var timeInterval_1 = __webpack_require__("../../../../rxjs/operators/timeInterval.js");
-exports.timeInterval = timeInterval_1.timeInterval;
-var timeout_1 = __webpack_require__("../../../../rxjs/operators/timeout.js");
-exports.timeout = timeout_1.timeout;
-var timeoutWith_1 = __webpack_require__("../../../../rxjs/operators/timeoutWith.js");
-exports.timeoutWith = timeoutWith_1.timeoutWith;
-var timestamp_1 = __webpack_require__("../../../../rxjs/operators/timestamp.js");
-exports.timestamp = timestamp_1.timestamp;
-var toArray_1 = __webpack_require__("../../../../rxjs/operators/toArray.js");
-exports.toArray = toArray_1.toArray;
-var window_1 = __webpack_require__("../../../../rxjs/operators/window.js");
-exports.window = window_1.window;
-var windowCount_1 = __webpack_require__("../../../../rxjs/operators/windowCount.js");
-exports.windowCount = windowCount_1.windowCount;
-var windowTime_1 = __webpack_require__("../../../../rxjs/operators/windowTime.js");
-exports.windowTime = windowTime_1.windowTime;
-var windowToggle_1 = __webpack_require__("../../../../rxjs/operators/windowToggle.js");
-exports.windowToggle = windowToggle_1.windowToggle;
-var windowWhen_1 = __webpack_require__("../../../../rxjs/operators/windowWhen.js");
-exports.windowWhen = windowWhen_1.windowWhen;
-var withLatestFrom_1 = __webpack_require__("../../../../rxjs/operators/withLatestFrom.js");
-exports.withLatestFrom = withLatestFrom_1.withLatestFrom;
-var zip_1 = __webpack_require__("../../../../rxjs/operators/zip.js");
-exports.zip = zip_1.zip;
-var zipAll_1 = __webpack_require__("../../../../rxjs/operators/zipAll.js");
-exports.zipAll = zipAll_1.zipAll;
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/isEmpty.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-function isEmpty() {
-    return function (source) { return source.lift(new IsEmptyOperator()); };
-}
-exports.isEmpty = isEmpty;
-var IsEmptyOperator = (function () {
-    function IsEmptyOperator() {
-    }
-    IsEmptyOperator.prototype.call = function (observer, source) {
-        return source.subscribe(new IsEmptySubscriber(observer));
-    };
-    return IsEmptyOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var IsEmptySubscriber = (function (_super) {
-    __extends(IsEmptySubscriber, _super);
-    function IsEmptySubscriber(destination) {
-        _super.call(this, destination);
-    }
-    IsEmptySubscriber.prototype.notifyComplete = function (isEmpty) {
-        var destination = this.destination;
-        destination.next(isEmpty);
-        destination.complete();
-    };
-    IsEmptySubscriber.prototype._next = function (value) {
-        this.notifyComplete(false);
-    };
-    IsEmptySubscriber.prototype._complete = function () {
-        this.notifyComplete(true);
-    };
-    return IsEmptySubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=isEmpty.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/mapTo.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-/**
- * Emits the given constant value on the output Observable every time the source
- * Observable emits a value.
- *
- * <span class="informal">Like {@link map}, but it maps every source value to
- * the same output value every time.</span>
- *
- * <img src="./img/mapTo.png" width="100%">
- *
- * Takes a constant `value` as argument, and emits that whenever the source
- * Observable emits a value. In other words, ignores the actual source value,
- * and simply uses the emission moment to know when to emit the given `value`.
- *
- * @example <caption>Map every click to the string 'Hi'</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var greetings = clicks.mapTo('Hi');
- * greetings.subscribe(x => console.log(x));
- *
- * @see {@link map}
- *
- * @param {any} value The value to map each source value to.
- * @return {Observable} An Observable that emits the given `value` every time
- * the source Observable emits something.
- * @method mapTo
- * @owner Observable
- */
-function mapTo(value) {
-    return function (source) { return source.lift(new MapToOperator(value)); };
-}
-exports.mapTo = mapTo;
-var MapToOperator = (function () {
-    function MapToOperator(value) {
-        this.value = value;
-    }
-    MapToOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new MapToSubscriber(subscriber, this.value));
-    };
-    return MapToOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var MapToSubscriber = (function (_super) {
-    __extends(MapToSubscriber, _super);
-    function MapToSubscriber(destination, value) {
-        _super.call(this, destination);
-        this.value = value;
-    }
-    MapToSubscriber.prototype._next = function (x) {
-        this.destination.next(this.value);
-    };
-    return MapToSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=mapTo.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/materialize.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var Notification_1 = __webpack_require__("../../../../rxjs/Notification.js");
-/**
- * Represents all of the notifications from the source Observable as `next`
- * emissions marked with their original types within {@link Notification}
- * objects.
- *
- * <span class="informal">Wraps `next`, `error` and `complete` emissions in
- * {@link Notification} objects, emitted as `next` on the output Observable.
- * </span>
- *
- * <img src="./img/materialize.png" width="100%">
- *
- * `materialize` returns an Observable that emits a `next` notification for each
- * `next`, `error`, or `complete` emission of the source Observable. When the
- * source Observable emits `complete`, the output Observable will emit `next` as
- * a Notification of type "complete", and then it will emit `complete` as well.
- * When the source Observable emits `error`, the output will emit `next` as a
- * Notification of type "error", and then `complete`.
- *
- * This operator is useful for producing metadata of the source Observable, to
- * be consumed as `next` emissions. Use it in conjunction with
- * {@link dematerialize}.
- *
- * @example <caption>Convert a faulty Observable to an Observable of Notifications</caption>
- * var letters = Rx.Observable.of('a', 'b', 13, 'd');
- * var upperCase = letters.map(x => x.toUpperCase());
- * var materialized = upperCase.materialize();
- * materialized.subscribe(x => console.log(x));
- *
- * // Results in the following:
- * // - Notification {kind: "N", value: "A", error: undefined, hasValue: true}
- * // - Notification {kind: "N", value: "B", error: undefined, hasValue: true}
- * // - Notification {kind: "E", value: undefined, error: TypeError:
- * //   x.toUpperCase is not a function at MapSubscriber.letters.map.x
- * //   [as project] (http://1…, hasValue: false}
- *
- * @see {@link Notification}
- * @see {@link dematerialize}
- *
- * @return {Observable<Notification<T>>} An Observable that emits
- * {@link Notification} objects that wrap the original emissions from the source
- * Observable with metadata.
- * @method materialize
- * @owner Observable
- */
-function materialize() {
-    return function materializeOperatorFunction(source) {
-        return source.lift(new MaterializeOperator());
-    };
-}
-exports.materialize = materialize;
-var MaterializeOperator = (function () {
-    function MaterializeOperator() {
-    }
-    MaterializeOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new MaterializeSubscriber(subscriber));
-    };
-    return MaterializeOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var MaterializeSubscriber = (function (_super) {
-    __extends(MaterializeSubscriber, _super);
-    function MaterializeSubscriber(destination) {
-        _super.call(this, destination);
-    }
-    MaterializeSubscriber.prototype._next = function (value) {
-        this.destination.next(Notification_1.Notification.createNext(value));
-    };
-    MaterializeSubscriber.prototype._error = function (err) {
-        var destination = this.destination;
-        destination.next(Notification_1.Notification.createError(err));
-        destination.complete();
-    };
-    MaterializeSubscriber.prototype._complete = function () {
-        var destination = this.destination;
-        destination.next(Notification_1.Notification.createComplete());
-        destination.complete();
-    };
-    return MaterializeSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=materialize.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/max.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var reduce_1 = __webpack_require__("../../../../rxjs/operators/reduce.js");
-/**
- * The Max operator operates on an Observable that emits numbers (or items that can be compared with a provided function),
- * and when source Observable completes it emits a single item: the item with the largest value.
- *
- * <img src="./img/max.png" width="100%">
- *
- * @example <caption>Get the maximal value of a series of numbers</caption>
- * Rx.Observable.of(5, 4, 7, 2, 8)
- *   .max()
- *   .subscribe(x => console.log(x)); // -> 8
- *
- * @example <caption>Use a comparer function to get the maximal item</caption>
- * interface Person {
- *   age: number,
- *   name: string
- * }
- * Observable.of<Person>({age: 7, name: 'Foo'},
- *                       {age: 5, name: 'Bar'},
- *                       {age: 9, name: 'Beer'})
- *           .max<Person>((a: Person, b: Person) => a.age < b.age ? -1 : 1)
- *           .subscribe((x: Person) => console.log(x.name)); // -> 'Beer'
- * }
- *
- * @see {@link min}
- *
- * @param {Function} [comparer] - Optional comparer function that it will use instead of its default to compare the
- * value of two items.
- * @return {Observable} An Observable that emits item with the largest value.
- * @method max
- * @owner Observable
- */
-function max(comparer) {
-    var max = (typeof comparer === 'function')
-        ? function (x, y) { return comparer(x, y) > 0 ? x : y; }
-        : function (x, y) { return x > y ? x : y; };
-    return reduce_1.reduce(max);
-}
-exports.max = max;
-//# sourceMappingURL=max.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/mergeMapTo.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/* tslint:enable:max-line-length */
-/**
- * Projects each source value to the same Observable which is merged multiple
- * times in the output Observable.
- *
- * <span class="informal">It's like {@link mergeMap}, but maps each value always
- * to the same inner Observable.</span>
- *
- * <img src="./img/mergeMapTo.png" width="100%">
- *
- * Maps each source value to the given Observable `innerObservable` regardless
- * of the source value, and then merges those resulting Observables into one
- * single Observable, which is the output Observable.
- *
- * @example <caption>For each click event, start an interval Observable ticking every 1 second</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks.mergeMapTo(Rx.Observable.interval(1000));
- * result.subscribe(x => console.log(x));
- *
- * @see {@link concatMapTo}
- * @see {@link merge}
- * @see {@link mergeAll}
- * @see {@link mergeMap}
- * @see {@link mergeScan}
- * @see {@link switchMapTo}
- *
- * @param {ObservableInput} innerObservable An Observable to replace each value from
- * the source Observable.
- * @param {function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any} [resultSelector]
- * A function to produce the value on the output Observable based on the values
- * and the indices of the source (outer) emission and the inner Observable
- * emission. The arguments passed to this function are:
- * - `outerValue`: the value that came from the source
- * - `innerValue`: the value that came from the projected Observable
- * - `outerIndex`: the "index" of the value that came from the source
- * - `innerIndex`: the "index" of the value from the projected Observable
- * @param {number} [concurrent=Number.POSITIVE_INFINITY] Maximum number of input
- * Observables being subscribed to concurrently.
- * @return {Observable} An Observable that emits items from the given
- * `innerObservable` (and optionally transformed through `resultSelector`) every
- * time a value is emitted on the source Observable.
- * @method mergeMapTo
- * @owner Observable
- */
-function mergeMapTo(innerObservable, resultSelector, concurrent) {
-    if (concurrent === void 0) { concurrent = Number.POSITIVE_INFINITY; }
-    if (typeof resultSelector === 'number') {
-        concurrent = resultSelector;
-        resultSelector = null;
-    }
-    return function (source) { return source.lift(new MergeMapToOperator(innerObservable, resultSelector, concurrent)); };
-}
-exports.mergeMapTo = mergeMapTo;
-// TODO: Figure out correct signature here: an Operator<Observable<T>, R>
-//       needs to implement call(observer: Subscriber<R>): Subscriber<Observable<T>>
-var MergeMapToOperator = (function () {
-    function MergeMapToOperator(ish, resultSelector, concurrent) {
-        if (concurrent === void 0) { concurrent = Number.POSITIVE_INFINITY; }
-        this.ish = ish;
-        this.resultSelector = resultSelector;
-        this.concurrent = concurrent;
-    }
-    MergeMapToOperator.prototype.call = function (observer, source) {
-        return source.subscribe(new MergeMapToSubscriber(observer, this.ish, this.resultSelector, this.concurrent));
-    };
-    return MergeMapToOperator;
-}());
-exports.MergeMapToOperator = MergeMapToOperator;
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var MergeMapToSubscriber = (function (_super) {
-    __extends(MergeMapToSubscriber, _super);
-    function MergeMapToSubscriber(destination, ish, resultSelector, concurrent) {
-        if (concurrent === void 0) { concurrent = Number.POSITIVE_INFINITY; }
-        _super.call(this, destination);
-        this.ish = ish;
-        this.resultSelector = resultSelector;
-        this.concurrent = concurrent;
-        this.hasCompleted = false;
-        this.buffer = [];
-        this.active = 0;
-        this.index = 0;
-    }
-    MergeMapToSubscriber.prototype._next = function (value) {
-        if (this.active < this.concurrent) {
-            var resultSelector = this.resultSelector;
-            var index = this.index++;
-            var ish = this.ish;
-            var destination = this.destination;
-            this.active++;
-            this._innerSub(ish, destination, resultSelector, value, index);
-        }
-        else {
-            this.buffer.push(value);
-        }
-    };
-    MergeMapToSubscriber.prototype._innerSub = function (ish, destination, resultSelector, value, index) {
-        this.add(subscribeToResult_1.subscribeToResult(this, ish, value, index));
-    };
-    MergeMapToSubscriber.prototype._complete = function () {
-        this.hasCompleted = true;
-        if (this.active === 0 && this.buffer.length === 0) {
-            this.destination.complete();
-        }
-    };
-    MergeMapToSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        var _a = this, resultSelector = _a.resultSelector, destination = _a.destination;
-        if (resultSelector) {
-            this.trySelectResult(outerValue, innerValue, outerIndex, innerIndex);
-        }
-        else {
-            destination.next(innerValue);
-        }
-    };
-    MergeMapToSubscriber.prototype.trySelectResult = function (outerValue, innerValue, outerIndex, innerIndex) {
-        var _a = this, resultSelector = _a.resultSelector, destination = _a.destination;
-        var result;
-        try {
-            result = resultSelector(outerValue, innerValue, outerIndex, innerIndex);
-        }
-        catch (err) {
-            destination.error(err);
-            return;
-        }
-        destination.next(result);
-    };
-    MergeMapToSubscriber.prototype.notifyError = function (err) {
-        this.destination.error(err);
-    };
-    MergeMapToSubscriber.prototype.notifyComplete = function (innerSub) {
-        var buffer = this.buffer;
-        this.remove(innerSub);
-        this.active--;
-        if (buffer.length > 0) {
-            this._next(buffer.shift());
-        }
-        else if (this.active === 0 && this.hasCompleted) {
-            this.destination.complete();
-        }
-    };
-    return MergeMapToSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-exports.MergeMapToSubscriber = MergeMapToSubscriber;
-//# sourceMappingURL=mergeMapTo.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/mergeScan.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var tryCatch_1 = __webpack_require__("../../../../rxjs/util/tryCatch.js");
-var errorObject_1 = __webpack_require__("../../../../rxjs/util/errorObject.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-/**
- * Applies an accumulator function over the source Observable where the
- * accumulator function itself returns an Observable, then each intermediate
- * Observable returned is merged into the output Observable.
- *
- * <span class="informal">It's like {@link scan}, but the Observables returned
- * by the accumulator are merged into the outer Observable.</span>
- *
- * @example <caption>Count the number of click events</caption>
- * const click$ = Rx.Observable.fromEvent(document, 'click');
- * const one$ = click$.mapTo(1);
- * const seed = 0;
- * const count$ = one$.mergeScan((acc, one) => Rx.Observable.of(acc + one), seed);
- * count$.subscribe(x => console.log(x));
- *
- * // Results:
- * 1
- * 2
- * 3
- * 4
- * // ...and so on for each click
- *
- * @param {function(acc: R, value: T): Observable<R>} accumulator
- * The accumulator function called on each source value.
- * @param seed The initial accumulation value.
- * @param {number} [concurrent=Number.POSITIVE_INFINITY] Maximum number of
- * input Observables being subscribed to concurrently.
- * @return {Observable<R>} An observable of the accumulated values.
- * @method mergeScan
- * @owner Observable
- */
-function mergeScan(accumulator, seed, concurrent) {
-    if (concurrent === void 0) { concurrent = Number.POSITIVE_INFINITY; }
-    return function (source) { return source.lift(new MergeScanOperator(accumulator, seed, concurrent)); };
-}
-exports.mergeScan = mergeScan;
-var MergeScanOperator = (function () {
-    function MergeScanOperator(accumulator, seed, concurrent) {
-        this.accumulator = accumulator;
-        this.seed = seed;
-        this.concurrent = concurrent;
-    }
-    MergeScanOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new MergeScanSubscriber(subscriber, this.accumulator, this.seed, this.concurrent));
-    };
-    return MergeScanOperator;
-}());
-exports.MergeScanOperator = MergeScanOperator;
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var MergeScanSubscriber = (function (_super) {
-    __extends(MergeScanSubscriber, _super);
-    function MergeScanSubscriber(destination, accumulator, acc, concurrent) {
-        _super.call(this, destination);
-        this.accumulator = accumulator;
-        this.acc = acc;
-        this.concurrent = concurrent;
-        this.hasValue = false;
-        this.hasCompleted = false;
-        this.buffer = [];
-        this.active = 0;
-        this.index = 0;
-    }
-    MergeScanSubscriber.prototype._next = function (value) {
-        if (this.active < this.concurrent) {
-            var index = this.index++;
-            var ish = tryCatch_1.tryCatch(this.accumulator)(this.acc, value);
-            var destination = this.destination;
-            if (ish === errorObject_1.errorObject) {
-                destination.error(errorObject_1.errorObject.e);
-            }
-            else {
-                this.active++;
-                this._innerSub(ish, value, index);
-            }
-        }
-        else {
-            this.buffer.push(value);
-        }
-    };
-    MergeScanSubscriber.prototype._innerSub = function (ish, value, index) {
-        this.add(subscribeToResult_1.subscribeToResult(this, ish, value, index));
-    };
-    MergeScanSubscriber.prototype._complete = function () {
-        this.hasCompleted = true;
-        if (this.active === 0 && this.buffer.length === 0) {
-            if (this.hasValue === false) {
-                this.destination.next(this.acc);
-            }
-            this.destination.complete();
-        }
-    };
-    MergeScanSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        var destination = this.destination;
-        this.acc = innerValue;
-        this.hasValue = true;
-        destination.next(innerValue);
-    };
-    MergeScanSubscriber.prototype.notifyComplete = function (innerSub) {
-        var buffer = this.buffer;
-        this.remove(innerSub);
-        this.active--;
-        if (buffer.length > 0) {
-            this._next(buffer.shift());
-        }
-        else if (this.active === 0 && this.hasCompleted) {
-            if (this.hasValue === false) {
-                this.destination.next(this.acc);
-            }
-            this.destination.complete();
-        }
-    };
-    return MergeScanSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-exports.MergeScanSubscriber = MergeScanSubscriber;
-//# sourceMappingURL=mergeScan.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/min.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var reduce_1 = __webpack_require__("../../../../rxjs/operators/reduce.js");
-/**
- * The Min operator operates on an Observable that emits numbers (or items that can be compared with a provided function),
- * and when source Observable completes it emits a single item: the item with the smallest value.
- *
- * <img src="./img/min.png" width="100%">
- *
- * @example <caption>Get the minimal value of a series of numbers</caption>
- * Rx.Observable.of(5, 4, 7, 2, 8)
- *   .min()
- *   .subscribe(x => console.log(x)); // -> 2
- *
- * @example <caption>Use a comparer function to get the minimal item</caption>
- * interface Person {
- *   age: number,
- *   name: string
- * }
- * Observable.of<Person>({age: 7, name: 'Foo'},
- *                       {age: 5, name: 'Bar'},
- *                       {age: 9, name: 'Beer'})
- *           .min<Person>( (a: Person, b: Person) => a.age < b.age ? -1 : 1)
- *           .subscribe((x: Person) => console.log(x.name)); // -> 'Bar'
- * }
- *
- * @see {@link max}
- *
- * @param {Function} [comparer] - Optional comparer function that it will use instead of its default to compare the
- * value of two items.
- * @return {Observable<R>} An Observable that emits item with the smallest value.
- * @method min
- * @owner Observable
- */
-function min(comparer) {
-    var min = (typeof comparer === 'function')
-        ? function (x, y) { return comparer(x, y) < 0 ? x : y; }
-        : function (x, y) { return x < y ? x : y; };
-    return reduce_1.reduce(min);
-}
-exports.min = min;
-//# sourceMappingURL=min.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/onErrorResumeNext.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var FromObservable_1 = __webpack_require__("../../../../rxjs/observable/FromObservable.js");
-var isArray_1 = __webpack_require__("../../../../rxjs/util/isArray.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/* tslint:enable:max-line-length */
-/**
- * When any of the provided Observable emits an complete or error notification, it immediately subscribes to the next one
- * that was passed.
- *
- * <span class="informal">Execute series of Observables no matter what, even if it means swallowing errors.</span>
- *
- * <img src="./img/onErrorResumeNext.png" width="100%">
- *
- * `onErrorResumeNext` is an operator that accepts a series of Observables, provided either directly as
- * arguments or as an array. If no single Observable is provided, returned Observable will simply behave the same
- * as the source.
- *
- * `onErrorResumeNext` returns an Observable that starts by subscribing and re-emitting values from the source Observable.
- * When its stream of values ends - no matter if Observable completed or emitted an error - `onErrorResumeNext`
- * will subscribe to the first Observable that was passed as an argument to the method. It will start re-emitting
- * its values as well and - again - when that stream ends, `onErrorResumeNext` will proceed to subscribing yet another
- * Observable in provided series, no matter if previous Observable completed or ended with an error. This will
- * be happening until there is no more Observables left in the series, at which point returned Observable will
- * complete - even if the last subscribed stream ended with an error.
- *
- * `onErrorResumeNext` can be therefore thought of as version of {@link concat} operator, which is more permissive
- * when it comes to the errors emitted by its input Observables. While `concat` subscribes to the next Observable
- * in series only if previous one successfully completed, `onErrorResumeNext` subscribes even if it ended with
- * an error.
- *
- * Note that you do not get any access to errors emitted by the Observables. In particular do not
- * expect these errors to appear in error callback passed to {@link subscribe}. If you want to take
- * specific actions based on what error was emitted by an Observable, you should try out {@link catch} instead.
- *
- *
- * @example <caption>Subscribe to the next Observable after map fails</caption>
- * Rx.Observable.of(1, 2, 3, 0)
- *   .map(x => {
- *       if (x === 0) { throw Error(); }
-         return 10 / x;
- *   })
- *   .onErrorResumeNext(Rx.Observable.of(1, 2, 3))
- *   .subscribe(
- *     val => console.log(val),
- *     err => console.log(err),          // Will never be called.
- *     () => console.log('that\'s it!')
- *   );
- *
- * // Logs:
- * // 10
- * // 5
- * // 3.3333333333333335
- * // 1
- * // 2
- * // 3
- * // "that's it!"
- *
- * @see {@link concat}
- * @see {@link catch}
- *
- * @param {...ObservableInput} observables Observables passed either directly or as an array.
- * @return {Observable} An Observable that emits values from source Observable, but - if it errors - subscribes
- * to the next passed Observable and so on, until it completes or runs out of Observables.
- * @method onErrorResumeNext
- * @owner Observable
- */
-function onErrorResumeNext() {
-    var nextSources = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        nextSources[_i - 0] = arguments[_i];
-    }
-    if (nextSources.length === 1 && isArray_1.isArray(nextSources[0])) {
-        nextSources = nextSources[0];
-    }
-    return function (source) { return source.lift(new OnErrorResumeNextOperator(nextSources)); };
-}
-exports.onErrorResumeNext = onErrorResumeNext;
-/* tslint:enable:max-line-length */
-function onErrorResumeNextStatic() {
-    var nextSources = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        nextSources[_i - 0] = arguments[_i];
-    }
-    var source = null;
-    if (nextSources.length === 1 && isArray_1.isArray(nextSources[0])) {
-        nextSources = nextSources[0];
-    }
-    source = nextSources.shift();
-    return new FromObservable_1.FromObservable(source, null).lift(new OnErrorResumeNextOperator(nextSources));
-}
-exports.onErrorResumeNextStatic = onErrorResumeNextStatic;
-var OnErrorResumeNextOperator = (function () {
-    function OnErrorResumeNextOperator(nextSources) {
-        this.nextSources = nextSources;
-    }
-    OnErrorResumeNextOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new OnErrorResumeNextSubscriber(subscriber, this.nextSources));
-    };
-    return OnErrorResumeNextOperator;
-}());
-var OnErrorResumeNextSubscriber = (function (_super) {
-    __extends(OnErrorResumeNextSubscriber, _super);
-    function OnErrorResumeNextSubscriber(destination, nextSources) {
-        _super.call(this, destination);
-        this.destination = destination;
-        this.nextSources = nextSources;
-    }
-    OnErrorResumeNextSubscriber.prototype.notifyError = function (error, innerSub) {
-        this.subscribeToNextSource();
-    };
-    OnErrorResumeNextSubscriber.prototype.notifyComplete = function (innerSub) {
-        this.subscribeToNextSource();
-    };
-    OnErrorResumeNextSubscriber.prototype._error = function (err) {
-        this.subscribeToNextSource();
-    };
-    OnErrorResumeNextSubscriber.prototype._complete = function () {
-        this.subscribeToNextSource();
-    };
-    OnErrorResumeNextSubscriber.prototype.subscribeToNextSource = function () {
-        var next = this.nextSources.shift();
-        if (next) {
-            this.add(subscribeToResult_1.subscribeToResult(this, next));
-        }
-        else {
-            this.destination.complete();
-        }
-    };
-    return OnErrorResumeNextSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=onErrorResumeNext.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/pairwise.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-/**
- * Groups pairs of consecutive emissions together and emits them as an array of
- * two values.
- *
- * <span class="informal">Puts the current value and previous value together as
- * an array, and emits that.</span>
- *
- * <img src="./img/pairwise.png" width="100%">
- *
- * The Nth emission from the source Observable will cause the output Observable
- * to emit an array [(N-1)th, Nth] of the previous and the current value, as a
- * pair. For this reason, `pairwise` emits on the second and subsequent
- * emissions from the source Observable, but not on the first emission, because
- * there is no previous value in that case.
- *
- * @example <caption>On every click (starting from the second), emit the relative distance to the previous click</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var pairs = clicks.pairwise();
- * var distance = pairs.map(pair => {
- *   var x0 = pair[0].clientX;
- *   var y0 = pair[0].clientY;
- *   var x1 = pair[1].clientX;
- *   var y1 = pair[1].clientY;
- *   return Math.sqrt(Math.pow(x0 - x1, 2) + Math.pow(y0 - y1, 2));
- * });
- * distance.subscribe(x => console.log(x));
- *
- * @see {@link buffer}
- * @see {@link bufferCount}
- *
- * @return {Observable<Array<T>>} An Observable of pairs (as arrays) of
- * consecutive values from the source Observable.
- * @method pairwise
- * @owner Observable
- */
-function pairwise() {
-    return function (source) { return source.lift(new PairwiseOperator()); };
-}
-exports.pairwise = pairwise;
-var PairwiseOperator = (function () {
-    function PairwiseOperator() {
-    }
-    PairwiseOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new PairwiseSubscriber(subscriber));
-    };
-    return PairwiseOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var PairwiseSubscriber = (function (_super) {
-    __extends(PairwiseSubscriber, _super);
-    function PairwiseSubscriber(destination) {
-        _super.call(this, destination);
-        this.hasPrev = false;
-    }
-    PairwiseSubscriber.prototype._next = function (value) {
-        if (this.hasPrev) {
-            this.destination.next([this.prev, value]);
-        }
-        else {
-            this.hasPrev = true;
-        }
-        this.prev = value;
-    };
-    return PairwiseSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=pairwise.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/partition.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var not_1 = __webpack_require__("../../../../rxjs/util/not.js");
-var filter_1 = __webpack_require__("../../../../rxjs/operators/filter.js");
-/**
- * Splits the source Observable into two, one with values that satisfy a
- * predicate, and another with values that don't satisfy the predicate.
- *
- * <span class="informal">It's like {@link filter}, but returns two Observables:
- * one like the output of {@link filter}, and the other with values that did not
- * pass the condition.</span>
- *
- * <img src="./img/partition.png" width="100%">
- *
- * `partition` outputs an array with two Observables that partition the values
- * from the source Observable through the given `predicate` function. The first
- * Observable in that array emits source values for which the predicate argument
- * returns true. The second Observable emits source values for which the
- * predicate returns false. The first behaves like {@link filter} and the second
- * behaves like {@link filter} with the predicate negated.
- *
- * @example <caption>Partition click events into those on DIV elements and those elsewhere</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var parts = clicks.partition(ev => ev.target.tagName === 'DIV');
- * var clicksOnDivs = parts[0];
- * var clicksElsewhere = parts[1];
- * clicksOnDivs.subscribe(x => console.log('DIV clicked: ', x));
- * clicksElsewhere.subscribe(x => console.log('Other clicked: ', x));
- *
- * @see {@link filter}
- *
- * @param {function(value: T, index: number): boolean} predicate A function that
- * evaluates each value emitted by the source Observable. If it returns `true`,
- * the value is emitted on the first Observable in the returned array, if
- * `false` the value is emitted on the second Observable in the array. The
- * `index` parameter is the number `i` for the i-th source emission that has
- * happened since the subscription, starting from the number `0`.
- * @param {any} [thisArg] An optional argument to determine the value of `this`
- * in the `predicate` function.
- * @return {[Observable<T>, Observable<T>]} An array with two Observables: one
- * with values that passed the predicate, and another with values that did not
- * pass the predicate.
- * @method partition
- * @owner Observable
- */
-function partition(predicate, thisArg) {
-    return function (source) { return [
-        filter_1.filter(predicate, thisArg)(source),
-        filter_1.filter(not_1.not(predicate, thisArg))(source)
-    ]; };
-}
-exports.partition = partition;
-//# sourceMappingURL=partition.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/pluck.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var map_1 = __webpack_require__("../../../../rxjs/operators/map.js");
-/**
- * Maps each source value (an object) to its specified nested property.
- *
- * <span class="informal">Like {@link map}, but meant only for picking one of
- * the nested properties of every emitted object.</span>
- *
- * <img src="./img/pluck.png" width="100%">
- *
- * Given a list of strings describing a path to an object property, retrieves
- * the value of a specified nested property from all values in the source
- * Observable. If a property can't be resolved, it will return `undefined` for
- * that value.
- *
- * @example <caption>Map every click to the tagName of the clicked target element</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var tagNames = clicks.pluck('target', 'tagName');
- * tagNames.subscribe(x => console.log(x));
- *
- * @see {@link map}
- *
- * @param {...string} properties The nested properties to pluck from each source
- * value (an object).
- * @return {Observable} A new Observable of property values from the source values.
- * @method pluck
- * @owner Observable
- */
-function pluck() {
-    var properties = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        properties[_i - 0] = arguments[_i];
-    }
-    var length = properties.length;
-    if (length === 0) {
-        throw new Error('list of properties cannot be empty.');
-    }
-    return function (source) { return map_1.map(plucker(properties, length))(source); };
-}
-exports.pluck = pluck;
-function plucker(props, length) {
-    var mapper = function (x) {
-        var currentProp = x;
-        for (var i = 0; i < length; i++) {
-            var p = currentProp[props[i]];
-            if (typeof p !== 'undefined') {
-                currentProp = p;
-            }
-            else {
-                return undefined;
-            }
-        }
-        return currentProp;
-    };
-    return mapper;
-}
-//# sourceMappingURL=pluck.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/publish.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var Subject_1 = __webpack_require__("../../../../rxjs/Subject.js");
-var multicast_1 = __webpack_require__("../../../../rxjs/operators/multicast.js");
-/* tslint:enable:max-line-length */
-/**
- * Returns a ConnectableObservable, which is a variety of Observable that waits until its connect method is called
- * before it begins emitting items to those Observers that have subscribed to it.
- *
- * <img src="./img/publish.png" width="100%">
- *
- * @param {Function} [selector] - Optional selector function which can use the multicasted source sequence as many times
- * as needed, without causing multiple subscriptions to the source sequence.
- * Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
- * @return A ConnectableObservable that upon connection causes the source Observable to emit items to its Observers.
- * @method publish
- * @owner Observable
- */
-function publish(selector) {
-    return selector ?
-        multicast_1.multicast(function () { return new Subject_1.Subject(); }, selector) :
-        multicast_1.multicast(new Subject_1.Subject());
-}
-exports.publish = publish;
-//# sourceMappingURL=publish.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/publishBehavior.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var BehaviorSubject_1 = __webpack_require__("../../../../rxjs/BehaviorSubject.js");
-var multicast_1 = __webpack_require__("../../../../rxjs/operators/multicast.js");
-/**
- * @param value
- * @return {ConnectableObservable<T>}
- * @method publishBehavior
- * @owner Observable
- */
-function publishBehavior(value) {
-    return function (source) { return multicast_1.multicast(new BehaviorSubject_1.BehaviorSubject(value))(source); };
-}
-exports.publishBehavior = publishBehavior;
-//# sourceMappingURL=publishBehavior.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/publishLast.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var AsyncSubject_1 = __webpack_require__("../../../../rxjs/AsyncSubject.js");
-var multicast_1 = __webpack_require__("../../../../rxjs/operators/multicast.js");
-function publishLast() {
-    return function (source) { return multicast_1.multicast(new AsyncSubject_1.AsyncSubject())(source); };
-}
-exports.publishLast = publishLast;
-//# sourceMappingURL=publishLast.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/publishReplay.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var ReplaySubject_1 = __webpack_require__("../../../../rxjs/ReplaySubject.js");
-var multicast_1 = __webpack_require__("../../../../rxjs/operators/multicast.js");
-/* tslint:enable:max-line-length */
-function publishReplay(bufferSize, windowTime, selectorOrScheduler, scheduler) {
-    if (selectorOrScheduler && typeof selectorOrScheduler !== 'function') {
-        scheduler = selectorOrScheduler;
-    }
-    var selector = typeof selectorOrScheduler === 'function' ? selectorOrScheduler : undefined;
-    var subject = new ReplaySubject_1.ReplaySubject(bufferSize, windowTime, scheduler);
-    return function (source) { return multicast_1.multicast(function () { return subject; }, selector)(source); };
-}
-exports.publishReplay = publishReplay;
-//# sourceMappingURL=publishReplay.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/race.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var isArray_1 = __webpack_require__("../../../../rxjs/util/isArray.js");
-var race_1 = __webpack_require__("../../../../rxjs/observable/race.js");
-/* tslint:enable:max-line-length */
-/**
- * Returns an Observable that mirrors the first source Observable to emit an item
- * from the combination of this Observable and supplied Observables.
- * @param {...Observables} ...observables Sources used to race for which Observable emits first.
- * @return {Observable} An Observable that mirrors the output of the first Observable to emit an item.
- * @method race
- * @owner Observable
- */
-function race() {
-    var observables = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        observables[_i - 0] = arguments[_i];
-    }
-    return function raceOperatorFunction(source) {
-        // if the only argument is an array, it was most likely called with
-        // `pair([obs1, obs2, ...])`
-        if (observables.length === 1 && isArray_1.isArray(observables[0])) {
-            observables = observables[0];
-        }
-        return source.lift.call(race_1.race.apply(void 0, [source].concat(observables)));
-    };
-}
-exports.race = race;
-//# sourceMappingURL=race.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/repeat.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var EmptyObservable_1 = __webpack_require__("../../../../rxjs/observable/EmptyObservable.js");
-/**
- * Returns an Observable that repeats the stream of items emitted by the source Observable at most count times.
- *
- * <img src="./img/repeat.png" width="100%">
- *
- * @param {number} [count] The number of times the source Observable items are repeated, a count of 0 will yield
- * an empty Observable.
- * @return {Observable} An Observable that repeats the stream of items emitted by the source Observable at most
- * count times.
- * @method repeat
- * @owner Observable
- */
-function repeat(count) {
-    if (count === void 0) { count = -1; }
-    return function (source) {
-        if (count === 0) {
-            return new EmptyObservable_1.EmptyObservable();
-        }
-        else if (count < 0) {
-            return source.lift(new RepeatOperator(-1, source));
-        }
-        else {
-            return source.lift(new RepeatOperator(count - 1, source));
-        }
-    };
-}
-exports.repeat = repeat;
-var RepeatOperator = (function () {
-    function RepeatOperator(count, source) {
-        this.count = count;
-        this.source = source;
-    }
-    RepeatOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new RepeatSubscriber(subscriber, this.count, this.source));
-    };
-    return RepeatOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var RepeatSubscriber = (function (_super) {
-    __extends(RepeatSubscriber, _super);
-    function RepeatSubscriber(destination, count, source) {
-        _super.call(this, destination);
-        this.count = count;
-        this.source = source;
-    }
-    RepeatSubscriber.prototype.complete = function () {
-        if (!this.isStopped) {
-            var _a = this, source = _a.source, count = _a.count;
-            if (count === 0) {
-                return _super.prototype.complete.call(this);
-            }
-            else if (count > -1) {
-                this.count = count - 1;
-            }
-            source.subscribe(this._unsubscribeAndRecycle());
-        }
-    };
-    return RepeatSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=repeat.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/repeatWhen.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subject_1 = __webpack_require__("../../../../rxjs/Subject.js");
-var tryCatch_1 = __webpack_require__("../../../../rxjs/util/tryCatch.js");
-var errorObject_1 = __webpack_require__("../../../../rxjs/util/errorObject.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/**
- * Returns an Observable that mirrors the source Observable with the exception of a `complete`. If the source
- * Observable calls `complete`, this method will emit to the Observable returned from `notifier`. If that Observable
- * calls `complete` or `error`, then this method will call `complete` or `error` on the child subscription. Otherwise
- * this method will resubscribe to the source Observable.
- *
- * <img src="./img/repeatWhen.png" width="100%">
- *
- * @param {function(notifications: Observable): Observable} notifier - Receives an Observable of notifications with
- * which a user can `complete` or `error`, aborting the repetition.
- * @return {Observable} The source Observable modified with repeat logic.
- * @method repeatWhen
- * @owner Observable
- */
-function repeatWhen(notifier) {
-    return function (source) { return source.lift(new RepeatWhenOperator(notifier)); };
-}
-exports.repeatWhen = repeatWhen;
-var RepeatWhenOperator = (function () {
-    function RepeatWhenOperator(notifier) {
-        this.notifier = notifier;
-    }
-    RepeatWhenOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new RepeatWhenSubscriber(subscriber, this.notifier, source));
-    };
-    return RepeatWhenOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var RepeatWhenSubscriber = (function (_super) {
-    __extends(RepeatWhenSubscriber, _super);
-    function RepeatWhenSubscriber(destination, notifier, source) {
-        _super.call(this, destination);
-        this.notifier = notifier;
-        this.source = source;
-        this.sourceIsBeingSubscribedTo = true;
-    }
-    RepeatWhenSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        this.sourceIsBeingSubscribedTo = true;
-        this.source.subscribe(this);
-    };
-    RepeatWhenSubscriber.prototype.notifyComplete = function (innerSub) {
-        if (this.sourceIsBeingSubscribedTo === false) {
-            return _super.prototype.complete.call(this);
-        }
-    };
-    RepeatWhenSubscriber.prototype.complete = function () {
-        this.sourceIsBeingSubscribedTo = false;
-        if (!this.isStopped) {
-            if (!this.retries) {
-                this.subscribeToRetries();
-            }
-            else if (this.retriesSubscription.closed) {
-                return _super.prototype.complete.call(this);
-            }
-            this._unsubscribeAndRecycle();
-            this.notifications.next();
-        }
-    };
-    RepeatWhenSubscriber.prototype._unsubscribe = function () {
-        var _a = this, notifications = _a.notifications, retriesSubscription = _a.retriesSubscription;
-        if (notifications) {
-            notifications.unsubscribe();
-            this.notifications = null;
-        }
-        if (retriesSubscription) {
-            retriesSubscription.unsubscribe();
-            this.retriesSubscription = null;
-        }
-        this.retries = null;
-    };
-    RepeatWhenSubscriber.prototype._unsubscribeAndRecycle = function () {
-        var _a = this, notifications = _a.notifications, retries = _a.retries, retriesSubscription = _a.retriesSubscription;
-        this.notifications = null;
-        this.retries = null;
-        this.retriesSubscription = null;
-        _super.prototype._unsubscribeAndRecycle.call(this);
-        this.notifications = notifications;
-        this.retries = retries;
-        this.retriesSubscription = retriesSubscription;
-        return this;
-    };
-    RepeatWhenSubscriber.prototype.subscribeToRetries = function () {
-        this.notifications = new Subject_1.Subject();
-        var retries = tryCatch_1.tryCatch(this.notifier)(this.notifications);
-        if (retries === errorObject_1.errorObject) {
-            return _super.prototype.complete.call(this);
-        }
-        this.retries = retries;
-        this.retriesSubscription = subscribeToResult_1.subscribeToResult(this, retries);
-    };
-    return RepeatWhenSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=repeatWhen.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/retry.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-/**
- * Returns an Observable that mirrors the source Observable with the exception of an `error`. If the source Observable
- * calls `error`, this method will resubscribe to the source Observable for a maximum of `count` resubscriptions (given
- * as a number parameter) rather than propagating the `error` call.
- *
- * <img src="./img/retry.png" width="100%">
- *
- * Any and all items emitted by the source Observable will be emitted by the resulting Observable, even those emitted
- * during failed subscriptions. For example, if an Observable fails at first but emits [1, 2] then succeeds the second
- * time and emits: [1, 2, 3, 4, 5] then the complete stream of emissions and notifications
- * would be: [1, 2, 1, 2, 3, 4, 5, `complete`].
- * @param {number} count - Number of retry attempts before failing.
- * @return {Observable} The source Observable modified with the retry logic.
- * @method retry
- * @owner Observable
- */
-function retry(count) {
-    if (count === void 0) { count = -1; }
-    return function (source) { return source.lift(new RetryOperator(count, source)); };
-}
-exports.retry = retry;
-var RetryOperator = (function () {
-    function RetryOperator(count, source) {
-        this.count = count;
-        this.source = source;
-    }
-    RetryOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new RetrySubscriber(subscriber, this.count, this.source));
-    };
-    return RetryOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var RetrySubscriber = (function (_super) {
-    __extends(RetrySubscriber, _super);
-    function RetrySubscriber(destination, count, source) {
-        _super.call(this, destination);
-        this.count = count;
-        this.source = source;
-    }
-    RetrySubscriber.prototype.error = function (err) {
-        if (!this.isStopped) {
-            var _a = this, source = _a.source, count = _a.count;
-            if (count === 0) {
-                return _super.prototype.error.call(this, err);
-            }
-            else if (count > -1) {
-                this.count = count - 1;
-            }
-            source.subscribe(this._unsubscribeAndRecycle());
-        }
-    };
-    return RetrySubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=retry.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/retryWhen.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subject_1 = __webpack_require__("../../../../rxjs/Subject.js");
-var tryCatch_1 = __webpack_require__("../../../../rxjs/util/tryCatch.js");
-var errorObject_1 = __webpack_require__("../../../../rxjs/util/errorObject.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/**
- * Returns an Observable that mirrors the source Observable with the exception of an `error`. If the source Observable
- * calls `error`, this method will emit the Throwable that caused the error to the Observable returned from `notifier`.
- * If that Observable calls `complete` or `error` then this method will call `complete` or `error` on the child
- * subscription. Otherwise this method will resubscribe to the source Observable.
- *
- * <img src="./img/retryWhen.png" width="100%">
- *
- * @param {function(errors: Observable): Observable} notifier - Receives an Observable of notifications with which a
- * user can `complete` or `error`, aborting the retry.
- * @return {Observable} The source Observable modified with retry logic.
- * @method retryWhen
- * @owner Observable
- */
-function retryWhen(notifier) {
-    return function (source) { return source.lift(new RetryWhenOperator(notifier, source)); };
-}
-exports.retryWhen = retryWhen;
-var RetryWhenOperator = (function () {
-    function RetryWhenOperator(notifier, source) {
-        this.notifier = notifier;
-        this.source = source;
-    }
-    RetryWhenOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new RetryWhenSubscriber(subscriber, this.notifier, this.source));
-    };
-    return RetryWhenOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var RetryWhenSubscriber = (function (_super) {
-    __extends(RetryWhenSubscriber, _super);
-    function RetryWhenSubscriber(destination, notifier, source) {
-        _super.call(this, destination);
-        this.notifier = notifier;
-        this.source = source;
-    }
-    RetryWhenSubscriber.prototype.error = function (err) {
-        if (!this.isStopped) {
-            var errors = this.errors;
-            var retries = this.retries;
-            var retriesSubscription = this.retriesSubscription;
-            if (!retries) {
-                errors = new Subject_1.Subject();
-                retries = tryCatch_1.tryCatch(this.notifier)(errors);
-                if (retries === errorObject_1.errorObject) {
-                    return _super.prototype.error.call(this, errorObject_1.errorObject.e);
-                }
-                retriesSubscription = subscribeToResult_1.subscribeToResult(this, retries);
-            }
-            else {
-                this.errors = null;
-                this.retriesSubscription = null;
-            }
-            this._unsubscribeAndRecycle();
-            this.errors = errors;
-            this.retries = retries;
-            this.retriesSubscription = retriesSubscription;
-            errors.next(err);
-        }
-    };
-    RetryWhenSubscriber.prototype._unsubscribe = function () {
-        var _a = this, errors = _a.errors, retriesSubscription = _a.retriesSubscription;
-        if (errors) {
-            errors.unsubscribe();
-            this.errors = null;
-        }
-        if (retriesSubscription) {
-            retriesSubscription.unsubscribe();
-            this.retriesSubscription = null;
-        }
-        this.retries = null;
-    };
-    RetryWhenSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        var _a = this, errors = _a.errors, retries = _a.retries, retriesSubscription = _a.retriesSubscription;
-        this.errors = null;
-        this.retries = null;
-        this.retriesSubscription = null;
-        this._unsubscribeAndRecycle();
-        this.errors = errors;
-        this.retries = retries;
-        this.retriesSubscription = retriesSubscription;
-        this.source.subscribe(this);
-    };
-    return RetryWhenSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=retryWhen.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/sample.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/**
- * Emits the most recently emitted value from the source Observable whenever
- * another Observable, the `notifier`, emits.
- *
- * <span class="informal">It's like {@link sampleTime}, but samples whenever
- * the `notifier` Observable emits something.</span>
- *
- * <img src="./img/sample.png" width="100%">
- *
- * Whenever the `notifier` Observable emits a value or completes, `sample`
- * looks at the source Observable and emits whichever value it has most recently
- * emitted since the previous sampling, unless the source has not emitted
- * anything since the previous sampling. The `notifier` is subscribed to as soon
- * as the output Observable is subscribed.
- *
- * @example <caption>On every click, sample the most recent "seconds" timer</caption>
- * var seconds = Rx.Observable.interval(1000);
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = seconds.sample(clicks);
- * result.subscribe(x => console.log(x));
- *
- * @see {@link audit}
- * @see {@link debounce}
- * @see {@link sampleTime}
- * @see {@link throttle}
- *
- * @param {Observable<any>} notifier The Observable to use for sampling the
- * source Observable.
- * @return {Observable<T>} An Observable that emits the results of sampling the
- * values emitted by the source Observable whenever the notifier Observable
- * emits value or completes.
- * @method sample
- * @owner Observable
- */
-function sample(notifier) {
-    return function (source) { return source.lift(new SampleOperator(notifier)); };
-}
-exports.sample = sample;
-var SampleOperator = (function () {
-    function SampleOperator(notifier) {
-        this.notifier = notifier;
-    }
-    SampleOperator.prototype.call = function (subscriber, source) {
-        var sampleSubscriber = new SampleSubscriber(subscriber);
-        var subscription = source.subscribe(sampleSubscriber);
-        subscription.add(subscribeToResult_1.subscribeToResult(sampleSubscriber, this.notifier));
-        return subscription;
-    };
-    return SampleOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var SampleSubscriber = (function (_super) {
-    __extends(SampleSubscriber, _super);
-    function SampleSubscriber() {
-        _super.apply(this, arguments);
-        this.hasValue = false;
-    }
-    SampleSubscriber.prototype._next = function (value) {
-        this.value = value;
-        this.hasValue = true;
-    };
-    SampleSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        this.emitValue();
-    };
-    SampleSubscriber.prototype.notifyComplete = function () {
-        this.emitValue();
-    };
-    SampleSubscriber.prototype.emitValue = function () {
-        if (this.hasValue) {
-            this.hasValue = false;
-            this.destination.next(this.value);
-        }
-    };
-    return SampleSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=sample.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/sampleTime.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var async_1 = __webpack_require__("../../../../rxjs/scheduler/async.js");
-/**
- * Emits the most recently emitted value from the source Observable within
- * periodic time intervals.
- *
- * <span class="informal">Samples the source Observable at periodic time
- * intervals, emitting what it samples.</span>
- *
- * <img src="./img/sampleTime.png" width="100%">
- *
- * `sampleTime` periodically looks at the source Observable and emits whichever
- * value it has most recently emitted since the previous sampling, unless the
- * source has not emitted anything since the previous sampling. The sampling
- * happens periodically in time every `period` milliseconds (or the time unit
- * defined by the optional `scheduler` argument). The sampling starts as soon as
- * the output Observable is subscribed.
- *
- * @example <caption>Every second, emit the most recent click at most once</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks.sampleTime(1000);
- * result.subscribe(x => console.log(x));
- *
- * @see {@link auditTime}
- * @see {@link debounceTime}
- * @see {@link delay}
- * @see {@link sample}
- * @see {@link throttleTime}
- *
- * @param {number} period The sampling period expressed in milliseconds or the
- * time unit determined internally by the optional `scheduler`.
- * @param {Scheduler} [scheduler=async] The {@link IScheduler} to use for
- * managing the timers that handle the sampling.
- * @return {Observable<T>} An Observable that emits the results of sampling the
- * values emitted by the source Observable at the specified time interval.
- * @method sampleTime
- * @owner Observable
- */
-function sampleTime(period, scheduler) {
-    if (scheduler === void 0) { scheduler = async_1.async; }
-    return function (source) { return source.lift(new SampleTimeOperator(period, scheduler)); };
-}
-exports.sampleTime = sampleTime;
-var SampleTimeOperator = (function () {
-    function SampleTimeOperator(period, scheduler) {
-        this.period = period;
-        this.scheduler = scheduler;
-    }
-    SampleTimeOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new SampleTimeSubscriber(subscriber, this.period, this.scheduler));
-    };
-    return SampleTimeOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var SampleTimeSubscriber = (function (_super) {
-    __extends(SampleTimeSubscriber, _super);
-    function SampleTimeSubscriber(destination, period, scheduler) {
-        _super.call(this, destination);
-        this.period = period;
-        this.scheduler = scheduler;
-        this.hasValue = false;
-        this.add(scheduler.schedule(dispatchNotification, period, { subscriber: this, period: period }));
-    }
-    SampleTimeSubscriber.prototype._next = function (value) {
-        this.lastValue = value;
-        this.hasValue = true;
-    };
-    SampleTimeSubscriber.prototype.notifyNext = function () {
-        if (this.hasValue) {
-            this.hasValue = false;
-            this.destination.next(this.lastValue);
-        }
-    };
-    return SampleTimeSubscriber;
-}(Subscriber_1.Subscriber));
-function dispatchNotification(state) {
-    var subscriber = state.subscriber, period = state.period;
-    subscriber.notifyNext();
-    this.schedule(state, period);
-}
-//# sourceMappingURL=sampleTime.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/sequenceEqual.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var tryCatch_1 = __webpack_require__("../../../../rxjs/util/tryCatch.js");
-var errorObject_1 = __webpack_require__("../../../../rxjs/util/errorObject.js");
-/**
- * Compares all values of two observables in sequence using an optional comparor function
- * and returns an observable of a single boolean value representing whether or not the two sequences
- * are equal.
- *
- * <span class="informal">Checks to see of all values emitted by both observables are equal, in order.</span>
- *
- * <img src="./img/sequenceEqual.png" width="100%">
- *
- * `sequenceEqual` subscribes to two observables and buffers incoming values from each observable. Whenever either
- * observable emits a value, the value is buffered and the buffers are shifted and compared from the bottom
- * up; If any value pair doesn't match, the returned observable will emit `false` and complete. If one of the
- * observables completes, the operator will wait for the other observable to complete; If the other
- * observable emits before completing, the returned observable will emit `false` and complete. If one observable never
- * completes or emits after the other complets, the returned observable will never complete.
- *
- * @example <caption>figure out if the Konami code matches</caption>
- * var code = Rx.Observable.from([
- *  "ArrowUp",
- *  "ArrowUp",
- *  "ArrowDown",
- *  "ArrowDown",
- *  "ArrowLeft",
- *  "ArrowRight",
- *  "ArrowLeft",
- *  "ArrowRight",
- *  "KeyB",
- *  "KeyA",
- *  "Enter" // no start key, clearly.
- * ]);
- *
- * var keys = Rx.Observable.fromEvent(document, 'keyup')
- *  .map(e => e.code);
- * var matches = keys.bufferCount(11, 1)
- *  .mergeMap(
- *    last11 =>
- *      Rx.Observable.from(last11)
- *        .sequenceEqual(code)
- *   );
- * matches.subscribe(matched => console.log('Successful cheat at Contra? ', matched));
- *
- * @see {@link combineLatest}
- * @see {@link zip}
- * @see {@link withLatestFrom}
- *
- * @param {Observable} compareTo The observable sequence to compare the source sequence to.
- * @param {function} [comparor] An optional function to compare each value pair
- * @return {Observable} An Observable of a single boolean value representing whether or not
- * the values emitted by both observables were equal in sequence.
- * @method sequenceEqual
- * @owner Observable
- */
-function sequenceEqual(compareTo, comparor) {
-    return function (source) { return source.lift(new SequenceEqualOperator(compareTo, comparor)); };
-}
-exports.sequenceEqual = sequenceEqual;
-var SequenceEqualOperator = (function () {
-    function SequenceEqualOperator(compareTo, comparor) {
-        this.compareTo = compareTo;
-        this.comparor = comparor;
-    }
-    SequenceEqualOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new SequenceEqualSubscriber(subscriber, this.compareTo, this.comparor));
-    };
-    return SequenceEqualOperator;
-}());
-exports.SequenceEqualOperator = SequenceEqualOperator;
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var SequenceEqualSubscriber = (function (_super) {
-    __extends(SequenceEqualSubscriber, _super);
-    function SequenceEqualSubscriber(destination, compareTo, comparor) {
-        _super.call(this, destination);
-        this.compareTo = compareTo;
-        this.comparor = comparor;
-        this._a = [];
-        this._b = [];
-        this._oneComplete = false;
-        this.add(compareTo.subscribe(new SequenceEqualCompareToSubscriber(destination, this)));
-    }
-    SequenceEqualSubscriber.prototype._next = function (value) {
-        if (this._oneComplete && this._b.length === 0) {
-            this.emit(false);
-        }
-        else {
-            this._a.push(value);
-            this.checkValues();
-        }
-    };
-    SequenceEqualSubscriber.prototype._complete = function () {
-        if (this._oneComplete) {
-            this.emit(this._a.length === 0 && this._b.length === 0);
-        }
-        else {
-            this._oneComplete = true;
-        }
-    };
-    SequenceEqualSubscriber.prototype.checkValues = function () {
-        var _c = this, _a = _c._a, _b = _c._b, comparor = _c.comparor;
-        while (_a.length > 0 && _b.length > 0) {
-            var a = _a.shift();
-            var b = _b.shift();
-            var areEqual = false;
-            if (comparor) {
-                areEqual = tryCatch_1.tryCatch(comparor)(a, b);
-                if (areEqual === errorObject_1.errorObject) {
-                    this.destination.error(errorObject_1.errorObject.e);
-                }
-            }
-            else {
-                areEqual = a === b;
-            }
-            if (!areEqual) {
-                this.emit(false);
-            }
-        }
-    };
-    SequenceEqualSubscriber.prototype.emit = function (value) {
-        var destination = this.destination;
-        destination.next(value);
-        destination.complete();
-    };
-    SequenceEqualSubscriber.prototype.nextB = function (value) {
-        if (this._oneComplete && this._a.length === 0) {
-            this.emit(false);
-        }
-        else {
-            this._b.push(value);
-            this.checkValues();
-        }
-    };
-    return SequenceEqualSubscriber;
-}(Subscriber_1.Subscriber));
-exports.SequenceEqualSubscriber = SequenceEqualSubscriber;
-var SequenceEqualCompareToSubscriber = (function (_super) {
-    __extends(SequenceEqualCompareToSubscriber, _super);
-    function SequenceEqualCompareToSubscriber(destination, parent) {
-        _super.call(this, destination);
-        this.parent = parent;
-    }
-    SequenceEqualCompareToSubscriber.prototype._next = function (value) {
-        this.parent.nextB(value);
-    };
-    SequenceEqualCompareToSubscriber.prototype._error = function (err) {
-        this.parent.error(err);
-    };
-    SequenceEqualCompareToSubscriber.prototype._complete = function () {
-        this.parent._complete();
-    };
-    return SequenceEqualCompareToSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=sequenceEqual.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/shareReplay.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var ReplaySubject_1 = __webpack_require__("../../../../rxjs/ReplaySubject.js");
-/**
- * @method shareReplay
- * @owner Observable
- */
-function shareReplay(bufferSize, windowTime, scheduler) {
-    return function (source) { return source.lift(shareReplayOperator(bufferSize, windowTime, scheduler)); };
-}
-exports.shareReplay = shareReplay;
-function shareReplayOperator(bufferSize, windowTime, scheduler) {
-    var subject;
-    var refCount = 0;
-    var subscription;
-    var hasError = false;
-    var isComplete = false;
-    return function shareReplayOperation(source) {
-        refCount++;
-        if (!subject || hasError) {
-            hasError = false;
-            subject = new ReplaySubject_1.ReplaySubject(bufferSize, windowTime, scheduler);
-            subscription = source.subscribe({
-                next: function (value) { subject.next(value); },
-                error: function (err) {
-                    hasError = true;
-                    subject.error(err);
-                },
-                complete: function () {
-                    isComplete = true;
-                    subject.complete();
-                },
-            });
-        }
-        var innerSub = subject.subscribe(this);
-        return function () {
-            refCount--;
-            innerSub.unsubscribe();
-            if (subscription && refCount === 0 && isComplete) {
-                subscription.unsubscribe();
-            }
-        };
-    };
-}
-;
-//# sourceMappingURL=shareReplay.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/single.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var EmptyError_1 = __webpack_require__("../../../../rxjs/util/EmptyError.js");
-/**
- * Returns an Observable that emits the single item emitted by the source Observable that matches a specified
- * predicate, if that Observable emits one such item. If the source Observable emits more than one such item or no
- * such items, notify of an IllegalArgumentException or NoSuchElementException respectively.
- *
- * <img src="./img/single.png" width="100%">
- *
- * @throws {EmptyError} Delivers an EmptyError to the Observer's `error`
- * callback if the Observable completes before any `next` notification was sent.
- * @param {Function} predicate - A predicate function to evaluate items emitted by the source Observable.
- * @return {Observable<T>} An Observable that emits the single item emitted by the source Observable that matches
- * the predicate.
- .
- * @method single
- * @owner Observable
- */
-function single(predicate) {
-    return function (source) { return source.lift(new SingleOperator(predicate, source)); };
-}
-exports.single = single;
-var SingleOperator = (function () {
-    function SingleOperator(predicate, source) {
-        this.predicate = predicate;
-        this.source = source;
-    }
-    SingleOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new SingleSubscriber(subscriber, this.predicate, this.source));
-    };
-    return SingleOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var SingleSubscriber = (function (_super) {
-    __extends(SingleSubscriber, _super);
-    function SingleSubscriber(destination, predicate, source) {
-        _super.call(this, destination);
-        this.predicate = predicate;
-        this.source = source;
-        this.seenValue = false;
-        this.index = 0;
-    }
-    SingleSubscriber.prototype.applySingleValue = function (value) {
-        if (this.seenValue) {
-            this.destination.error('Sequence contains more than one element');
-        }
-        else {
-            this.seenValue = true;
-            this.singleValue = value;
-        }
-    };
-    SingleSubscriber.prototype._next = function (value) {
-        var index = this.index++;
-        if (this.predicate) {
-            this.tryNext(value, index);
-        }
-        else {
-            this.applySingleValue(value);
-        }
-    };
-    SingleSubscriber.prototype.tryNext = function (value, index) {
-        try {
-            if (this.predicate(value, index, this.source)) {
-                this.applySingleValue(value);
-            }
-        }
-        catch (err) {
-            this.destination.error(err);
-        }
-    };
-    SingleSubscriber.prototype._complete = function () {
-        var destination = this.destination;
-        if (this.index > 0) {
-            destination.next(this.seenValue ? this.singleValue : undefined);
-            destination.complete();
-        }
-        else {
-            destination.error(new EmptyError_1.EmptyError);
-        }
-    };
-    return SingleSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=single.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/skip.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-/**
- * Returns an Observable that skips the first `count` items emitted by the source Observable.
- *
- * <img src="./img/skip.png" width="100%">
- *
- * @param {Number} count - The number of times, items emitted by source Observable should be skipped.
- * @return {Observable} An Observable that skips values emitted by the source Observable.
- *
- * @method skip
- * @owner Observable
- */
-function skip(count) {
-    return function (source) { return source.lift(new SkipOperator(count)); };
-}
-exports.skip = skip;
-var SkipOperator = (function () {
-    function SkipOperator(total) {
-        this.total = total;
-    }
-    SkipOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new SkipSubscriber(subscriber, this.total));
-    };
-    return SkipOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var SkipSubscriber = (function (_super) {
-    __extends(SkipSubscriber, _super);
-    function SkipSubscriber(destination, total) {
-        _super.call(this, destination);
-        this.total = total;
-        this.count = 0;
-    }
-    SkipSubscriber.prototype._next = function (x) {
-        if (++this.count > this.total) {
-            this.destination.next(x);
-        }
-    };
-    return SkipSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=skip.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/skipLast.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var ArgumentOutOfRangeError_1 = __webpack_require__("../../../../rxjs/util/ArgumentOutOfRangeError.js");
-/**
- * Skip the last `count` values emitted by the source Observable.
- *
- * <img src="./img/skipLast.png" width="100%">
- *
- * `skipLast` returns an Observable that accumulates a queue with a length
- * enough to store the first `count` values. As more values are received,
- * values are taken from the front of the queue and produced on the result
- * sequence. This causes values to be delayed.
- *
- * @example <caption>Skip the last 2 values of an Observable with many values</caption>
- * var many = Rx.Observable.range(1, 5);
- * var skipLastTwo = many.skipLast(2);
- * skipLastTwo.subscribe(x => console.log(x));
- *
- * // Results in:
- * // 1 2 3
- *
- * @see {@link skip}
- * @see {@link skipUntil}
- * @see {@link skipWhile}
- * @see {@link take}
- *
- * @throws {ArgumentOutOfRangeError} When using `skipLast(i)`, it throws
- * ArgumentOutOrRangeError if `i < 0`.
- *
- * @param {number} count Number of elements to skip from the end of the source Observable.
- * @returns {Observable<T>} An Observable that skips the last count values
- * emitted by the source Observable.
- * @method skipLast
- * @owner Observable
- */
-function skipLast(count) {
-    return function (source) { return source.lift(new SkipLastOperator(count)); };
-}
-exports.skipLast = skipLast;
-var SkipLastOperator = (function () {
-    function SkipLastOperator(_skipCount) {
-        this._skipCount = _skipCount;
-        if (this._skipCount < 0) {
-            throw new ArgumentOutOfRangeError_1.ArgumentOutOfRangeError;
-        }
-    }
-    SkipLastOperator.prototype.call = function (subscriber, source) {
-        if (this._skipCount === 0) {
-            // If we don't want to skip any values then just subscribe
-            // to Subscriber without any further logic.
-            return source.subscribe(new Subscriber_1.Subscriber(subscriber));
-        }
-        else {
-            return source.subscribe(new SkipLastSubscriber(subscriber, this._skipCount));
-        }
-    };
-    return SkipLastOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var SkipLastSubscriber = (function (_super) {
-    __extends(SkipLastSubscriber, _super);
-    function SkipLastSubscriber(destination, _skipCount) {
-        _super.call(this, destination);
-        this._skipCount = _skipCount;
-        this._count = 0;
-        this._ring = new Array(_skipCount);
-    }
-    SkipLastSubscriber.prototype._next = function (value) {
-        var skipCount = this._skipCount;
-        var count = this._count++;
-        if (count < skipCount) {
-            this._ring[count] = value;
-        }
-        else {
-            var currentIndex = count % skipCount;
-            var ring = this._ring;
-            var oldValue = ring[currentIndex];
-            ring[currentIndex] = value;
-            this.destination.next(oldValue);
-        }
-    };
-    return SkipLastSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=skipLast.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/skipUntil.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/**
- * Returns an Observable that skips items emitted by the source Observable until a second Observable emits an item.
- *
- * <img src="./img/skipUntil.png" width="100%">
- *
- * @param {Observable} notifier - The second Observable that has to emit an item before the source Observable's elements begin to
- * be mirrored by the resulting Observable.
- * @return {Observable<T>} An Observable that skips items from the source Observable until the second Observable emits
- * an item, then emits the remaining items.
- * @method skipUntil
- * @owner Observable
- */
-function skipUntil(notifier) {
-    return function (source) { return source.lift(new SkipUntilOperator(notifier)); };
-}
-exports.skipUntil = skipUntil;
-var SkipUntilOperator = (function () {
-    function SkipUntilOperator(notifier) {
-        this.notifier = notifier;
-    }
-    SkipUntilOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new SkipUntilSubscriber(subscriber, this.notifier));
-    };
-    return SkipUntilOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var SkipUntilSubscriber = (function (_super) {
-    __extends(SkipUntilSubscriber, _super);
-    function SkipUntilSubscriber(destination, notifier) {
-        _super.call(this, destination);
-        this.hasValue = false;
-        this.isInnerStopped = false;
-        this.add(subscribeToResult_1.subscribeToResult(this, notifier));
-    }
-    SkipUntilSubscriber.prototype._next = function (value) {
-        if (this.hasValue) {
-            _super.prototype._next.call(this, value);
-        }
-    };
-    SkipUntilSubscriber.prototype._complete = function () {
-        if (this.isInnerStopped) {
-            _super.prototype._complete.call(this);
-        }
-        else {
-            this.unsubscribe();
-        }
-    };
-    SkipUntilSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        this.hasValue = true;
-    };
-    SkipUntilSubscriber.prototype.notifyComplete = function () {
-        this.isInnerStopped = true;
-        if (this.isStopped) {
-            _super.prototype._complete.call(this);
-        }
-    };
-    return SkipUntilSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=skipUntil.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/skipWhile.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-/**
- * Returns an Observable that skips all items emitted by the source Observable as long as a specified condition holds
- * true, but emits all further source items as soon as the condition becomes false.
- *
- * <img src="./img/skipWhile.png" width="100%">
- *
- * @param {Function} predicate - A function to test each item emitted from the source Observable.
- * @return {Observable<T>} An Observable that begins emitting items emitted by the source Observable when the
- * specified predicate becomes false.
- * @method skipWhile
- * @owner Observable
- */
-function skipWhile(predicate) {
-    return function (source) { return source.lift(new SkipWhileOperator(predicate)); };
-}
-exports.skipWhile = skipWhile;
-var SkipWhileOperator = (function () {
-    function SkipWhileOperator(predicate) {
-        this.predicate = predicate;
-    }
-    SkipWhileOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new SkipWhileSubscriber(subscriber, this.predicate));
-    };
-    return SkipWhileOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var SkipWhileSubscriber = (function (_super) {
-    __extends(SkipWhileSubscriber, _super);
-    function SkipWhileSubscriber(destination, predicate) {
-        _super.call(this, destination);
-        this.predicate = predicate;
-        this.skipping = true;
-        this.index = 0;
-    }
-    SkipWhileSubscriber.prototype._next = function (value) {
-        var destination = this.destination;
-        if (this.skipping) {
-            this.tryCallPredicate(value);
-        }
-        if (!this.skipping) {
-            destination.next(value);
-        }
-    };
-    SkipWhileSubscriber.prototype.tryCallPredicate = function (value) {
-        try {
-            var result = this.predicate(value, this.index++);
-            this.skipping = Boolean(result);
-        }
-        catch (err) {
-            this.destination.error(err);
-        }
-    };
-    return SkipWhileSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=skipWhile.js.map
 
 /***/ }),
 
@@ -8169,21 +2528,6 @@ function startWith() {
 }
 exports.startWith = startWith;
 //# sourceMappingURL=startWith.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/switchAll.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var switchMap_1 = __webpack_require__("../../../../rxjs/operators/switchMap.js");
-var identity_1 = __webpack_require__("../../../../rxjs/util/identity.js");
-function switchAll() {
-    return switchMap_1.switchMap(identity_1.identity);
-}
-exports.switchAll = switchAll;
-//# sourceMappingURL=switchAll.js.map
 
 /***/ }),
 
@@ -8336,236 +2680,6 @@ var SwitchMapSubscriber = (function (_super) {
 
 /***/ }),
 
-/***/ "../../../../rxjs/operators/switchMapTo.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/* tslint:enable:max-line-length */
-/**
- * Projects each source value to the same Observable which is flattened multiple
- * times with {@link switch} in the output Observable.
- *
- * <span class="informal">It's like {@link switchMap}, but maps each value
- * always to the same inner Observable.</span>
- *
- * <img src="./img/switchMapTo.png" width="100%">
- *
- * Maps each source value to the given Observable `innerObservable` regardless
- * of the source value, and then flattens those resulting Observables into one
- * single Observable, which is the output Observable. The output Observables
- * emits values only from the most recently emitted instance of
- * `innerObservable`.
- *
- * @example <caption>Rerun an interval Observable on every click event</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks.switchMapTo(Rx.Observable.interval(1000));
- * result.subscribe(x => console.log(x));
- *
- * @see {@link concatMapTo}
- * @see {@link switch}
- * @see {@link switchMap}
- * @see {@link mergeMapTo}
- *
- * @param {ObservableInput} innerObservable An Observable to replace each value from
- * the source Observable.
- * @param {function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any} [resultSelector]
- * A function to produce the value on the output Observable based on the values
- * and the indices of the source (outer) emission and the inner Observable
- * emission. The arguments passed to this function are:
- * - `outerValue`: the value that came from the source
- * - `innerValue`: the value that came from the projected Observable
- * - `outerIndex`: the "index" of the value that came from the source
- * - `innerIndex`: the "index" of the value from the projected Observable
- * @return {Observable} An Observable that emits items from the given
- * `innerObservable` (and optionally transformed through `resultSelector`) every
- * time a value is emitted on the source Observable, and taking only the values
- * from the most recently projected inner Observable.
- * @method switchMapTo
- * @owner Observable
- */
-function switchMapTo(innerObservable, resultSelector) {
-    return function (source) { return source.lift(new SwitchMapToOperator(innerObservable, resultSelector)); };
-}
-exports.switchMapTo = switchMapTo;
-var SwitchMapToOperator = (function () {
-    function SwitchMapToOperator(observable, resultSelector) {
-        this.observable = observable;
-        this.resultSelector = resultSelector;
-    }
-    SwitchMapToOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new SwitchMapToSubscriber(subscriber, this.observable, this.resultSelector));
-    };
-    return SwitchMapToOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var SwitchMapToSubscriber = (function (_super) {
-    __extends(SwitchMapToSubscriber, _super);
-    function SwitchMapToSubscriber(destination, inner, resultSelector) {
-        _super.call(this, destination);
-        this.inner = inner;
-        this.resultSelector = resultSelector;
-        this.index = 0;
-    }
-    SwitchMapToSubscriber.prototype._next = function (value) {
-        var innerSubscription = this.innerSubscription;
-        if (innerSubscription) {
-            innerSubscription.unsubscribe();
-        }
-        this.add(this.innerSubscription = subscribeToResult_1.subscribeToResult(this, this.inner, value, this.index++));
-    };
-    SwitchMapToSubscriber.prototype._complete = function () {
-        var innerSubscription = this.innerSubscription;
-        if (!innerSubscription || innerSubscription.closed) {
-            _super.prototype._complete.call(this);
-        }
-    };
-    SwitchMapToSubscriber.prototype._unsubscribe = function () {
-        this.innerSubscription = null;
-    };
-    SwitchMapToSubscriber.prototype.notifyComplete = function (innerSub) {
-        this.remove(innerSub);
-        this.innerSubscription = null;
-        if (this.isStopped) {
-            _super.prototype._complete.call(this);
-        }
-    };
-    SwitchMapToSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        var _a = this, resultSelector = _a.resultSelector, destination = _a.destination;
-        if (resultSelector) {
-            this.tryResultSelector(outerValue, innerValue, outerIndex, innerIndex);
-        }
-        else {
-            destination.next(innerValue);
-        }
-    };
-    SwitchMapToSubscriber.prototype.tryResultSelector = function (outerValue, innerValue, outerIndex, innerIndex) {
-        var _a = this, resultSelector = _a.resultSelector, destination = _a.destination;
-        var result;
-        try {
-            result = resultSelector(outerValue, innerValue, outerIndex, innerIndex);
-        }
-        catch (err) {
-            destination.error(err);
-            return;
-        }
-        destination.next(result);
-    };
-    return SwitchMapToSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=switchMapTo.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/take.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var ArgumentOutOfRangeError_1 = __webpack_require__("../../../../rxjs/util/ArgumentOutOfRangeError.js");
-var EmptyObservable_1 = __webpack_require__("../../../../rxjs/observable/EmptyObservable.js");
-/**
- * Emits only the first `count` values emitted by the source Observable.
- *
- * <span class="informal">Takes the first `count` values from the source, then
- * completes.</span>
- *
- * <img src="./img/take.png" width="100%">
- *
- * `take` returns an Observable that emits only the first `count` values emitted
- * by the source Observable. If the source emits fewer than `count` values then
- * all of its values are emitted. After that, it completes, regardless if the
- * source completes.
- *
- * @example <caption>Take the first 5 seconds of an infinite 1-second interval Observable</caption>
- * var interval = Rx.Observable.interval(1000);
- * var five = interval.take(5);
- * five.subscribe(x => console.log(x));
- *
- * @see {@link takeLast}
- * @see {@link takeUntil}
- * @see {@link takeWhile}
- * @see {@link skip}
- *
- * @throws {ArgumentOutOfRangeError} When using `take(i)`, it delivers an
- * ArgumentOutOrRangeError to the Observer's `error` callback if `i < 0`.
- *
- * @param {number} count The maximum number of `next` values to emit.
- * @return {Observable<T>} An Observable that emits only the first `count`
- * values emitted by the source Observable, or all of the values from the source
- * if the source emits fewer than `count` values.
- * @method take
- * @owner Observable
- */
-function take(count) {
-    return function (source) {
-        if (count === 0) {
-            return new EmptyObservable_1.EmptyObservable();
-        }
-        else {
-            return source.lift(new TakeOperator(count));
-        }
-    };
-}
-exports.take = take;
-var TakeOperator = (function () {
-    function TakeOperator(total) {
-        this.total = total;
-        if (this.total < 0) {
-            throw new ArgumentOutOfRangeError_1.ArgumentOutOfRangeError;
-        }
-    }
-    TakeOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new TakeSubscriber(subscriber, this.total));
-    };
-    return TakeOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var TakeSubscriber = (function (_super) {
-    __extends(TakeSubscriber, _super);
-    function TakeSubscriber(destination, total) {
-        _super.call(this, destination);
-        this.total = total;
-        this.count = 0;
-    }
-    TakeSubscriber.prototype._next = function (value) {
-        var total = this.total;
-        var count = ++this.count;
-        if (count <= total) {
-            this.destination.next(value);
-            if (count === total) {
-                this.destination.complete();
-                this.unsubscribe();
-            }
-        }
-    };
-    return TakeSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=take.js.map
-
-/***/ }),
-
 /***/ "../../../../rxjs/operators/takeUntil.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8645,105 +2759,6 @@ var TakeUntilSubscriber = (function (_super) {
     return TakeUntilSubscriber;
 }(OuterSubscriber_1.OuterSubscriber));
 //# sourceMappingURL=takeUntil.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/takeWhile.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-/**
- * Emits values emitted by the source Observable so long as each value satisfies
- * the given `predicate`, and then completes as soon as this `predicate` is not
- * satisfied.
- *
- * <span class="informal">Takes values from the source only while they pass the
- * condition given. When the first value does not satisfy, it completes.</span>
- *
- * <img src="./img/takeWhile.png" width="100%">
- *
- * `takeWhile` subscribes and begins mirroring the source Observable. Each value
- * emitted on the source is given to the `predicate` function which returns a
- * boolean, representing a condition to be satisfied by the source values. The
- * output Observable emits the source values until such time as the `predicate`
- * returns false, at which point `takeWhile` stops mirroring the source
- * Observable and completes the output Observable.
- *
- * @example <caption>Emit click events only while the clientX property is greater than 200</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks.takeWhile(ev => ev.clientX > 200);
- * result.subscribe(x => console.log(x));
- *
- * @see {@link take}
- * @see {@link takeLast}
- * @see {@link takeUntil}
- * @see {@link skip}
- *
- * @param {function(value: T, index: number): boolean} predicate A function that
- * evaluates a value emitted by the source Observable and returns a boolean.
- * Also takes the (zero-based) index as the second argument.
- * @return {Observable<T>} An Observable that emits the values from the source
- * Observable so long as each value satisfies the condition defined by the
- * `predicate`, then completes.
- * @method takeWhile
- * @owner Observable
- */
-function takeWhile(predicate) {
-    return function (source) { return source.lift(new TakeWhileOperator(predicate)); };
-}
-exports.takeWhile = takeWhile;
-var TakeWhileOperator = (function () {
-    function TakeWhileOperator(predicate) {
-        this.predicate = predicate;
-    }
-    TakeWhileOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new TakeWhileSubscriber(subscriber, this.predicate));
-    };
-    return TakeWhileOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var TakeWhileSubscriber = (function (_super) {
-    __extends(TakeWhileSubscriber, _super);
-    function TakeWhileSubscriber(destination, predicate) {
-        _super.call(this, destination);
-        this.predicate = predicate;
-        this.index = 0;
-    }
-    TakeWhileSubscriber.prototype._next = function (value) {
-        var destination = this.destination;
-        var result;
-        try {
-            result = this.predicate(value, this.index++);
-        }
-        catch (err) {
-            destination.error(err);
-            return;
-        }
-        this.nextOrComplete(value, result);
-    };
-    TakeWhileSubscriber.prototype.nextOrComplete = function (value, predicateResult) {
-        var destination = this.destination;
-        if (Boolean(predicateResult)) {
-            destination.next(value);
-        }
-        else {
-            destination.complete();
-        }
-    };
-    return TakeWhileSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=takeWhile.js.map
 
 /***/ }),
 
@@ -8864,1864 +2879,6 @@ var DoSubscriber = (function (_super) {
     return DoSubscriber;
 }(Subscriber_1.Subscriber));
 //# sourceMappingURL=tap.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/throttle.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-exports.defaultThrottleConfig = {
-    leading: true,
-    trailing: false
-};
-/**
- * Emits a value from the source Observable, then ignores subsequent source
- * values for a duration determined by another Observable, then repeats this
- * process.
- *
- * <span class="informal">It's like {@link throttleTime}, but the silencing
- * duration is determined by a second Observable.</span>
- *
- * <img src="./img/throttle.png" width="100%">
- *
- * `throttle` emits the source Observable values on the output Observable
- * when its internal timer is disabled, and ignores source values when the timer
- * is enabled. Initially, the timer is disabled. As soon as the first source
- * value arrives, it is forwarded to the output Observable, and then the timer
- * is enabled by calling the `durationSelector` function with the source value,
- * which returns the "duration" Observable. When the duration Observable emits a
- * value or completes, the timer is disabled, and this process repeats for the
- * next source value.
- *
- * @example <caption>Emit clicks at a rate of at most one click per second</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks.throttle(ev => Rx.Observable.interval(1000));
- * result.subscribe(x => console.log(x));
- *
- * @see {@link audit}
- * @see {@link debounce}
- * @see {@link delayWhen}
- * @see {@link sample}
- * @see {@link throttleTime}
- *
- * @param {function(value: T): SubscribableOrPromise} durationSelector A function
- * that receives a value from the source Observable, for computing the silencing
- * duration for each source value, returned as an Observable or a Promise.
- * @param {Object} config a configuration object to define `leading` and `trailing` behavior. Defaults
- * to `{ leading: true, trailing: false }`.
- * @return {Observable<T>} An Observable that performs the throttle operation to
- * limit the rate of emissions from the source.
- * @method throttle
- * @owner Observable
- */
-function throttle(durationSelector, config) {
-    if (config === void 0) { config = exports.defaultThrottleConfig; }
-    return function (source) { return source.lift(new ThrottleOperator(durationSelector, config.leading, config.trailing)); };
-}
-exports.throttle = throttle;
-var ThrottleOperator = (function () {
-    function ThrottleOperator(durationSelector, leading, trailing) {
-        this.durationSelector = durationSelector;
-        this.leading = leading;
-        this.trailing = trailing;
-    }
-    ThrottleOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new ThrottleSubscriber(subscriber, this.durationSelector, this.leading, this.trailing));
-    };
-    return ThrottleOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc
- * @ignore
- * @extends {Ignored}
- */
-var ThrottleSubscriber = (function (_super) {
-    __extends(ThrottleSubscriber, _super);
-    function ThrottleSubscriber(destination, durationSelector, _leading, _trailing) {
-        _super.call(this, destination);
-        this.destination = destination;
-        this.durationSelector = durationSelector;
-        this._leading = _leading;
-        this._trailing = _trailing;
-        this._hasTrailingValue = false;
-    }
-    ThrottleSubscriber.prototype._next = function (value) {
-        if (this.throttled) {
-            if (this._trailing) {
-                this._hasTrailingValue = true;
-                this._trailingValue = value;
-            }
-        }
-        else {
-            var duration = this.tryDurationSelector(value);
-            if (duration) {
-                this.add(this.throttled = subscribeToResult_1.subscribeToResult(this, duration));
-            }
-            if (this._leading) {
-                this.destination.next(value);
-                if (this._trailing) {
-                    this._hasTrailingValue = true;
-                    this._trailingValue = value;
-                }
-            }
-        }
-    };
-    ThrottleSubscriber.prototype.tryDurationSelector = function (value) {
-        try {
-            return this.durationSelector(value);
-        }
-        catch (err) {
-            this.destination.error(err);
-            return null;
-        }
-    };
-    ThrottleSubscriber.prototype._unsubscribe = function () {
-        var _a = this, throttled = _a.throttled, _trailingValue = _a._trailingValue, _hasTrailingValue = _a._hasTrailingValue, _trailing = _a._trailing;
-        this._trailingValue = null;
-        this._hasTrailingValue = false;
-        if (throttled) {
-            this.remove(throttled);
-            this.throttled = null;
-            throttled.unsubscribe();
-        }
-    };
-    ThrottleSubscriber.prototype._sendTrailing = function () {
-        var _a = this, destination = _a.destination, throttled = _a.throttled, _trailing = _a._trailing, _trailingValue = _a._trailingValue, _hasTrailingValue = _a._hasTrailingValue;
-        if (throttled && _trailing && _hasTrailingValue) {
-            destination.next(_trailingValue);
-            this._trailingValue = null;
-            this._hasTrailingValue = false;
-        }
-    };
-    ThrottleSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        this._sendTrailing();
-        this._unsubscribe();
-    };
-    ThrottleSubscriber.prototype.notifyComplete = function () {
-        this._sendTrailing();
-        this._unsubscribe();
-    };
-    return ThrottleSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=throttle.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/throttleTime.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var async_1 = __webpack_require__("../../../../rxjs/scheduler/async.js");
-var throttle_1 = __webpack_require__("../../../../rxjs/operators/throttle.js");
-/**
- * Emits a value from the source Observable, then ignores subsequent source
- * values for `duration` milliseconds, then repeats this process.
- *
- * <span class="informal">Lets a value pass, then ignores source values for the
- * next `duration` milliseconds.</span>
- *
- * <img src="./img/throttleTime.png" width="100%">
- *
- * `throttleTime` emits the source Observable values on the output Observable
- * when its internal timer is disabled, and ignores source values when the timer
- * is enabled. Initially, the timer is disabled. As soon as the first source
- * value arrives, it is forwarded to the output Observable, and then the timer
- * is enabled. After `duration` milliseconds (or the time unit determined
- * internally by the optional `scheduler`) has passed, the timer is disabled,
- * and this process repeats for the next source value. Optionally takes a
- * {@link IScheduler} for managing timers.
- *
- * @example <caption>Emit clicks at a rate of at most one click per second</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks.throttleTime(1000);
- * result.subscribe(x => console.log(x));
- *
- * @see {@link auditTime}
- * @see {@link debounceTime}
- * @see {@link delay}
- * @see {@link sampleTime}
- * @see {@link throttle}
- *
- * @param {number} duration Time to wait before emitting another value after
- * emitting the last value, measured in milliseconds or the time unit determined
- * internally by the optional `scheduler`.
- * @param {Scheduler} [scheduler=async] The {@link IScheduler} to use for
- * managing the timers that handle the throttling.
- * @return {Observable<T>} An Observable that performs the throttle operation to
- * limit the rate of emissions from the source.
- * @method throttleTime
- * @owner Observable
- */
-function throttleTime(duration, scheduler, config) {
-    if (scheduler === void 0) { scheduler = async_1.async; }
-    if (config === void 0) { config = throttle_1.defaultThrottleConfig; }
-    return function (source) { return source.lift(new ThrottleTimeOperator(duration, scheduler, config.leading, config.trailing)); };
-}
-exports.throttleTime = throttleTime;
-var ThrottleTimeOperator = (function () {
-    function ThrottleTimeOperator(duration, scheduler, leading, trailing) {
-        this.duration = duration;
-        this.scheduler = scheduler;
-        this.leading = leading;
-        this.trailing = trailing;
-    }
-    ThrottleTimeOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new ThrottleTimeSubscriber(subscriber, this.duration, this.scheduler, this.leading, this.trailing));
-    };
-    return ThrottleTimeOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var ThrottleTimeSubscriber = (function (_super) {
-    __extends(ThrottleTimeSubscriber, _super);
-    function ThrottleTimeSubscriber(destination, duration, scheduler, leading, trailing) {
-        _super.call(this, destination);
-        this.duration = duration;
-        this.scheduler = scheduler;
-        this.leading = leading;
-        this.trailing = trailing;
-        this._hasTrailingValue = false;
-        this._trailingValue = null;
-    }
-    ThrottleTimeSubscriber.prototype._next = function (value) {
-        if (this.throttled) {
-            if (this.trailing) {
-                this._trailingValue = value;
-                this._hasTrailingValue = true;
-            }
-        }
-        else {
-            this.add(this.throttled = this.scheduler.schedule(dispatchNext, this.duration, { subscriber: this }));
-            if (this.leading) {
-                this.destination.next(value);
-            }
-        }
-    };
-    ThrottleTimeSubscriber.prototype.clearThrottle = function () {
-        var throttled = this.throttled;
-        if (throttled) {
-            if (this.trailing && this._hasTrailingValue) {
-                this.destination.next(this._trailingValue);
-                this._trailingValue = null;
-                this._hasTrailingValue = false;
-            }
-            throttled.unsubscribe();
-            this.remove(throttled);
-            this.throttled = null;
-        }
-    };
-    return ThrottleTimeSubscriber;
-}(Subscriber_1.Subscriber));
-function dispatchNext(arg) {
-    var subscriber = arg.subscriber;
-    subscriber.clearThrottle();
-}
-//# sourceMappingURL=throttleTime.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/timeInterval.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var async_1 = __webpack_require__("../../../../rxjs/scheduler/async.js");
-function timeInterval(scheduler) {
-    if (scheduler === void 0) { scheduler = async_1.async; }
-    return function (source) { return source.lift(new TimeIntervalOperator(scheduler)); };
-}
-exports.timeInterval = timeInterval;
-var TimeInterval = (function () {
-    function TimeInterval(value, interval) {
-        this.value = value;
-        this.interval = interval;
-    }
-    return TimeInterval;
-}());
-exports.TimeInterval = TimeInterval;
-;
-var TimeIntervalOperator = (function () {
-    function TimeIntervalOperator(scheduler) {
-        this.scheduler = scheduler;
-    }
-    TimeIntervalOperator.prototype.call = function (observer, source) {
-        return source.subscribe(new TimeIntervalSubscriber(observer, this.scheduler));
-    };
-    return TimeIntervalOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var TimeIntervalSubscriber = (function (_super) {
-    __extends(TimeIntervalSubscriber, _super);
-    function TimeIntervalSubscriber(destination, scheduler) {
-        _super.call(this, destination);
-        this.scheduler = scheduler;
-        this.lastTime = 0;
-        this.lastTime = scheduler.now();
-    }
-    TimeIntervalSubscriber.prototype._next = function (value) {
-        var now = this.scheduler.now();
-        var span = now - this.lastTime;
-        this.lastTime = now;
-        this.destination.next(new TimeInterval(value, span));
-    };
-    return TimeIntervalSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=timeInterval.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/timeout.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var async_1 = __webpack_require__("../../../../rxjs/scheduler/async.js");
-var isDate_1 = __webpack_require__("../../../../rxjs/util/isDate.js");
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var TimeoutError_1 = __webpack_require__("../../../../rxjs/util/TimeoutError.js");
-/**
- *
- * Errors if Observable does not emit a value in given time span.
- *
- * <span class="informal">Timeouts on Observable that doesn't emit values fast enough.</span>
- *
- * <img src="./img/timeout.png" width="100%">
- *
- * `timeout` operator accepts as an argument either a number or a Date.
- *
- * If number was provided, it returns an Observable that behaves like a source
- * Observable, unless there is a period of time where there is no value emitted.
- * So if you provide `100` as argument and first value comes after 50ms from
- * the moment of subscription, this value will be simply re-emitted by the resulting
- * Observable. If however after that 100ms passes without a second value being emitted,
- * stream will end with an error and source Observable will be unsubscribed.
- * These checks are performed throughout whole lifecycle of Observable - from the moment
- * it was subscribed to, until it completes or errors itself. Thus every value must be
- * emitted within specified period since previous value.
- *
- * If provided argument was Date, returned Observable behaves differently. It throws
- * if Observable did not complete before provided Date. This means that periods between
- * emission of particular values do not matter in this case. If Observable did not complete
- * before provided Date, source Observable will be unsubscribed. Other than that, resulting
- * stream behaves just as source Observable.
- *
- * `timeout` accepts also a Scheduler as a second parameter. It is used to schedule moment (or moments)
- * when returned Observable will check if source stream emitted value or completed.
- *
- * @example <caption>Check if ticks are emitted within certain timespan</caption>
- * const seconds = Rx.Observable.interval(1000);
- *
- * seconds.timeout(1100) // Let's use bigger timespan to be safe,
- *                       // since `interval` might fire a bit later then scheduled.
- * .subscribe(
- *     value => console.log(value), // Will emit numbers just as regular `interval` would.
- *     err => console.log(err) // Will never be called.
- * );
- *
- * seconds.timeout(900).subscribe(
- *     value => console.log(value), // Will never be called.
- *     err => console.log(err) // Will emit error before even first value is emitted,
- *                             // since it did not arrive within 900ms period.
- * );
- *
- * @example <caption>Use Date to check if Observable completed</caption>
- * const seconds = Rx.Observable.interval(1000);
- *
- * seconds.timeout(new Date("December 17, 2020 03:24:00"))
- * .subscribe(
- *     value => console.log(value), // Will emit values as regular `interval` would
- *                                  // until December 17, 2020 at 03:24:00.
- *     err => console.log(err) // On December 17, 2020 at 03:24:00 it will emit an error,
- *                             // since Observable did not complete by then.
- * );
- *
- * @see {@link timeoutWith}
- *
- * @param {number|Date} due Number specifying period within which Observable must emit values
- *                          or Date specifying before when Observable should complete
- * @param {Scheduler} [scheduler] Scheduler controlling when timeout checks occur.
- * @return {Observable<T>} Observable that mirrors behaviour of source, unless timeout checks fail.
- * @method timeout
- * @owner Observable
- */
-function timeout(due, scheduler) {
-    if (scheduler === void 0) { scheduler = async_1.async; }
-    var absoluteTimeout = isDate_1.isDate(due);
-    var waitFor = absoluteTimeout ? (+due - scheduler.now()) : Math.abs(due);
-    return function (source) { return source.lift(new TimeoutOperator(waitFor, absoluteTimeout, scheduler, new TimeoutError_1.TimeoutError())); };
-}
-exports.timeout = timeout;
-var TimeoutOperator = (function () {
-    function TimeoutOperator(waitFor, absoluteTimeout, scheduler, errorInstance) {
-        this.waitFor = waitFor;
-        this.absoluteTimeout = absoluteTimeout;
-        this.scheduler = scheduler;
-        this.errorInstance = errorInstance;
-    }
-    TimeoutOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new TimeoutSubscriber(subscriber, this.absoluteTimeout, this.waitFor, this.scheduler, this.errorInstance));
-    };
-    return TimeoutOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var TimeoutSubscriber = (function (_super) {
-    __extends(TimeoutSubscriber, _super);
-    function TimeoutSubscriber(destination, absoluteTimeout, waitFor, scheduler, errorInstance) {
-        _super.call(this, destination);
-        this.absoluteTimeout = absoluteTimeout;
-        this.waitFor = waitFor;
-        this.scheduler = scheduler;
-        this.errorInstance = errorInstance;
-        this.action = null;
-        this.scheduleTimeout();
-    }
-    TimeoutSubscriber.dispatchTimeout = function (subscriber) {
-        subscriber.error(subscriber.errorInstance);
-    };
-    TimeoutSubscriber.prototype.scheduleTimeout = function () {
-        var action = this.action;
-        if (action) {
-            // Recycle the action if we've already scheduled one. All the production
-            // Scheduler Actions mutate their state/delay time and return themeselves.
-            // VirtualActions are immutable, so they create and return a clone. In this
-            // case, we need to set the action reference to the most recent VirtualAction,
-            // to ensure that's the one we clone from next time.
-            this.action = action.schedule(this, this.waitFor);
-        }
-        else {
-            this.add(this.action = this.scheduler.schedule(TimeoutSubscriber.dispatchTimeout, this.waitFor, this));
-        }
-    };
-    TimeoutSubscriber.prototype._next = function (value) {
-        if (!this.absoluteTimeout) {
-            this.scheduleTimeout();
-        }
-        _super.prototype._next.call(this, value);
-    };
-    TimeoutSubscriber.prototype._unsubscribe = function () {
-        this.action = null;
-        this.scheduler = null;
-        this.errorInstance = null;
-    };
-    return TimeoutSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=timeout.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/timeoutWith.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var async_1 = __webpack_require__("../../../../rxjs/scheduler/async.js");
-var isDate_1 = __webpack_require__("../../../../rxjs/util/isDate.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/* tslint:enable:max-line-length */
-/**
- *
- * Errors if Observable does not emit a value in given time span, in case of which
- * subscribes to the second Observable.
- *
- * <span class="informal">It's a version of `timeout` operator that let's you specify fallback Observable.</span>
- *
- * <img src="./img/timeoutWith.png" width="100%">
- *
- * `timeoutWith` is a variation of `timeout` operator. It behaves exactly the same,
- * still accepting as a first argument either a number or a Date, which control - respectively -
- * when values of source Observable should be emitted or when it should complete.
- *
- * The only difference is that it accepts a second, required parameter. This parameter
- * should be an Observable which will be subscribed when source Observable fails any timeout check.
- * So whenever regular `timeout` would emit an error, `timeoutWith` will instead start re-emitting
- * values from second Observable. Note that this fallback Observable is not checked for timeouts
- * itself, so it can emit values and complete at arbitrary points in time. From the moment of a second
- * subscription, Observable returned from `timeoutWith` simply mirrors fallback stream. When that
- * stream completes, it completes as well.
- *
- * Scheduler, which in case of `timeout` is provided as as second argument, can be still provided
- * here - as a third, optional parameter. It still is used to schedule timeout checks and -
- * as a consequence - when second Observable will be subscribed, since subscription happens
- * immediately after failing check.
- *
- * @example <caption>Add fallback observable</caption>
- * const seconds = Rx.Observable.interval(1000);
- * const minutes = Rx.Observable.interval(60 * 1000);
- *
- * seconds.timeoutWith(900, minutes)
- *     .subscribe(
- *         value => console.log(value), // After 900ms, will start emitting `minutes`,
- *                                      // since first value of `seconds` will not arrive fast enough.
- *         err => console.log(err) // Would be called after 900ms in case of `timeout`,
- *                                 // but here will never be called.
- *     );
- *
- * @param {number|Date} due Number specifying period within which Observable must emit values
- *                          or Date specifying before when Observable should complete
- * @param {Observable<T>} withObservable Observable which will be subscribed if source fails timeout check.
- * @param {Scheduler} [scheduler] Scheduler controlling when timeout checks occur.
- * @return {Observable<T>} Observable that mirrors behaviour of source or, when timeout check fails, of an Observable
- *                          passed as a second parameter.
- * @method timeoutWith
- * @owner Observable
- */
-function timeoutWith(due, withObservable, scheduler) {
-    if (scheduler === void 0) { scheduler = async_1.async; }
-    return function (source) {
-        var absoluteTimeout = isDate_1.isDate(due);
-        var waitFor = absoluteTimeout ? (+due - scheduler.now()) : Math.abs(due);
-        return source.lift(new TimeoutWithOperator(waitFor, absoluteTimeout, withObservable, scheduler));
-    };
-}
-exports.timeoutWith = timeoutWith;
-var TimeoutWithOperator = (function () {
-    function TimeoutWithOperator(waitFor, absoluteTimeout, withObservable, scheduler) {
-        this.waitFor = waitFor;
-        this.absoluteTimeout = absoluteTimeout;
-        this.withObservable = withObservable;
-        this.scheduler = scheduler;
-    }
-    TimeoutWithOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new TimeoutWithSubscriber(subscriber, this.absoluteTimeout, this.waitFor, this.withObservable, this.scheduler));
-    };
-    return TimeoutWithOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var TimeoutWithSubscriber = (function (_super) {
-    __extends(TimeoutWithSubscriber, _super);
-    function TimeoutWithSubscriber(destination, absoluteTimeout, waitFor, withObservable, scheduler) {
-        _super.call(this, destination);
-        this.absoluteTimeout = absoluteTimeout;
-        this.waitFor = waitFor;
-        this.withObservable = withObservable;
-        this.scheduler = scheduler;
-        this.action = null;
-        this.scheduleTimeout();
-    }
-    TimeoutWithSubscriber.dispatchTimeout = function (subscriber) {
-        var withObservable = subscriber.withObservable;
-        subscriber._unsubscribeAndRecycle();
-        subscriber.add(subscribeToResult_1.subscribeToResult(subscriber, withObservable));
-    };
-    TimeoutWithSubscriber.prototype.scheduleTimeout = function () {
-        var action = this.action;
-        if (action) {
-            // Recycle the action if we've already scheduled one. All the production
-            // Scheduler Actions mutate their state/delay time and return themeselves.
-            // VirtualActions are immutable, so they create and return a clone. In this
-            // case, we need to set the action reference to the most recent VirtualAction,
-            // to ensure that's the one we clone from next time.
-            this.action = action.schedule(this, this.waitFor);
-        }
-        else {
-            this.add(this.action = this.scheduler.schedule(TimeoutWithSubscriber.dispatchTimeout, this.waitFor, this));
-        }
-    };
-    TimeoutWithSubscriber.prototype._next = function (value) {
-        if (!this.absoluteTimeout) {
-            this.scheduleTimeout();
-        }
-        _super.prototype._next.call(this, value);
-    };
-    TimeoutWithSubscriber.prototype._unsubscribe = function () {
-        this.action = null;
-        this.scheduler = null;
-        this.withObservable = null;
-    };
-    return TimeoutWithSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=timeoutWith.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/timestamp.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var async_1 = __webpack_require__("../../../../rxjs/scheduler/async.js");
-var map_1 = __webpack_require__("../../../../rxjs/operators/map.js");
-/**
- * @param scheduler
- * @return {Observable<Timestamp<any>>|WebSocketSubject<T>|Observable<T>}
- * @method timestamp
- * @owner Observable
- */
-function timestamp(scheduler) {
-    if (scheduler === void 0) { scheduler = async_1.async; }
-    return map_1.map(function (value) { return new Timestamp(value, scheduler.now()); });
-    // return (source: Observable<T>) => source.lift(new TimestampOperator(scheduler));
-}
-exports.timestamp = timestamp;
-var Timestamp = (function () {
-    function Timestamp(value, timestamp) {
-        this.value = value;
-        this.timestamp = timestamp;
-    }
-    return Timestamp;
-}());
-exports.Timestamp = Timestamp;
-;
-//# sourceMappingURL=timestamp.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/toArray.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var reduce_1 = __webpack_require__("../../../../rxjs/operators/reduce.js");
-function toArrayReducer(arr, item, index) {
-    arr.push(item);
-    return arr;
-}
-function toArray() {
-    return reduce_1.reduce(toArrayReducer, []);
-}
-exports.toArray = toArray;
-//# sourceMappingURL=toArray.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/window.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subject_1 = __webpack_require__("../../../../rxjs/Subject.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/**
- * Branch out the source Observable values as a nested Observable whenever
- * `windowBoundaries` emits.
- *
- * <span class="informal">It's like {@link buffer}, but emits a nested Observable
- * instead of an array.</span>
- *
- * <img src="./img/window.png" width="100%">
- *
- * Returns an Observable that emits windows of items it collects from the source
- * Observable. The output Observable emits connected, non-overlapping
- * windows. It emits the current window and opens a new one whenever the
- * Observable `windowBoundaries` emits an item. Because each window is an
- * Observable, the output is a higher-order Observable.
- *
- * @example <caption>In every window of 1 second each, emit at most 2 click events</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var interval = Rx.Observable.interval(1000);
- * var result = clicks.window(interval)
- *   .map(win => win.take(2)) // each window has at most 2 emissions
- *   .mergeAll(); // flatten the Observable-of-Observables
- * result.subscribe(x => console.log(x));
- *
- * @see {@link windowCount}
- * @see {@link windowTime}
- * @see {@link windowToggle}
- * @see {@link windowWhen}
- * @see {@link buffer}
- *
- * @param {Observable<any>} windowBoundaries An Observable that completes the
- * previous window and starts a new window.
- * @return {Observable<Observable<T>>} An Observable of windows, which are
- * Observables emitting values of the source Observable.
- * @method window
- * @owner Observable
- */
-function window(windowBoundaries) {
-    return function windowOperatorFunction(source) {
-        return source.lift(new WindowOperator(windowBoundaries));
-    };
-}
-exports.window = window;
-var WindowOperator = (function () {
-    function WindowOperator(windowBoundaries) {
-        this.windowBoundaries = windowBoundaries;
-    }
-    WindowOperator.prototype.call = function (subscriber, source) {
-        var windowSubscriber = new WindowSubscriber(subscriber);
-        var sourceSubscription = source.subscribe(windowSubscriber);
-        if (!sourceSubscription.closed) {
-            windowSubscriber.add(subscribeToResult_1.subscribeToResult(windowSubscriber, this.windowBoundaries));
-        }
-        return sourceSubscription;
-    };
-    return WindowOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var WindowSubscriber = (function (_super) {
-    __extends(WindowSubscriber, _super);
-    function WindowSubscriber(destination) {
-        _super.call(this, destination);
-        this.window = new Subject_1.Subject();
-        destination.next(this.window);
-    }
-    WindowSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        this.openWindow();
-    };
-    WindowSubscriber.prototype.notifyError = function (error, innerSub) {
-        this._error(error);
-    };
-    WindowSubscriber.prototype.notifyComplete = function (innerSub) {
-        this._complete();
-    };
-    WindowSubscriber.prototype._next = function (value) {
-        this.window.next(value);
-    };
-    WindowSubscriber.prototype._error = function (err) {
-        this.window.error(err);
-        this.destination.error(err);
-    };
-    WindowSubscriber.prototype._complete = function () {
-        this.window.complete();
-        this.destination.complete();
-    };
-    WindowSubscriber.prototype._unsubscribe = function () {
-        this.window = null;
-    };
-    WindowSubscriber.prototype.openWindow = function () {
-        var prevWindow = this.window;
-        if (prevWindow) {
-            prevWindow.complete();
-        }
-        var destination = this.destination;
-        var newWindow = this.window = new Subject_1.Subject();
-        destination.next(newWindow);
-    };
-    return WindowSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=window.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/windowCount.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var Subject_1 = __webpack_require__("../../../../rxjs/Subject.js");
-/**
- * Branch out the source Observable values as a nested Observable with each
- * nested Observable emitting at most `windowSize` values.
- *
- * <span class="informal">It's like {@link bufferCount}, but emits a nested
- * Observable instead of an array.</span>
- *
- * <img src="./img/windowCount.png" width="100%">
- *
- * Returns an Observable that emits windows of items it collects from the source
- * Observable. The output Observable emits windows every `startWindowEvery`
- * items, each containing no more than `windowSize` items. When the source
- * Observable completes or encounters an error, the output Observable emits
- * the current window and propagates the notification from the source
- * Observable. If `startWindowEvery` is not provided, then new windows are
- * started immediately at the start of the source and when each window completes
- * with size `windowSize`.
- *
- * @example <caption>Ignore every 3rd click event, starting from the first one</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks.windowCount(3)
- *   .map(win => win.skip(1)) // skip first of every 3 clicks
- *   .mergeAll(); // flatten the Observable-of-Observables
- * result.subscribe(x => console.log(x));
- *
- * @example <caption>Ignore every 3rd click event, starting from the third one</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks.windowCount(2, 3)
- *   .mergeAll(); // flatten the Observable-of-Observables
- * result.subscribe(x => console.log(x));
- *
- * @see {@link window}
- * @see {@link windowTime}
- * @see {@link windowToggle}
- * @see {@link windowWhen}
- * @see {@link bufferCount}
- *
- * @param {number} windowSize The maximum number of values emitted by each
- * window.
- * @param {number} [startWindowEvery] Interval at which to start a new window.
- * For example if `startWindowEvery` is `2`, then a new window will be started
- * on every other value from the source. A new window is started at the
- * beginning of the source by default.
- * @return {Observable<Observable<T>>} An Observable of windows, which in turn
- * are Observable of values.
- * @method windowCount
- * @owner Observable
- */
-function windowCount(windowSize, startWindowEvery) {
-    if (startWindowEvery === void 0) { startWindowEvery = 0; }
-    return function windowCountOperatorFunction(source) {
-        return source.lift(new WindowCountOperator(windowSize, startWindowEvery));
-    };
-}
-exports.windowCount = windowCount;
-var WindowCountOperator = (function () {
-    function WindowCountOperator(windowSize, startWindowEvery) {
-        this.windowSize = windowSize;
-        this.startWindowEvery = startWindowEvery;
-    }
-    WindowCountOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new WindowCountSubscriber(subscriber, this.windowSize, this.startWindowEvery));
-    };
-    return WindowCountOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var WindowCountSubscriber = (function (_super) {
-    __extends(WindowCountSubscriber, _super);
-    function WindowCountSubscriber(destination, windowSize, startWindowEvery) {
-        _super.call(this, destination);
-        this.destination = destination;
-        this.windowSize = windowSize;
-        this.startWindowEvery = startWindowEvery;
-        this.windows = [new Subject_1.Subject()];
-        this.count = 0;
-        destination.next(this.windows[0]);
-    }
-    WindowCountSubscriber.prototype._next = function (value) {
-        var startWindowEvery = (this.startWindowEvery > 0) ? this.startWindowEvery : this.windowSize;
-        var destination = this.destination;
-        var windowSize = this.windowSize;
-        var windows = this.windows;
-        var len = windows.length;
-        for (var i = 0; i < len && !this.closed; i++) {
-            windows[i].next(value);
-        }
-        var c = this.count - windowSize + 1;
-        if (c >= 0 && c % startWindowEvery === 0 && !this.closed) {
-            windows.shift().complete();
-        }
-        if (++this.count % startWindowEvery === 0 && !this.closed) {
-            var window_1 = new Subject_1.Subject();
-            windows.push(window_1);
-            destination.next(window_1);
-        }
-    };
-    WindowCountSubscriber.prototype._error = function (err) {
-        var windows = this.windows;
-        if (windows) {
-            while (windows.length > 0 && !this.closed) {
-                windows.shift().error(err);
-            }
-        }
-        this.destination.error(err);
-    };
-    WindowCountSubscriber.prototype._complete = function () {
-        var windows = this.windows;
-        if (windows) {
-            while (windows.length > 0 && !this.closed) {
-                windows.shift().complete();
-            }
-        }
-        this.destination.complete();
-    };
-    WindowCountSubscriber.prototype._unsubscribe = function () {
-        this.count = 0;
-        this.windows = null;
-    };
-    return WindowCountSubscriber;
-}(Subscriber_1.Subscriber));
-//# sourceMappingURL=windowCount.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/windowTime.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subject_1 = __webpack_require__("../../../../rxjs/Subject.js");
-var async_1 = __webpack_require__("../../../../rxjs/scheduler/async.js");
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var isNumeric_1 = __webpack_require__("../../../../rxjs/util/isNumeric.js");
-var isScheduler_1 = __webpack_require__("../../../../rxjs/util/isScheduler.js");
-function windowTime(windowTimeSpan) {
-    var scheduler = async_1.async;
-    var windowCreationInterval = null;
-    var maxWindowSize = Number.POSITIVE_INFINITY;
-    if (isScheduler_1.isScheduler(arguments[3])) {
-        scheduler = arguments[3];
-    }
-    if (isScheduler_1.isScheduler(arguments[2])) {
-        scheduler = arguments[2];
-    }
-    else if (isNumeric_1.isNumeric(arguments[2])) {
-        maxWindowSize = arguments[2];
-    }
-    if (isScheduler_1.isScheduler(arguments[1])) {
-        scheduler = arguments[1];
-    }
-    else if (isNumeric_1.isNumeric(arguments[1])) {
-        windowCreationInterval = arguments[1];
-    }
-    return function windowTimeOperatorFunction(source) {
-        return source.lift(new WindowTimeOperator(windowTimeSpan, windowCreationInterval, maxWindowSize, scheduler));
-    };
-}
-exports.windowTime = windowTime;
-var WindowTimeOperator = (function () {
-    function WindowTimeOperator(windowTimeSpan, windowCreationInterval, maxWindowSize, scheduler) {
-        this.windowTimeSpan = windowTimeSpan;
-        this.windowCreationInterval = windowCreationInterval;
-        this.maxWindowSize = maxWindowSize;
-        this.scheduler = scheduler;
-    }
-    WindowTimeOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new WindowTimeSubscriber(subscriber, this.windowTimeSpan, this.windowCreationInterval, this.maxWindowSize, this.scheduler));
-    };
-    return WindowTimeOperator;
-}());
-var CountedSubject = (function (_super) {
-    __extends(CountedSubject, _super);
-    function CountedSubject() {
-        _super.apply(this, arguments);
-        this._numberOfNextedValues = 0;
-    }
-    CountedSubject.prototype.next = function (value) {
-        this._numberOfNextedValues++;
-        _super.prototype.next.call(this, value);
-    };
-    Object.defineProperty(CountedSubject.prototype, "numberOfNextedValues", {
-        get: function () {
-            return this._numberOfNextedValues;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return CountedSubject;
-}(Subject_1.Subject));
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var WindowTimeSubscriber = (function (_super) {
-    __extends(WindowTimeSubscriber, _super);
-    function WindowTimeSubscriber(destination, windowTimeSpan, windowCreationInterval, maxWindowSize, scheduler) {
-        _super.call(this, destination);
-        this.destination = destination;
-        this.windowTimeSpan = windowTimeSpan;
-        this.windowCreationInterval = windowCreationInterval;
-        this.maxWindowSize = maxWindowSize;
-        this.scheduler = scheduler;
-        this.windows = [];
-        var window = this.openWindow();
-        if (windowCreationInterval !== null && windowCreationInterval >= 0) {
-            var closeState = { subscriber: this, window: window, context: null };
-            var creationState = { windowTimeSpan: windowTimeSpan, windowCreationInterval: windowCreationInterval, subscriber: this, scheduler: scheduler };
-            this.add(scheduler.schedule(dispatchWindowClose, windowTimeSpan, closeState));
-            this.add(scheduler.schedule(dispatchWindowCreation, windowCreationInterval, creationState));
-        }
-        else {
-            var timeSpanOnlyState = { subscriber: this, window: window, windowTimeSpan: windowTimeSpan };
-            this.add(scheduler.schedule(dispatchWindowTimeSpanOnly, windowTimeSpan, timeSpanOnlyState));
-        }
-    }
-    WindowTimeSubscriber.prototype._next = function (value) {
-        var windows = this.windows;
-        var len = windows.length;
-        for (var i = 0; i < len; i++) {
-            var window_1 = windows[i];
-            if (!window_1.closed) {
-                window_1.next(value);
-                if (window_1.numberOfNextedValues >= this.maxWindowSize) {
-                    this.closeWindow(window_1);
-                }
-            }
-        }
-    };
-    WindowTimeSubscriber.prototype._error = function (err) {
-        var windows = this.windows;
-        while (windows.length > 0) {
-            windows.shift().error(err);
-        }
-        this.destination.error(err);
-    };
-    WindowTimeSubscriber.prototype._complete = function () {
-        var windows = this.windows;
-        while (windows.length > 0) {
-            var window_2 = windows.shift();
-            if (!window_2.closed) {
-                window_2.complete();
-            }
-        }
-        this.destination.complete();
-    };
-    WindowTimeSubscriber.prototype.openWindow = function () {
-        var window = new CountedSubject();
-        this.windows.push(window);
-        var destination = this.destination;
-        destination.next(window);
-        return window;
-    };
-    WindowTimeSubscriber.prototype.closeWindow = function (window) {
-        window.complete();
-        var windows = this.windows;
-        windows.splice(windows.indexOf(window), 1);
-    };
-    return WindowTimeSubscriber;
-}(Subscriber_1.Subscriber));
-function dispatchWindowTimeSpanOnly(state) {
-    var subscriber = state.subscriber, windowTimeSpan = state.windowTimeSpan, window = state.window;
-    if (window) {
-        subscriber.closeWindow(window);
-    }
-    state.window = subscriber.openWindow();
-    this.schedule(state, windowTimeSpan);
-}
-function dispatchWindowCreation(state) {
-    var windowTimeSpan = state.windowTimeSpan, subscriber = state.subscriber, scheduler = state.scheduler, windowCreationInterval = state.windowCreationInterval;
-    var window = subscriber.openWindow();
-    var action = this;
-    var context = { action: action, subscription: null };
-    var timeSpanState = { subscriber: subscriber, window: window, context: context };
-    context.subscription = scheduler.schedule(dispatchWindowClose, windowTimeSpan, timeSpanState);
-    action.add(context.subscription);
-    action.schedule(state, windowCreationInterval);
-}
-function dispatchWindowClose(state) {
-    var subscriber = state.subscriber, window = state.window, context = state.context;
-    if (context && context.action && context.subscription) {
-        context.action.remove(context.subscription);
-    }
-    subscriber.closeWindow(window);
-}
-//# sourceMappingURL=windowTime.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/windowToggle.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subject_1 = __webpack_require__("../../../../rxjs/Subject.js");
-var Subscription_1 = __webpack_require__("../../../../rxjs/Subscription.js");
-var tryCatch_1 = __webpack_require__("../../../../rxjs/util/tryCatch.js");
-var errorObject_1 = __webpack_require__("../../../../rxjs/util/errorObject.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/**
- * Branch out the source Observable values as a nested Observable starting from
- * an emission from `openings` and ending when the output of `closingSelector`
- * emits.
- *
- * <span class="informal">It's like {@link bufferToggle}, but emits a nested
- * Observable instead of an array.</span>
- *
- * <img src="./img/windowToggle.png" width="100%">
- *
- * Returns an Observable that emits windows of items it collects from the source
- * Observable. The output Observable emits windows that contain those items
- * emitted by the source Observable between the time when the `openings`
- * Observable emits an item and when the Observable returned by
- * `closingSelector` emits an item.
- *
- * @example <caption>Every other second, emit the click events from the next 500ms</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var openings = Rx.Observable.interval(1000);
- * var result = clicks.windowToggle(openings, i =>
- *   i % 2 ? Rx.Observable.interval(500) : Rx.Observable.empty()
- * ).mergeAll();
- * result.subscribe(x => console.log(x));
- *
- * @see {@link window}
- * @see {@link windowCount}
- * @see {@link windowTime}
- * @see {@link windowWhen}
- * @see {@link bufferToggle}
- *
- * @param {Observable<O>} openings An observable of notifications to start new
- * windows.
- * @param {function(value: O): Observable} closingSelector A function that takes
- * the value emitted by the `openings` observable and returns an Observable,
- * which, when it emits (either `next` or `complete`), signals that the
- * associated window should complete.
- * @return {Observable<Observable<T>>} An observable of windows, which in turn
- * are Observables.
- * @method windowToggle
- * @owner Observable
- */
-function windowToggle(openings, closingSelector) {
-    return function (source) { return source.lift(new WindowToggleOperator(openings, closingSelector)); };
-}
-exports.windowToggle = windowToggle;
-var WindowToggleOperator = (function () {
-    function WindowToggleOperator(openings, closingSelector) {
-        this.openings = openings;
-        this.closingSelector = closingSelector;
-    }
-    WindowToggleOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new WindowToggleSubscriber(subscriber, this.openings, this.closingSelector));
-    };
-    return WindowToggleOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var WindowToggleSubscriber = (function (_super) {
-    __extends(WindowToggleSubscriber, _super);
-    function WindowToggleSubscriber(destination, openings, closingSelector) {
-        _super.call(this, destination);
-        this.openings = openings;
-        this.closingSelector = closingSelector;
-        this.contexts = [];
-        this.add(this.openSubscription = subscribeToResult_1.subscribeToResult(this, openings, openings));
-    }
-    WindowToggleSubscriber.prototype._next = function (value) {
-        var contexts = this.contexts;
-        if (contexts) {
-            var len = contexts.length;
-            for (var i = 0; i < len; i++) {
-                contexts[i].window.next(value);
-            }
-        }
-    };
-    WindowToggleSubscriber.prototype._error = function (err) {
-        var contexts = this.contexts;
-        this.contexts = null;
-        if (contexts) {
-            var len = contexts.length;
-            var index = -1;
-            while (++index < len) {
-                var context = contexts[index];
-                context.window.error(err);
-                context.subscription.unsubscribe();
-            }
-        }
-        _super.prototype._error.call(this, err);
-    };
-    WindowToggleSubscriber.prototype._complete = function () {
-        var contexts = this.contexts;
-        this.contexts = null;
-        if (contexts) {
-            var len = contexts.length;
-            var index = -1;
-            while (++index < len) {
-                var context = contexts[index];
-                context.window.complete();
-                context.subscription.unsubscribe();
-            }
-        }
-        _super.prototype._complete.call(this);
-    };
-    WindowToggleSubscriber.prototype._unsubscribe = function () {
-        var contexts = this.contexts;
-        this.contexts = null;
-        if (contexts) {
-            var len = contexts.length;
-            var index = -1;
-            while (++index < len) {
-                var context = contexts[index];
-                context.window.unsubscribe();
-                context.subscription.unsubscribe();
-            }
-        }
-    };
-    WindowToggleSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        if (outerValue === this.openings) {
-            var closingSelector = this.closingSelector;
-            var closingNotifier = tryCatch_1.tryCatch(closingSelector)(innerValue);
-            if (closingNotifier === errorObject_1.errorObject) {
-                return this.error(errorObject_1.errorObject.e);
-            }
-            else {
-                var window_1 = new Subject_1.Subject();
-                var subscription = new Subscription_1.Subscription();
-                var context = { window: window_1, subscription: subscription };
-                this.contexts.push(context);
-                var innerSubscription = subscribeToResult_1.subscribeToResult(this, closingNotifier, context);
-                if (innerSubscription.closed) {
-                    this.closeWindow(this.contexts.length - 1);
-                }
-                else {
-                    innerSubscription.context = context;
-                    subscription.add(innerSubscription);
-                }
-                this.destination.next(window_1);
-            }
-        }
-        else {
-            this.closeWindow(this.contexts.indexOf(outerValue));
-        }
-    };
-    WindowToggleSubscriber.prototype.notifyError = function (err) {
-        this.error(err);
-    };
-    WindowToggleSubscriber.prototype.notifyComplete = function (inner) {
-        if (inner !== this.openSubscription) {
-            this.closeWindow(this.contexts.indexOf(inner.context));
-        }
-    };
-    WindowToggleSubscriber.prototype.closeWindow = function (index) {
-        if (index === -1) {
-            return;
-        }
-        var contexts = this.contexts;
-        var context = contexts[index];
-        var window = context.window, subscription = context.subscription;
-        contexts.splice(index, 1);
-        window.complete();
-        subscription.unsubscribe();
-    };
-    return WindowToggleSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=windowToggle.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/windowWhen.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subject_1 = __webpack_require__("../../../../rxjs/Subject.js");
-var tryCatch_1 = __webpack_require__("../../../../rxjs/util/tryCatch.js");
-var errorObject_1 = __webpack_require__("../../../../rxjs/util/errorObject.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/**
- * Branch out the source Observable values as a nested Observable using a
- * factory function of closing Observables to determine when to start a new
- * window.
- *
- * <span class="informal">It's like {@link bufferWhen}, but emits a nested
- * Observable instead of an array.</span>
- *
- * <img src="./img/windowWhen.png" width="100%">
- *
- * Returns an Observable that emits windows of items it collects from the source
- * Observable. The output Observable emits connected, non-overlapping windows.
- * It emits the current window and opens a new one whenever the Observable
- * produced by the specified `closingSelector` function emits an item. The first
- * window is opened immediately when subscribing to the output Observable.
- *
- * @example <caption>Emit only the first two clicks events in every window of [1-5] random seconds</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var result = clicks
- *   .windowWhen(() => Rx.Observable.interval(1000 + Math.random() * 4000))
- *   .map(win => win.take(2)) // each window has at most 2 emissions
- *   .mergeAll(); // flatten the Observable-of-Observables
- * result.subscribe(x => console.log(x));
- *
- * @see {@link window}
- * @see {@link windowCount}
- * @see {@link windowTime}
- * @see {@link windowToggle}
- * @see {@link bufferWhen}
- *
- * @param {function(): Observable} closingSelector A function that takes no
- * arguments and returns an Observable that signals (on either `next` or
- * `complete`) when to close the previous window and start a new one.
- * @return {Observable<Observable<T>>} An observable of windows, which in turn
- * are Observables.
- * @method windowWhen
- * @owner Observable
- */
-function windowWhen(closingSelector) {
-    return function windowWhenOperatorFunction(source) {
-        return source.lift(new WindowOperator(closingSelector));
-    };
-}
-exports.windowWhen = windowWhen;
-var WindowOperator = (function () {
-    function WindowOperator(closingSelector) {
-        this.closingSelector = closingSelector;
-    }
-    WindowOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new WindowSubscriber(subscriber, this.closingSelector));
-    };
-    return WindowOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var WindowSubscriber = (function (_super) {
-    __extends(WindowSubscriber, _super);
-    function WindowSubscriber(destination, closingSelector) {
-        _super.call(this, destination);
-        this.destination = destination;
-        this.closingSelector = closingSelector;
-        this.openWindow();
-    }
-    WindowSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        this.openWindow(innerSub);
-    };
-    WindowSubscriber.prototype.notifyError = function (error, innerSub) {
-        this._error(error);
-    };
-    WindowSubscriber.prototype.notifyComplete = function (innerSub) {
-        this.openWindow(innerSub);
-    };
-    WindowSubscriber.prototype._next = function (value) {
-        this.window.next(value);
-    };
-    WindowSubscriber.prototype._error = function (err) {
-        this.window.error(err);
-        this.destination.error(err);
-        this.unsubscribeClosingNotification();
-    };
-    WindowSubscriber.prototype._complete = function () {
-        this.window.complete();
-        this.destination.complete();
-        this.unsubscribeClosingNotification();
-    };
-    WindowSubscriber.prototype.unsubscribeClosingNotification = function () {
-        if (this.closingNotification) {
-            this.closingNotification.unsubscribe();
-        }
-    };
-    WindowSubscriber.prototype.openWindow = function (innerSub) {
-        if (innerSub === void 0) { innerSub = null; }
-        if (innerSub) {
-            this.remove(innerSub);
-            innerSub.unsubscribe();
-        }
-        var prevWindow = this.window;
-        if (prevWindow) {
-            prevWindow.complete();
-        }
-        var window = this.window = new Subject_1.Subject();
-        this.destination.next(window);
-        var closingNotifier = tryCatch_1.tryCatch(this.closingSelector)();
-        if (closingNotifier === errorObject_1.errorObject) {
-            var err = errorObject_1.errorObject.e;
-            this.destination.error(err);
-            this.window.error(err);
-        }
-        else {
-            this.add(this.closingNotification = subscribeToResult_1.subscribeToResult(this, closingNotifier));
-        }
-    };
-    return WindowSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=windowWhen.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/withLatestFrom.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-/* tslint:enable:max-line-length */
-/**
- * Combines the source Observable with other Observables to create an Observable
- * whose values are calculated from the latest values of each, only when the
- * source emits.
- *
- * <span class="informal">Whenever the source Observable emits a value, it
- * computes a formula using that value plus the latest values from other input
- * Observables, then emits the output of that formula.</span>
- *
- * <img src="./img/withLatestFrom.png" width="100%">
- *
- * `withLatestFrom` combines each value from the source Observable (the
- * instance) with the latest values from the other input Observables only when
- * the source emits a value, optionally using a `project` function to determine
- * the value to be emitted on the output Observable. All input Observables must
- * emit at least one value before the output Observable will emit a value.
- *
- * @example <caption>On every click event, emit an array with the latest timer event plus the click event</caption>
- * var clicks = Rx.Observable.fromEvent(document, 'click');
- * var timer = Rx.Observable.interval(1000);
- * var result = clicks.withLatestFrom(timer);
- * result.subscribe(x => console.log(x));
- *
- * @see {@link combineLatest}
- *
- * @param {ObservableInput} other An input Observable to combine with the source
- * Observable. More than one input Observables may be given as argument.
- * @param {Function} [project] Projection function for combining values
- * together. Receives all values in order of the Observables passed, where the
- * first parameter is a value from the source Observable. (e.g.
- * `a.withLatestFrom(b, c, (a1, b1, c1) => a1 + b1 + c1)`). If this is not
- * passed, arrays will be emitted on the output Observable.
- * @return {Observable} An Observable of projected values from the most recent
- * values from each input Observable, or an array of the most recent values from
- * each input Observable.
- * @method withLatestFrom
- * @owner Observable
- */
-function withLatestFrom() {
-    var args = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i - 0] = arguments[_i];
-    }
-    return function (source) {
-        var project;
-        if (typeof args[args.length - 1] === 'function') {
-            project = args.pop();
-        }
-        var observables = args;
-        return source.lift(new WithLatestFromOperator(observables, project));
-    };
-}
-exports.withLatestFrom = withLatestFrom;
-var WithLatestFromOperator = (function () {
-    function WithLatestFromOperator(observables, project) {
-        this.observables = observables;
-        this.project = project;
-    }
-    WithLatestFromOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new WithLatestFromSubscriber(subscriber, this.observables, this.project));
-    };
-    return WithLatestFromOperator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var WithLatestFromSubscriber = (function (_super) {
-    __extends(WithLatestFromSubscriber, _super);
-    function WithLatestFromSubscriber(destination, observables, project) {
-        _super.call(this, destination);
-        this.observables = observables;
-        this.project = project;
-        this.toRespond = [];
-        var len = observables.length;
-        this.values = new Array(len);
-        for (var i = 0; i < len; i++) {
-            this.toRespond.push(i);
-        }
-        for (var i = 0; i < len; i++) {
-            var observable = observables[i];
-            this.add(subscribeToResult_1.subscribeToResult(this, observable, observable, i));
-        }
-    }
-    WithLatestFromSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        this.values[outerIndex] = innerValue;
-        var toRespond = this.toRespond;
-        if (toRespond.length > 0) {
-            var found = toRespond.indexOf(outerIndex);
-            if (found !== -1) {
-                toRespond.splice(found, 1);
-            }
-        }
-    };
-    WithLatestFromSubscriber.prototype.notifyComplete = function () {
-        // noop
-    };
-    WithLatestFromSubscriber.prototype._next = function (value) {
-        if (this.toRespond.length === 0) {
-            var args = [value].concat(this.values);
-            if (this.project) {
-                this._tryProject(args);
-            }
-            else {
-                this.destination.next(args);
-            }
-        }
-    };
-    WithLatestFromSubscriber.prototype._tryProject = function (args) {
-        var result;
-        try {
-            result = this.project.apply(this, args);
-        }
-        catch (err) {
-            this.destination.error(err);
-            return;
-        }
-        this.destination.next(result);
-    };
-    return WithLatestFromSubscriber;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=withLatestFrom.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/zip.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var ArrayObservable_1 = __webpack_require__("../../../../rxjs/observable/ArrayObservable.js");
-var isArray_1 = __webpack_require__("../../../../rxjs/util/isArray.js");
-var Subscriber_1 = __webpack_require__("../../../../rxjs/Subscriber.js");
-var OuterSubscriber_1 = __webpack_require__("../../../../rxjs/OuterSubscriber.js");
-var subscribeToResult_1 = __webpack_require__("../../../../rxjs/util/subscribeToResult.js");
-var iterator_1 = __webpack_require__("../../../../rxjs/symbol/iterator.js");
-/* tslint:enable:max-line-length */
-/**
- * @param observables
- * @return {Observable<R>}
- * @method zip
- * @owner Observable
- */
-function zip() {
-    var observables = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        observables[_i - 0] = arguments[_i];
-    }
-    return function zipOperatorFunction(source) {
-        return source.lift.call(zipStatic.apply(void 0, [source].concat(observables)));
-    };
-}
-exports.zip = zip;
-/* tslint:enable:max-line-length */
-/**
- * Combines multiple Observables to create an Observable whose values are calculated from the values, in order, of each
- * of its input Observables.
- *
- * If the latest parameter is a function, this function is used to compute the created value from the input values.
- * Otherwise, an array of the input values is returned.
- *
- * @example <caption>Combine age and name from different sources</caption>
- *
- * let age$ = Observable.of<number>(27, 25, 29);
- * let name$ = Observable.of<string>('Foo', 'Bar', 'Beer');
- * let isDev$ = Observable.of<boolean>(true, true, false);
- *
- * Observable
- *     .zip(age$,
- *          name$,
- *          isDev$,
- *          (age: number, name: string, isDev: boolean) => ({ age, name, isDev }))
- *     .subscribe(x => console.log(x));
- *
- * // outputs
- * // { age: 27, name: 'Foo', isDev: true }
- * // { age: 25, name: 'Bar', isDev: true }
- * // { age: 29, name: 'Beer', isDev: false }
- *
- * @param observables
- * @return {Observable<R>}
- * @static true
- * @name zip
- * @owner Observable
- */
-function zipStatic() {
-    var observables = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        observables[_i - 0] = arguments[_i];
-    }
-    var project = observables[observables.length - 1];
-    if (typeof project === 'function') {
-        observables.pop();
-    }
-    return new ArrayObservable_1.ArrayObservable(observables).lift(new ZipOperator(project));
-}
-exports.zipStatic = zipStatic;
-var ZipOperator = (function () {
-    function ZipOperator(project) {
-        this.project = project;
-    }
-    ZipOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new ZipSubscriber(subscriber, this.project));
-    };
-    return ZipOperator;
-}());
-exports.ZipOperator = ZipOperator;
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var ZipSubscriber = (function (_super) {
-    __extends(ZipSubscriber, _super);
-    function ZipSubscriber(destination, project, values) {
-        if (values === void 0) { values = Object.create(null); }
-        _super.call(this, destination);
-        this.iterators = [];
-        this.active = 0;
-        this.project = (typeof project === 'function') ? project : null;
-        this.values = values;
-    }
-    ZipSubscriber.prototype._next = function (value) {
-        var iterators = this.iterators;
-        if (isArray_1.isArray(value)) {
-            iterators.push(new StaticArrayIterator(value));
-        }
-        else if (typeof value[iterator_1.iterator] === 'function') {
-            iterators.push(new StaticIterator(value[iterator_1.iterator]()));
-        }
-        else {
-            iterators.push(new ZipBufferIterator(this.destination, this, value));
-        }
-    };
-    ZipSubscriber.prototype._complete = function () {
-        var iterators = this.iterators;
-        var len = iterators.length;
-        if (len === 0) {
-            this.destination.complete();
-            return;
-        }
-        this.active = len;
-        for (var i = 0; i < len; i++) {
-            var iterator = iterators[i];
-            if (iterator.stillUnsubscribed) {
-                this.add(iterator.subscribe(iterator, i));
-            }
-            else {
-                this.active--; // not an observable
-            }
-        }
-    };
-    ZipSubscriber.prototype.notifyInactive = function () {
-        this.active--;
-        if (this.active === 0) {
-            this.destination.complete();
-        }
-    };
-    ZipSubscriber.prototype.checkIterators = function () {
-        var iterators = this.iterators;
-        var len = iterators.length;
-        var destination = this.destination;
-        // abort if not all of them have values
-        for (var i = 0; i < len; i++) {
-            var iterator = iterators[i];
-            if (typeof iterator.hasValue === 'function' && !iterator.hasValue()) {
-                return;
-            }
-        }
-        var shouldComplete = false;
-        var args = [];
-        for (var i = 0; i < len; i++) {
-            var iterator = iterators[i];
-            var result = iterator.next();
-            // check to see if it's completed now that you've gotten
-            // the next value.
-            if (iterator.hasCompleted()) {
-                shouldComplete = true;
-            }
-            if (result.done) {
-                destination.complete();
-                return;
-            }
-            args.push(result.value);
-        }
-        if (this.project) {
-            this._tryProject(args);
-        }
-        else {
-            destination.next(args);
-        }
-        if (shouldComplete) {
-            destination.complete();
-        }
-    };
-    ZipSubscriber.prototype._tryProject = function (args) {
-        var result;
-        try {
-            result = this.project.apply(this, args);
-        }
-        catch (err) {
-            this.destination.error(err);
-            return;
-        }
-        this.destination.next(result);
-    };
-    return ZipSubscriber;
-}(Subscriber_1.Subscriber));
-exports.ZipSubscriber = ZipSubscriber;
-var StaticIterator = (function () {
-    function StaticIterator(iterator) {
-        this.iterator = iterator;
-        this.nextResult = iterator.next();
-    }
-    StaticIterator.prototype.hasValue = function () {
-        return true;
-    };
-    StaticIterator.prototype.next = function () {
-        var result = this.nextResult;
-        this.nextResult = this.iterator.next();
-        return result;
-    };
-    StaticIterator.prototype.hasCompleted = function () {
-        var nextResult = this.nextResult;
-        return nextResult && nextResult.done;
-    };
-    return StaticIterator;
-}());
-var StaticArrayIterator = (function () {
-    function StaticArrayIterator(array) {
-        this.array = array;
-        this.index = 0;
-        this.length = 0;
-        this.length = array.length;
-    }
-    StaticArrayIterator.prototype[iterator_1.iterator] = function () {
-        return this;
-    };
-    StaticArrayIterator.prototype.next = function (value) {
-        var i = this.index++;
-        var array = this.array;
-        return i < this.length ? { value: array[i], done: false } : { value: null, done: true };
-    };
-    StaticArrayIterator.prototype.hasValue = function () {
-        return this.array.length > this.index;
-    };
-    StaticArrayIterator.prototype.hasCompleted = function () {
-        return this.array.length === this.index;
-    };
-    return StaticArrayIterator;
-}());
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var ZipBufferIterator = (function (_super) {
-    __extends(ZipBufferIterator, _super);
-    function ZipBufferIterator(destination, parent, observable) {
-        _super.call(this, destination);
-        this.parent = parent;
-        this.observable = observable;
-        this.stillUnsubscribed = true;
-        this.buffer = [];
-        this.isComplete = false;
-    }
-    ZipBufferIterator.prototype[iterator_1.iterator] = function () {
-        return this;
-    };
-    // NOTE: there is actually a name collision here with Subscriber.next and Iterator.next
-    //    this is legit because `next()` will never be called by a subscription in this case.
-    ZipBufferIterator.prototype.next = function () {
-        var buffer = this.buffer;
-        if (buffer.length === 0 && this.isComplete) {
-            return { value: null, done: true };
-        }
-        else {
-            return { value: buffer.shift(), done: false };
-        }
-    };
-    ZipBufferIterator.prototype.hasValue = function () {
-        return this.buffer.length > 0;
-    };
-    ZipBufferIterator.prototype.hasCompleted = function () {
-        return this.buffer.length === 0 && this.isComplete;
-    };
-    ZipBufferIterator.prototype.notifyComplete = function () {
-        if (this.buffer.length > 0) {
-            this.isComplete = true;
-            this.parent.notifyInactive();
-        }
-        else {
-            this.destination.complete();
-        }
-    };
-    ZipBufferIterator.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        this.buffer.push(innerValue);
-        this.parent.checkIterators();
-    };
-    ZipBufferIterator.prototype.subscribe = function (value, index) {
-        return subscribeToResult_1.subscribeToResult(this, this.observable, this, index);
-    };
-    return ZipBufferIterator;
-}(OuterSubscriber_1.OuterSubscriber));
-//# sourceMappingURL=zip.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/operators/zipAll.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var zip_1 = __webpack_require__("../../../../rxjs/operators/zip.js");
-function zipAll(project) {
-    return function (source) { return source.lift(new zip_1.ZipOperator(project)); };
-}
-exports.zipAll = zipAll;
-//# sourceMappingURL=zipAll.js.map
 
 /***/ }),
 
@@ -10983,85 +3140,6 @@ exports.AsyncScheduler = AsyncScheduler;
 
 /***/ }),
 
-/***/ "../../../../rxjs/scheduler/QueueAction.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var AsyncAction_1 = __webpack_require__("../../../../rxjs/scheduler/AsyncAction.js");
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var QueueAction = (function (_super) {
-    __extends(QueueAction, _super);
-    function QueueAction(scheduler, work) {
-        _super.call(this, scheduler, work);
-        this.scheduler = scheduler;
-        this.work = work;
-    }
-    QueueAction.prototype.schedule = function (state, delay) {
-        if (delay === void 0) { delay = 0; }
-        if (delay > 0) {
-            return _super.prototype.schedule.call(this, state, delay);
-        }
-        this.delay = delay;
-        this.state = state;
-        this.scheduler.flush(this);
-        return this;
-    };
-    QueueAction.prototype.execute = function (state, delay) {
-        return (delay > 0 || this.closed) ?
-            _super.prototype.execute.call(this, state, delay) :
-            this._execute(state, delay);
-    };
-    QueueAction.prototype.requestAsyncId = function (scheduler, id, delay) {
-        if (delay === void 0) { delay = 0; }
-        // If delay exists and is greater than 0, or if the delay is null (the
-        // action wasn't rescheduled) but was originally scheduled as an async
-        // action, then recycle as an async action.
-        if ((delay !== null && delay > 0) || (delay === null && this.delay > 0)) {
-            return _super.prototype.requestAsyncId.call(this, scheduler, id, delay);
-        }
-        // Otherwise flush the scheduler starting with this action.
-        return scheduler.flush(this);
-    };
-    return QueueAction;
-}(AsyncAction_1.AsyncAction));
-exports.QueueAction = QueueAction;
-//# sourceMappingURL=QueueAction.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/scheduler/QueueScheduler.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var AsyncScheduler_1 = __webpack_require__("../../../../rxjs/scheduler/AsyncScheduler.js");
-var QueueScheduler = (function (_super) {
-    __extends(QueueScheduler, _super);
-    function QueueScheduler() {
-        _super.apply(this, arguments);
-    }
-    return QueueScheduler;
-}(AsyncScheduler_1.AsyncScheduler));
-exports.QueueScheduler = QueueScheduler;
-//# sourceMappingURL=QueueScheduler.js.map
-
-/***/ }),
-
 /***/ "../../../../rxjs/scheduler/async.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11116,255 +3194,6 @@ exports.async = new AsyncScheduler_1.AsyncScheduler(AsyncAction_1.AsyncAction);
 
 /***/ }),
 
-/***/ "../../../../rxjs/scheduler/queue.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var QueueAction_1 = __webpack_require__("../../../../rxjs/scheduler/QueueAction.js");
-var QueueScheduler_1 = __webpack_require__("../../../../rxjs/scheduler/QueueScheduler.js");
-/**
- *
- * Queue Scheduler
- *
- * <span class="informal">Put every next task on a queue, instead of executing it immediately</span>
- *
- * `queue` scheduler, when used with delay, behaves the same as {@link async} scheduler.
- *
- * When used without delay, it schedules given task synchronously - executes it right when
- * it is scheduled. However when called recursively, that is when inside the scheduled task,
- * another task is scheduled with queue scheduler, instead of executing immediately as well,
- * that task will be put on a queue and wait for current one to finish.
- *
- * This means that when you execute task with `queue` scheduler, you are sure it will end
- * before any other task scheduled with that scheduler will start.
- *
- * @examples <caption>Schedule recursively first, then do something</caption>
- *
- * Rx.Scheduler.queue.schedule(() => {
- *   Rx.Scheduler.queue.schedule(() => console.log('second')); // will not happen now, but will be put on a queue
- *
- *   console.log('first');
- * });
- *
- * // Logs:
- * // "first"
- * // "second"
- *
- *
- * @example <caption>Reschedule itself recursively</caption>
- *
- * Rx.Scheduler.queue.schedule(function(state) {
- *   if (state !== 0) {
- *     console.log('before', state);
- *     this.schedule(state - 1); // `this` references currently executing Action,
- *                               // which we reschedule with new state
- *     console.log('after', state);
- *   }
- * }, 0, 3);
- *
- * // In scheduler that runs recursively, you would expect:
- * // "before", 3
- * // "before", 2
- * // "before", 1
- * // "after", 1
- * // "after", 2
- * // "after", 3
- *
- * // But with queue it logs:
- * // "before", 3
- * // "after", 3
- * // "before", 2
- * // "after", 2
- * // "before", 1
- * // "after", 1
- *
- *
- * @static true
- * @name queue
- * @owner Scheduler
- */
-exports.queue = new QueueScheduler_1.QueueScheduler(QueueAction_1.QueueAction);
-//# sourceMappingURL=queue.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/util/FastMap.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var FastMap = (function () {
-    function FastMap() {
-        this.values = {};
-    }
-    FastMap.prototype.delete = function (key) {
-        this.values[key] = null;
-        return true;
-    };
-    FastMap.prototype.set = function (key, value) {
-        this.values[key] = value;
-        return this;
-    };
-    FastMap.prototype.get = function (key) {
-        return this.values[key];
-    };
-    FastMap.prototype.forEach = function (cb, thisArg) {
-        var values = this.values;
-        for (var key in values) {
-            if (values.hasOwnProperty(key) && values[key] !== null) {
-                cb.call(thisArg, values[key], key);
-            }
-        }
-    };
-    FastMap.prototype.clear = function () {
-        this.values = {};
-    };
-    return FastMap;
-}());
-exports.FastMap = FastMap;
-//# sourceMappingURL=FastMap.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/util/Map.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var root_1 = __webpack_require__("../../../../rxjs/util/root.js");
-var MapPolyfill_1 = __webpack_require__("../../../../rxjs/util/MapPolyfill.js");
-exports.Map = root_1.root.Map || (function () { return MapPolyfill_1.MapPolyfill; })();
-//# sourceMappingURL=Map.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/util/MapPolyfill.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var MapPolyfill = (function () {
-    function MapPolyfill() {
-        this.size = 0;
-        this._values = [];
-        this._keys = [];
-    }
-    MapPolyfill.prototype.get = function (key) {
-        var i = this._keys.indexOf(key);
-        return i === -1 ? undefined : this._values[i];
-    };
-    MapPolyfill.prototype.set = function (key, value) {
-        var i = this._keys.indexOf(key);
-        if (i === -1) {
-            this._keys.push(key);
-            this._values.push(value);
-            this.size++;
-        }
-        else {
-            this._values[i] = value;
-        }
-        return this;
-    };
-    MapPolyfill.prototype.delete = function (key) {
-        var i = this._keys.indexOf(key);
-        if (i === -1) {
-            return false;
-        }
-        this._values.splice(i, 1);
-        this._keys.splice(i, 1);
-        this.size--;
-        return true;
-    };
-    MapPolyfill.prototype.clear = function () {
-        this._keys.length = 0;
-        this._values.length = 0;
-        this.size = 0;
-    };
-    MapPolyfill.prototype.forEach = function (cb, thisArg) {
-        for (var i = 0; i < this.size; i++) {
-            cb.call(thisArg, this._values[i], this._keys[i]);
-        }
-    };
-    return MapPolyfill;
-}());
-exports.MapPolyfill = MapPolyfill;
-//# sourceMappingURL=MapPolyfill.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/util/Set.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var root_1 = __webpack_require__("../../../../rxjs/util/root.js");
-function minimalSetImpl() {
-    // THIS IS NOT a full impl of Set, this is just the minimum
-    // bits of functionality we need for this library.
-    return (function () {
-        function MinimalSet() {
-            this._values = [];
-        }
-        MinimalSet.prototype.add = function (value) {
-            if (!this.has(value)) {
-                this._values.push(value);
-            }
-        };
-        MinimalSet.prototype.has = function (value) {
-            return this._values.indexOf(value) !== -1;
-        };
-        Object.defineProperty(MinimalSet.prototype, "size", {
-            get: function () {
-                return this._values.length;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        MinimalSet.prototype.clear = function () {
-            this._values.length = 0;
-        };
-        return MinimalSet;
-    }());
-}
-exports.minimalSetImpl = minimalSetImpl;
-exports.Set = root_1.root.Set || minimalSetImpl();
-//# sourceMappingURL=Set.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/util/TimeoutError.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-/**
- * An error thrown when duetime elapses.
- *
- * @see {@link timeout}
- *
- * @class TimeoutError
- */
-var TimeoutError = (function (_super) {
-    __extends(TimeoutError, _super);
-    function TimeoutError() {
-        var err = _super.call(this, 'Timeout has occurred');
-        this.name = err.name = 'TimeoutError';
-        this.stack = err.stack;
-        this.message = err.message;
-    }
-    return TimeoutError;
-}(Error));
-exports.TimeoutError = TimeoutError;
-//# sourceMappingURL=TimeoutError.js.map
-
-/***/ }),
-
 /***/ "../../../../rxjs/util/isDate.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11394,24 +3223,6 @@ function isNumeric(val) {
 exports.isNumeric = isNumeric;
 ;
 //# sourceMappingURL=isNumeric.js.map
-
-/***/ }),
-
-/***/ "../../../../rxjs/util/not.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-function not(pred, thisArg) {
-    function notPred() {
-        return !(notPred.pred.apply(notPred.thisArg, arguments));
-    }
-    notPred.pred = pred;
-    notPred.thisArg = thisArg;
-    return notPred;
-}
-exports.not = not;
-//# sourceMappingURL=not.js.map
 
 /***/ }),
 
@@ -18827,39 +10638,39 @@ var CdkTableModule = (function () {
 
 /***/ }),
 
-/***/ "../../../flex-layout/esm5/flex-layout.es5.js":
+/***/ "../../../flex-layout/@angular/flex-layout.es5.js":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__("../../../platform-browser/@angular/platform-browser.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_operators__ = __webpack_require__("../../../../rxjs/operators/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_operators___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_operators__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_tslib__ = __webpack_require__("../../../../tslib/tslib.es6.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_common__ = __webpack_require__("../../../common/@angular/common.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__ = __webpack_require__("../../../../rxjs/BehaviorSubject.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_ReplaySubject__ = __webpack_require__("../../../../rxjs/ReplaySubject.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_ReplaySubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_ReplaySubject__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__("../../../../tslib/tslib.es6.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_platform_browser__ = __webpack_require__("../../../platform-browser/@angular/platform-browser.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__ = __webpack_require__("../../../../rxjs/BehaviorSubject.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_operator_filter__ = __webpack_require__("../../../../rxjs/operator/filter.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_operator_filter___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_operator_filter__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_operator_map__ = __webpack_require__("../../../../rxjs/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_common__ = __webpack_require__("../../../common/@angular/common.es5.js");
 /* unused harmony export VERSION */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FlexLayoutModule; });
 /* unused harmony export BaseFxDirective */
 /* unused harmony export BaseFxDirectiveAdapter */
-/* unused harmony export KeyOptions */
-/* unused harmony export ResponsiveActivation */
-/* unused harmony export LayoutDirective */
-/* unused harmony export LayoutAlignDirective */
-/* unused harmony export LayoutGapDirective */
-/* unused harmony export LayoutWrapDirective */
 /* unused harmony export FlexDirective */
 /* unused harmony export FlexAlignDirective */
 /* unused harmony export FlexFillDirective */
 /* unused harmony export FlexOffsetDirective */
 /* unused harmony export FlexOrderDirective */
-/* unused harmony export ClassDirective */
-/* unused harmony export StyleDirective */
+/* unused harmony export LayoutDirective */
+/* unused harmony export LayoutAlignDirective */
+/* unused harmony export LayoutGapDirective */
+/* unused harmony export LayoutWrapDirective */
 /* unused harmony export negativeOf */
 /* unused harmony export ShowHideDirective */
-/* unused harmony export ImgSrcDirective */
+/* unused harmony export ClassDirective */
+/* unused harmony export StyleDirective */
+/* unused harmony export KeyOptions */
+/* unused harmony export ResponsiveActivation */
 /* unused harmony export RESPONSIVE_ALIASES */
 /* unused harmony export DEFAULT_BREAKPOINTS */
 /* unused harmony export ScreenTypes */
@@ -18894,10 +10705,10 @@ var CdkTableModule = (function () {
 /* unused harmony export extendObject */
 /* unused harmony export NgStyleKeyValue */
 /* unused harmony export ngStyleUtils */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FlexLayoutModule; });
+
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google Inc. All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -18908,256 +10719,177 @@ var CdkTableModule = (function () {
 
 
 
-
-
-
-/**
- * Current version of Angular Flex-Layout.
- */
-var VERSION = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["d" /* Version */]('2.0.0-beta.10-4905443');
-
-var LAYOUT_VALUES = ['row', 'column', 'row-reverse', 'column-reverse'];
-/**
- * Validate the direction|'direction wrap' value and then update the host's inline flexbox styles
- * @param {?} value
- * @return {?}
- */
-function buildLayoutCSS(value) {
-    var _a = validateValue(value), direction = _a[0], wrap = _a[1];
-    return buildCSS(direction, wrap);
-}
-/**
- * Validate the value to be one of the acceptable value options
- * Use default fallback of 'row'
- * @param {?} value
- * @return {?}
- */
-function validateValue(value) {
-    value = value ? value.toLowerCase() : '';
-    var _a = value.split(' '), direction = _a[0], wrap = _a[1];
-    if (!LAYOUT_VALUES.find(function (x) { return x === direction; })) {
-        direction = LAYOUT_VALUES[0];
+var VERSION = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["d" /* Version */]('2.0.0-beta.8-d171c33');
+var MediaChange = (function () {
+    function MediaChange(matches, mediaQuery, mqAlias, suffix) {
+        if (matches === void 0) { matches = false; }
+        if (mediaQuery === void 0) { mediaQuery = 'all'; }
+        if (mqAlias === void 0) { mqAlias = ''; }
+        if (suffix === void 0) { suffix = ''; }
+        this.matches = matches;
+        this.mediaQuery = mediaQuery;
+        this.mqAlias = mqAlias;
+        this.suffix = suffix;
     }
-    return [direction, validateWrapValue(wrap)];
-}
-/**
- * Determine if the validated, flex-direction value specifies
- * a horizontal/row flow.
- * @param {?} value
- * @return {?}
- */
-function isFlowHorizontal(value) {
-    var _a = validateValue(value), flow = _a[0], _ = _a[1];
-    return flow.indexOf('row') > -1;
-}
-/**
- * Convert layout-wrap='<value>' to expected flex-wrap style
- * @param {?} value
- * @return {?}
- */
-function validateWrapValue(value) {
-    if (!!value) {
-        switch (value.toLowerCase()) {
-            case 'reverse':
-            case 'wrap-reverse':
-            case 'reverse-wrap':
-                value = 'wrap-reverse';
-                break;
-            case 'no':
-            case 'none':
-            case 'nowrap':
-                value = 'nowrap';
-                break;
-            // All other values fallback to 'wrap'
-            default:
-                value = 'wrap';
-                break;
-        }
-    }
-    return value;
-}
-/**
- * Build the CSS that should be assigned to the element instance
- * BUG:
- *   1) min-height on a column flex container won’t apply to its flex item children in IE 10-11.
- *      Use height instead if possible; height : <xxx>vh;
- *
- *  This way any padding or border specified on the child elements are
- *  laid out and drawn inside that element's specified width and height.
- * @param {?} direction
- * @param {?=} wrap
- * @return {?}
- */
-function buildCSS(direction, wrap) {
-    if (wrap === void 0) { wrap = null; }
-    return {
-        'display': 'flex',
-        'box-sizing': 'border-box',
-        'flex-direction': direction,
-        'flex-wrap': !!wrap ? wrap : null
+    MediaChange.prototype.clone = function () {
+        return new MediaChange(this.matches, this.mediaQuery, this.mqAlias, this.suffix);
     };
-}
-
-/**
- * Applies CSS prefixes to appropriate style keys.
- *
- * Note: `-ms-`, `-moz` and `-webkit-box` are no longer supported. e.g.
- *    {
- *      display: -webkit-flex;     NEW - Safari 6.1+. iOS 7.1+, BB10
- *      display: flex;             NEW, Spec - Firefox, Chrome, Opera
- *      // display: -webkit-box;   OLD - iOS 6-, Safari 3.1-6, BB7
- *      // display: -ms-flexbox;   TWEENER - IE 10
- *      // display: -moz-flexbox;  OLD - Firefox
- *    }
- * @param {?} target
- * @return {?}
- */
-function applyCssPrefixes(target) {
-    for (var /** @type {?} */ key in target) {
-        var /** @type {?} */ value = target[key] || '';
-        switch (key) {
-            case 'display':
-                if (value === 'flex') {
-                    target['display'] = [
-                        '-webkit-flex',
-                        'flex'
-                    ];
-                }
-                else if (value === 'inline-flex') {
-                    target['display'] = [
-                        '-webkit-inline-flex',
-                        'inline-flex'
-                    ];
-                }
-                else {
-                    target['display'] = value;
-                }
-                break;
-            case 'align-items':
-            case 'align-self':
-            case 'align-content':
-            case 'flex':
-            case 'flex-basis':
-            case 'flex-flow':
-            case 'flex-grow':
-            case 'flex-shrink':
-            case 'flex-wrap':
-            case 'justify-content':
-                target['-webkit-' + key] = value;
-                break;
-            case 'flex-direction':
-                value = value || 'row';
-                target['-webkit-flex-direction'] = value;
-                target['flex-direction'] = value;
-                break;
-            case 'order':
-                target['order'] = target['-webkit-' + key] = isNaN(value) ? '0' : value;
-                break;
-        }
+    return MediaChange;
+}());
+var MatchMedia = (function () {
+    function MatchMedia(_zone, _document) {
+        this._zone = _zone;
+        this._document = _document;
+        this._registry = new Map();
+        this._source = new __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"](new MediaChange(true));
+        this._observable$ = this._source.asObservable();
     }
-    return target;
-}
-
-/**
- * Applies styles given via string pair or object map to the directive element.
- * @param {?} renderer
- * @param {?} element
- * @param {?} style
- * @param {?=} value
- * @return {?}
- */
-function applyStyleToElement(renderer, element, style, value) {
-    var /** @type {?} */ styles = {};
-    if (typeof style === 'string') {
-        styles[style] = value;
-        style = styles;
-    }
-    styles = applyCssPrefixes(style);
-    applyMultiValueStyleToElement(styles, element, renderer);
-}
-/**
- * Applies styles given via string pair or object map to the directive's element.
- * @param {?} renderer
- * @param {?} style
- * @param {?} elements
- * @return {?}
- */
-function applyStyleToElements(renderer, style, elements) {
-    var /** @type {?} */ styles = applyCssPrefixes(style);
-    elements.forEach(function (el) {
-        applyMultiValueStyleToElement(styles, el, renderer);
-    });
-}
-/**
- * Applies the styles to the element. The styles object map may contain an array of values.
- * Each value will be added as element style.
- * Keys are sorted to add prefixed styles (like -webkit-x) first, before the standard ones.
- * @param {?} styles
- * @param {?} element
- * @param {?} renderer
- * @return {?}
- */
-function applyMultiValueStyleToElement(styles, element, renderer) {
-    Object.keys(styles).sort().forEach(function (key) {
-        var /** @type {?} */ values = Array.isArray(styles[key]) ? styles[key] : [styles[key]];
-        for (var _i = 0, values_1 = values; _i < values_1.length; _i++) {
-            var value = values_1[_i];
-            renderer.setStyle(element, key, value);
+    MatchMedia.prototype.isActive = function (mediaQuery) {
+        if (this._registry.has(mediaQuery)) {
+            var mql = this._registry.get(mediaQuery);
+            return mql.matches;
         }
-    });
-}
-/**
- * Find the DOM element's raw attribute value (if any)
- * @param {?} element
- * @param {?} attribute
- * @return {?}
- */
-function lookupAttributeValue(element, attribute) {
-    return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["b" /* ɵgetDOM */])().getAttribute(element, attribute) || '';
-}
-/**
- * Find the DOM element's inline style value (if any)
- * @param {?} element
- * @param {?} styleName
- * @return {?}
- */
-function lookupInlineStyle(element, styleName) {
-    return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["b" /* ɵgetDOM */])().getStyle(element, styleName);
-}
-/**
- * Determine the inline or inherited CSS style
- * @param {?} element
- * @param {?} styleName
- * @param {?=} inlineOnly
- * @return {?}
- */
-function lookupStyle(element, styleName, inlineOnly) {
-    if (inlineOnly === void 0) { inlineOnly = false; }
-    var /** @type {?} */ value = '';
-    if (element) {
-        try {
-            var /** @type {?} */ immediateValue = value = lookupInlineStyle(element, styleName);
-            if (!inlineOnly) {
-                value = immediateValue || __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["b" /* ɵgetDOM */])().getComputedStyle(element).getPropertyValue(styleName);
+        return false;
+    };
+    MatchMedia.prototype.observe = function (mediaQuery) {
+        this.registerQuery(mediaQuery);
+        return __WEBPACK_IMPORTED_MODULE_4_rxjs_operator_filter__["filter"].call(this._observable$, function (change) {
+            return mediaQuery ? (change.mediaQuery === mediaQuery) : true;
+        });
+    };
+    MatchMedia.prototype.registerQuery = function (mediaQuery) {
+        var _this = this;
+        var list = normalizeQuery(mediaQuery);
+        if (list.length > 0) {
+            prepareQueryCSS(list, this._document);
+            list.forEach(function (query) {
+                var mql = _this._registry.get(query);
+                var onMQLEvent = function (e) {
+                    _this._zone.run(function () {
+                        var change = new MediaChange(e.matches, query);
+                        _this._source.next(change);
+                    });
+                };
+                if (!mql) {
+                    mql = _this._buildMQL(query);
+                    mql.addListener(onMQLEvent);
+                    _this._registry.set(query, mql);
+                }
+                if (mql.matches) {
+                    onMQLEvent(mql);
+                }
+            });
+        }
+    };
+    MatchMedia.prototype._buildMQL = function (query) {
+        var canListen = isBrowser() && !!((window)).matchMedia('all').addListener;
+        return canListen ? ((window)).matchMedia(query) : ({
+            matches: query === 'all' || query === '',
+            media: query,
+            addListener: function () {
+            },
+            removeListener: function () {
             }
+        });
+    };
+    return MatchMedia;
+}());
+MatchMedia.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["c" /* Injectable */] },
+];
+MatchMedia.ctorParameters = function () { return [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["Z" /* NgZone */], },
+    { type: undefined, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["G" /* Inject */], args: [__WEBPACK_IMPORTED_MODULE_2__angular_platform_browser__["d" /* DOCUMENT */],] },] },
+]; };
+function isBrowser() {
+    return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__angular_platform_browser__["b" /* ɵgetDOM */])().supportsDOMEvents();
+}
+var ALL_STYLES = {};
+function prepareQueryCSS(mediaQueries, _document) {
+    var list = mediaQueries.filter(function (it) { return !ALL_STYLES[it]; });
+    if (list.length > 0) {
+        var query = list.join(', ');
+        try {
+            var styleEl_1 = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__angular_platform_browser__["b" /* ɵgetDOM */])().createElement('style');
+            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__angular_platform_browser__["b" /* ɵgetDOM */])().setAttribute(styleEl_1, 'type', 'text/css');
+            if (!styleEl_1['styleSheet']) {
+                var cssText = "/*\n  @angular/flex-layout - workaround for possible browser quirk with mediaQuery listeners\n  see http://bit.ly/2sd4HMP\n*/\n@media " + query + " {.fx-query-test{ }}";
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__angular_platform_browser__["b" /* ɵgetDOM */])().appendChild(styleEl_1, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__angular_platform_browser__["b" /* ɵgetDOM */])().createTextNode(cssText));
+            }
+            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__angular_platform_browser__["b" /* ɵgetDOM */])().appendChild(_document.head, styleEl_1);
+            list.forEach(function (mq) { return ALL_STYLES[mq] = styleEl_1; });
         }
         catch (e) {
-            // TODO: platform-server throws an exception for getComputedStyle, will be fixed by PR 18362
+            console.error(e);
         }
     }
-    // Note: 'inline' is the default of all elements, unless UA stylesheet overrides;
-    //       in which case getComputedStyle() should determine a valid value.
-    return value ? value.trim() : 'block';
 }
-
-/**
- * Extends an object with the *enumerable* and *own* properties of one or more source objects,
- * similar to Object.assign.
- *
- * @param {?} dest The object which will have properties copied to it.
- * @param {...?} sources The source objects from which properties will be copied.
- * @return {?}
- */
+function normalizeQuery(mediaQuery) {
+    return (typeof mediaQuery === 'undefined') ? [] :
+        (typeof mediaQuery === 'string') ? [mediaQuery] : unique((mediaQuery));
+}
+function unique(list) {
+    var seen = {};
+    return list.filter(function (item) {
+        return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+    });
+}
+var BREAKPOINTS = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["i" /* InjectionToken */]('Token (@angular/flex-layout) Breakpoints');
+var BreakPointRegistry = (function () {
+    function BreakPointRegistry(_registry) {
+        this._registry = _registry;
+    }
+    Object.defineProperty(BreakPointRegistry.prototype, "items", {
+        get: function () {
+            return this._registry.slice();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BreakPointRegistry.prototype, "sortedItems", {
+        get: function () {
+            var overlaps = this._registry.filter(function (it) { return it.overlapping === true; });
+            var nonOverlaps = this._registry.filter(function (it) { return it.overlapping !== true; });
+            return overlaps.concat(nonOverlaps);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    BreakPointRegistry.prototype.findByAlias = function (alias) {
+        return this._registry.find(function (bp) { return bp.alias == alias; });
+    };
+    BreakPointRegistry.prototype.findByQuery = function (query) {
+        return this._registry.find(function (bp) { return bp.mediaQuery == query; });
+    };
+    Object.defineProperty(BreakPointRegistry.prototype, "overlappings", {
+        get: function () {
+            return this._registry.filter(function (it) { return it.overlapping == true; });
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BreakPointRegistry.prototype, "aliases", {
+        get: function () {
+            return this._registry.map(function (it) { return it.alias; });
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BreakPointRegistry.prototype, "suffixes", {
+        get: function () {
+            return this._registry.map(function (it) { return it.suffix; });
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return BreakPointRegistry;
+}());
+BreakPointRegistry.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["c" /* Injectable */] },
+];
+BreakPointRegistry.ctorParameters = function () { return [
+    { type: Array, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["G" /* Inject */], args: [BREAKPOINTS,] },] },
+]; };
 function extendObject(dest) {
     var sources = [];
     for (var _i = 1; _i < arguments.length; _i++) {
@@ -19169,7 +10901,7 @@ function extendObject(dest) {
     for (var _a = 0, sources_1 = sources; _a < sources_1.length; _a++) {
         var source = sources_1[_a];
         if (source != null) {
-            for (var /** @type {?} */ key in source) {
+            for (var key in source) {
                 if (source.hasOwnProperty(key)) {
                     dest[key] = source[key];
                 }
@@ -19178,1024 +10910,19 @@ function extendObject(dest) {
     }
     return dest;
 }
-
-var KeyOptions = (function () {
-    /**
-     * @param {?} baseKey
-     * @param {?} defaultValue
-     * @param {?} inputKeys
-     */
-    function KeyOptions(baseKey, defaultValue, inputKeys) {
-        this.baseKey = baseKey;
-        this.defaultValue = defaultValue;
-        this.inputKeys = inputKeys;
-    }
-    return KeyOptions;
-}());
-/**
- * ResponsiveActivation acts as a proxy between the MonitorMedia service (which emits mediaQuery
- * changes) and the fx API directives. The MQA proxies mediaQuery change events and notifies the
- * directive via the specified callback.
- *
- * - The MQA also determines which directive property should be used to determine the
- *   current change 'value'... BEFORE the original `onMediaQueryChanges()` method is called.
- * - The `ngOnDestroy()` method is also head-hooked to enable auto-unsubscribe from the
- *   MediaQueryServices.
- *
- * NOTE: these interceptions enables the logic in the fx API directives to remain terse and clean.
- */
-var ResponsiveActivation = (function () {
-    /**
-     * Constructor
-     * @param {?} _options
-     * @param {?} _mediaMonitor
-     * @param {?} _onMediaChanges
-     */
-    function ResponsiveActivation(_options, _mediaMonitor, _onMediaChanges) {
-        this._options = _options;
-        this._mediaMonitor = _mediaMonitor;
-        this._onMediaChanges = _onMediaChanges;
-        this._subscribers = [];
-        this._registryMap = this._buildRegistryMap();
-        this._subscribers = this._configureChangeObservers();
-    }
-    Object.defineProperty(ResponsiveActivation.prototype, "registryFromLargest", {
-        /**
-         * Get a readonly sorted list of the breakpoints corresponding to the directive properties
-         * defined in the HTML markup: the sorting is done from largest to smallest. The order is
-         * important when several media queries are 'registered' and from which, the browser uses the
-         * first matching media query.
-         * @return {?}
-         */
-        get: function () {
-            return this._registryMap.slice().reverse();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ResponsiveActivation.prototype, "mediaMonitor", {
-        /**
-         * Accessor to the DI'ed directive property
-         * Each directive instance has a reference to the MediaMonitor which is
-         * used HERE to subscribe to mediaQuery change notifications.
-         * @return {?}
-         */
-        get: function () {
-            return this._mediaMonitor;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ResponsiveActivation.prototype, "activatedInputKey", {
-        /**
-         * Determine which directive \@Input() property is currently active (for the viewport size):
-         * The key must be defined (in use) or fallback to the 'closest' overlapping property key
-         * that is defined; otherwise the default property key will be used.
-         * e.g.
-         *      if `<div fxHide fxHide.gt-sm="false">` is used but the current activated mediaQuery alias
-         *      key is `.md` then `.gt-sm` should be used instead
-         * @return {?}
-         */
-        get: function () {
-            return this._activatedInputKey || this._options.baseKey;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ResponsiveActivation.prototype, "activatedInput", {
-        /**
-         * Get the currently activated \@Input value or the fallback default \@Input value
-         * @return {?}
-         */
-        get: function () {
-            var /** @type {?} */ key = this.activatedInputKey;
-            return this.hasKeyValue(key) ? this._lookupKeyValue(key) : this._options.defaultValue;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    /**
-     * Fast validator for presence of attribute on the host element
-     * @param {?} key
-     * @return {?}
-     */
-    ResponsiveActivation.prototype.hasKeyValue = function (key) {
-        var /** @type {?} */ value = this._options.inputKeys[key];
-        return typeof value !== 'undefined';
-    };
-    /**
-     * Remove interceptors, restore original functions, and forward the onDestroy() call
-     * @return {?}
-     */
-    ResponsiveActivation.prototype.destroy = function () {
-        this._subscribers.forEach(function (link) {
-            link.unsubscribe();
-        });
-        this._subscribers = [];
-    };
-    /**
-     * For each *defined* API property, register a callback to `_onMonitorEvents( )`
-     * Cache 1..n subscriptions for internal auto-unsubscribes when the the directive destructs
-     * @return {?}
-     */
-    ResponsiveActivation.prototype._configureChangeObservers = function () {
-        var _this = this;
-        var /** @type {?} */ subscriptions = [];
-        this._registryMap.forEach(function (bp) {
-            if (_this._keyInUse(bp.key)) {
-                // Inject directive default property key name: to let onMediaChange() calls
-                // know which property is being triggered...
-                var /** @type {?} */ buildChanges = function (change) {
-                    change = change.clone();
-                    change.property = _this._options.baseKey;
-                    return change;
-                };
-                subscriptions.push(_this.mediaMonitor.observe(bp.alias).pipe(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_rxjs_operators__["map"])(buildChanges))
-                    .subscribe(function (change) {
-                    _this._onMonitorEvents(change);
-                }));
-            }
-        });
-        return subscriptions;
-    };
-    /**
-     * Build mediaQuery key-hashmap; only for the directive properties that are actually defined/used
-     * in the HTML markup
-     * @return {?}
-     */
-    ResponsiveActivation.prototype._buildRegistryMap = function () {
-        var _this = this;
-        return this.mediaMonitor.breakpoints
-            .map(function (bp) {
-            return (extendObject({}, bp, {
-                baseKey: _this._options.baseKey,
-                key: _this._options.baseKey + bp.suffix // e.g.  layoutGtSm, layoutMd, layoutGtLg
-            }));
-        })
-            .filter(function (bp) { return _this._keyInUse(bp.key); });
-    };
-    /**
-     * Synchronizes change notifications with the current mq-activated \@Input and calculates the
-     * mq-activated input value or the default value
-     * @param {?} change
-     * @return {?}
-     */
-    ResponsiveActivation.prototype._onMonitorEvents = function (change) {
-        if (change.property == this._options.baseKey) {
-            change.value = this._calculateActivatedValue(change);
-            this._onMediaChanges(change);
-        }
-    };
-    /**
-     * Has the key been specified in the HTML markup and thus is intended
-     * to participate in activation processes.
-     * @param {?} key
-     * @return {?}
-     */
-    ResponsiveActivation.prototype._keyInUse = function (key) {
-        return this._lookupKeyValue(key) !== undefined;
-    };
-    /**
-     *  Map input key associated with mediaQuery activation to closest defined input key
-     *  then return the values associated with the targeted input property
-     *
-     *  !! change events may arrive out-of-order (activate before deactivate)
-     *     so make sure the deactivate is used ONLY when the keys match
-     *     (since a different activate may be in use)
-     * @param {?} current
-     * @return {?}
-     */
-    ResponsiveActivation.prototype._calculateActivatedValue = function (current) {
-        var /** @type {?} */ currentKey = this._options.baseKey + current.suffix; // e.g. suffix == 'GtSm',
-        var /** @type {?} */ newKey = this._activatedInputKey; // e.g. newKey == hideGtSm
-        newKey = current.matches ? currentKey : ((newKey == currentKey) ? '' : newKey);
-        this._activatedInputKey = this._validateInputKey(newKey);
-        return this.activatedInput;
-    };
-    /**
-     * For the specified input property key, validate it is defined (used in the markup)
-     * If not see if a overlapping mediaQuery-related input key fallback has been defined
-     *
-     * NOTE: scans in the order defined by activeOverLaps (largest viewport ranges -> smallest ranges)
-     * @param {?} inputKey
-     * @return {?}
-     */
-    ResponsiveActivation.prototype._validateInputKey = function (inputKey) {
-        var _this = this;
-        var /** @type {?} */ isMissingKey = function (key) { return !_this._keyInUse(key); };
-        if (isMissingKey(inputKey)) {
-            this.mediaMonitor.activeOverlaps.some(function (bp) {
-                var /** @type {?} */ key = _this._options.baseKey + bp.suffix;
-                if (!isMissingKey(key)) {
-                    inputKey = key;
-                    return true; // exit .some()
-                }
-                return false;
-            });
-        }
-        return inputKey;
-    };
-    /**
-     * Get the value (if any) for the directive instances \@Input property (aka key)
-     * @param {?} key
-     * @return {?}
-     */
-    ResponsiveActivation.prototype._lookupKeyValue = function (key) {
-        return this._options.inputKeys[key];
-    };
-    return ResponsiveActivation;
-}());
-
-/**
- * Abstract base class for the Layout API styling directives.
- * @abstract
- */
-var BaseFxDirective = (function () {
-    /**
-     * Constructor
-     * @param {?} _mediaMonitor
-     * @param {?} _elementRef
-     * @param {?} _renderer
-     */
-    function BaseFxDirective(_mediaMonitor, _elementRef, _renderer) {
-        this._mediaMonitor = _mediaMonitor;
-        this._elementRef = _elementRef;
-        this._renderer = _renderer;
-        /**
-         *  Dictionary of input keys with associated values
-         */
-        this._inputMap = {};
-        /**
-         * Has the `ngOnInit()` method fired
-         *
-         * Used to allow *ngFor tasks to finish and support queries like
-         * getComputedStyle() during ngOnInit().
-         */
-        this._hasInitialized = false;
-    }
-    Object.defineProperty(BaseFxDirective.prototype, "hasMediaQueryListener", {
-        /**
-         * @return {?}
-         */
-        get: function () {
-            return !!this._mqActivation;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(BaseFxDirective.prototype, "activatedValue", {
-        /**
-         * Imperatively determine the current activated [input] value;
-         * if called before ngOnInit() this will return `undefined`
-         * @return {?}
-         */
-        get: function () {
-            return this._mqActivation ? this._mqActivation.activatedInput : undefined;
-        },
-        /**
-         * Change the currently activated input value and force-update
-         * the injected CSS (by-passing change detection).
-         *
-         * NOTE: Only the currently activated input value will be modified;
-         *       other input values will NOT be affected.
-         * @param {?} value
-         * @return {?}
-         */
-        set: function (value) {
-            var /** @type {?} */ key = 'baseKey', /** @type {?} */ previousVal;
-            if (this._mqActivation) {
-                key = this._mqActivation.activatedInputKey;
-                previousVal = this._inputMap[key];
-                this._inputMap[key] = value;
-            }
-            var /** @type {?} */ change = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["_19" /* SimpleChange */](previousVal, value, false);
-            this.ngOnChanges(/** @type {?} */ (_a = {}, _a[key] = change, _a));
-            var _a;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(BaseFxDirective.prototype, "parentElement", {
-        /**
-         * Access to host element's parent DOM node
-         * @return {?}
-         */
-        get: function () {
-            return this._elementRef.nativeElement.parentNode;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(BaseFxDirective.prototype, "nativeElement", {
-        /**
-         * @return {?}
-         */
-        get: function () {
-            return this._elementRef.nativeElement;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    /**
-     * Access the current value (if any) of the \@Input property.
-     * @param {?} key
-     * @return {?}
-     */
-    BaseFxDirective.prototype._queryInput = function (key) {
-        return this._inputMap[key];
-    };
-    /**
-     * Use post-component-initialization event to perform extra
-     * querying such as computed Display style
-     * @return {?}
-     */
-    BaseFxDirective.prototype.ngOnInit = function () {
-        this._display = this._getDisplayStyle();
-        this._hasInitialized = true;
-    };
-    /**
-     * @param {?} change
-     * @return {?}
-     */
-    BaseFxDirective.prototype.ngOnChanges = function (change) {
-        throw new Error("BaseFxDirective::ngOnChanges should be overridden in subclass: " + change);
-    };
-    /**
-     * @return {?}
-     */
-    BaseFxDirective.prototype.ngOnDestroy = function () {
-        if (this._mqActivation) {
-            this._mqActivation.destroy();
-        }
-        this._mediaMonitor = null;
-    };
-    /**
-     * Was the directive's default selector used ?
-     * If not, use the fallback value!
-     * @param {?} key
-     * @param {?} fallbackVal
-     * @return {?}
-     */
-    BaseFxDirective.prototype._getDefaultVal = function (key, fallbackVal) {
-        var /** @type {?} */ val = this._queryInput(key);
-        var /** @type {?} */ hasDefaultVal = (val !== undefined && val !== null);
-        return (hasDefaultVal && val !== '') ? val : fallbackVal;
-    };
-    /**
-     * Quick accessor to the current HTMLElement's `display` style
-     * Note: this allows use to preserve the original style
-     * and optional restore it when the mediaQueries deactivate
-     * @param {?=} source
-     * @return {?}
-     */
-    BaseFxDirective.prototype._getDisplayStyle = function (source) {
-        if (source === void 0) { source = this.nativeElement; }
-        return lookupStyle(source || this.nativeElement, 'display');
-    };
-    /**
-     * Quick accessor to raw attribute value on the target DOM element
-     * @param {?} attribute
-     * @param {?=} source
-     * @return {?}
-     */
-    BaseFxDirective.prototype._getAttributeValue = function (attribute, source) {
-        if (source === void 0) { source = this.nativeElement; }
-        return lookupAttributeValue(source || this.nativeElement, attribute);
-    };
-    /**
-     * Determine the DOM element's Flexbox flow (flex-direction).
-     *
-     * Check inline style first then check computed (stylesheet) style.
-     * And optionally add the flow value to element's inline style.
-     * @param {?} target
-     * @param {?=} addIfMissing
-     * @return {?}
-     */
-    BaseFxDirective.prototype._getFlowDirection = function (target, addIfMissing) {
-        if (addIfMissing === void 0) { addIfMissing = false; }
-        var /** @type {?} */ value = 'row';
-        if (target) {
-            value = lookupStyle(target, 'flex-direction') || 'row';
-            var /** @type {?} */ hasInlineValue = lookupInlineStyle(target, 'flex-direction');
-            if (!hasInlineValue && addIfMissing) {
-                applyStyleToElements(this._renderer, buildLayoutCSS(value), [target]);
-            }
-        }
-        return value.trim();
-    };
-    /**
-     * Applies styles given via string pair or object map to the directive element.
-     * @param {?} style
-     * @param {?=} value
-     * @param {?=} nativeElement
-     * @return {?}
-     */
-    BaseFxDirective.prototype._applyStyleToElement = function (style, value, nativeElement) {
-        if (nativeElement === void 0) { nativeElement = this.nativeElement; }
-        var /** @type {?} */ element = nativeElement || this.nativeElement;
-        applyStyleToElement(this._renderer, element, style, value);
-    };
-    /**
-     * Applies styles given via string pair or object map to the directive's element.
-     * @param {?} style
-     * @param {?} elements
-     * @return {?}
-     */
-    BaseFxDirective.prototype._applyStyleToElements = function (style, elements) {
-        applyStyleToElements(this._renderer, style, elements || []);
-    };
-    /**
-     *  Save the property value; which may be a complex object.
-     *  Complex objects support property chains
-     * @param {?=} key
-     * @param {?=} source
-     * @return {?}
-     */
-    BaseFxDirective.prototype._cacheInput = function (key, source) {
-        if (typeof source === 'object') {
-            for (var /** @type {?} */ prop in source) {
-                this._inputMap[prop] = source[prop];
-            }
-        }
-        else {
-            if (!!key) {
-                this._inputMap[key] = source;
-            }
-        }
-    };
-    /**
-     *  Build a ResponsiveActivation object used to manage subscriptions to mediaChange notifications
-     *  and intelligent lookup of the directive's property value that corresponds to that mediaQuery
-     *  (or closest match).
-     * @param {?} key
-     * @param {?} defaultValue
-     * @param {?} onMediaQueryChange
-     * @return {?}
-     */
-    BaseFxDirective.prototype._listenForMediaQueryChanges = function (key, defaultValue, onMediaQueryChange) {
-        if (!this._mqActivation) {
-            var /** @type {?} */ keyOptions = new KeyOptions(key, defaultValue, this._inputMap);
-            this._mqActivation = new ResponsiveActivation(keyOptions, this._mediaMonitor, function (change) { return onMediaQueryChange(change); });
-        }
-        return this._mqActivation;
-    };
-    Object.defineProperty(BaseFxDirective.prototype, "childrenNodes", {
-        /**
-         * Special accessor to query for all child 'element' nodes regardless of type, class, etc.
-         * @return {?}
-         */
-        get: function () {
-            var /** @type {?} */ obj = this.nativeElement.children;
-            var /** @type {?} */ buffer = [];
-            // iterate backwards ensuring that length is an UInt32
-            for (var /** @type {?} */ i = obj.length; i--;) {
-                buffer[i] = obj[i];
-            }
-            return buffer;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    /**
-     * Does this directive have 1 or more responsive keys defined
-     * Note: we exclude the 'baseKey' key (which is NOT considered responsive)
-     * @param {?} baseKey
-     * @return {?}
-     */
-    BaseFxDirective.prototype.hasResponsiveAPI = function (baseKey) {
-        var /** @type {?} */ totalKeys = Object.keys(this._inputMap).length;
-        var /** @type {?} */ baseValue = this._inputMap[baseKey];
-        return (totalKeys - (!!baseValue ? 1 : 0)) > 0;
-    };
-    /**
-     * Fast validator for presence of attribute on the host element
-     * @param {?} key
-     * @return {?}
-     */
-    BaseFxDirective.prototype.hasKeyValue = function (key) {
-        return this._mqActivation.hasKeyValue(key);
-    };
-    Object.defineProperty(BaseFxDirective.prototype, "hasInitialized", {
-        /**
-         * @return {?}
-         */
-        get: function () {
-            return this._hasInitialized;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return BaseFxDirective;
-}());
-
-/**
- * Adapter to the BaseFxDirective abstract class so it can be used via composition.
- * @see BaseFxDirective
- */
-var BaseFxDirectiveAdapter = (function (_super) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_tslib__["a" /* __extends */])(BaseFxDirectiveAdapter, _super);
-    /**
-     * BaseFxDirectiveAdapter constructor
-     * @param {?} _baseKey
-     * @param {?} _mediaMonitor
-     * @param {?} _elementRef
-     * @param {?} _renderer
-     */
-    function BaseFxDirectiveAdapter(_baseKey, // non-responsive @Input property name
-        _mediaMonitor, _elementRef, _renderer) {
-        var _this = _super.call(this, _mediaMonitor, _elementRef, _renderer) || this;
-        _this._baseKey = _baseKey;
-        _this._mediaMonitor = _mediaMonitor;
-        _this._elementRef = _elementRef;
-        _this._renderer = _renderer;
-        return _this;
-    }
-    Object.defineProperty(BaseFxDirectiveAdapter.prototype, "activeKey", {
-        /**
-         * Accessor to determine which \@Input property is "active"
-         * e.g. which property value will be used.
-         * @return {?}
-         */
-        get: function () {
-            var /** @type {?} */ mqa = this._mqActivation;
-            var /** @type {?} */ key = mqa ? mqa.activatedInputKey : this._baseKey;
-            // Note: ClassDirective::SimpleChanges uses 'klazz' instead of 'class' as a key
-            return (key === 'class') ? 'klazz' : key;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(BaseFxDirectiveAdapter.prototype, "inputMap", {
-        /**
-         * Hash map of all \@Input keys/values defined/used
-         * @return {?}
-         */
-        get: function () {
-            return this._inputMap;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(BaseFxDirectiveAdapter.prototype, "mqActivation", {
-        /**
-         * @see BaseFxDirective._mqActivation
-         * @return {?}
-         */
-        get: function () {
-            return this._mqActivation;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    /**
-     * Does this directive have 1 or more responsive keys defined
-     * Note: we exclude the 'baseKey' key (which is NOT considered responsive)
-     * @return {?}
-     */
-    BaseFxDirectiveAdapter.prototype.hasResponsiveAPI = function () {
-        return _super.prototype.hasResponsiveAPI.call(this, this._baseKey);
-    };
-    /**
-     * @see BaseFxDirective._queryInput
-     * @param {?} key
-     * @return {?}
-     */
-    BaseFxDirectiveAdapter.prototype.queryInput = function (key) {
-        return key ? this._queryInput(key) : undefined;
-    };
-    /**
-     *  Save the property value.
-     * @param {?=} key
-     * @param {?=} source
-     * @param {?=} cacheRaw
-     * @return {?}
-     */
-    BaseFxDirectiveAdapter.prototype.cacheInput = function (key, source, cacheRaw) {
-        if (cacheRaw === void 0) { cacheRaw = false; }
-        if (cacheRaw) {
-            this._cacheInputRaw(key, source);
-        }
-        else if (Array.isArray(source)) {
-            this._cacheInputArray(key, source);
-        }
-        else if (typeof source === 'object') {
-            this._cacheInputObject(key, source);
-        }
-        else if (typeof source === 'string') {
-            this._cacheInputString(key, source);
-        }
-        else {
-            throw new Error("Invalid class value '" + key + "' provided. Did you want to cache the raw value?");
-        }
-    };
-    /**
-     * @see BaseFxDirective._listenForMediaQueryChanges
-     * @param {?} key
-     * @param {?} defaultValue
-     * @param {?} onMediaQueryChange
-     * @return {?}
-     */
-    BaseFxDirectiveAdapter.prototype.listenForMediaQueryChanges = function (key, defaultValue, onMediaQueryChange) {
-        return this._listenForMediaQueryChanges(key, defaultValue, onMediaQueryChange);
-    };
-    /**
-     * No implicit transforms of the source.
-     * Required when caching values expected later for KeyValueDiffers
-     * @param {?=} key
-     * @param {?=} source
-     * @return {?}
-     */
-    BaseFxDirectiveAdapter.prototype._cacheInputRaw = function (key, source) {
-        this._inputMap[key] = source;
-    };
-    /**
-     *  Save the property value for Array values.
-     * @param {?=} key
-     * @param {?=} source
-     * @return {?}
-     */
-    BaseFxDirectiveAdapter.prototype._cacheInputArray = function (key, source) {
-        if (key === void 0) { key = ''; }
-        this._inputMap[key] = source.join(' ');
-    };
-    /**
-     *  Save the property value for key/value pair values.
-     * @param {?=} key
-     * @param {?=} source
-     * @return {?}
-     */
-    BaseFxDirectiveAdapter.prototype._cacheInputObject = function (key, source) {
-        if (key === void 0) { key = ''; }
-        var /** @type {?} */ classes = [];
-        for (var /** @type {?} */ prop in source) {
-            if (!!source[prop]) {
-                classes.push(prop);
-            }
-        }
-        this._inputMap[key] = classes.join(' ');
-    };
-    /**
-     *  Save the property value for string values.
-     * @param {?=} key
-     * @param {?=} source
-     * @return {?}
-     */
-    BaseFxDirectiveAdapter.prototype._cacheInputString = function (key, source) {
-        if (key === void 0) { key = ''; }
-        this._inputMap[key] = source;
-    };
-    return BaseFxDirectiveAdapter;
-}(BaseFxDirective));
-
-// @TODO - remove after updating to TS v2.4
-// tslint:disable:no-unused-variable
-/**
- *  Injection token unique to the flex-layout library.
- *  Use this token when build a custom provider (see below).
- */
-var BREAKPOINTS = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["i" /* InjectionToken */]('Token (@angular/flex-layout) Breakpoints');
-
-/**
- * Registry of 1..n MediaQuery breakpoint ranges
- * This is published as a provider and may be overriden from custom, application-specific ranges
- *
- */
-var BreakPointRegistry = (function () {
-    /**
-     * @param {?} _registry
-     */
-    function BreakPointRegistry(_registry) {
-        this._registry = _registry;
-    }
-    Object.defineProperty(BreakPointRegistry.prototype, "items", {
-        /**
-         * Accessor to raw list
-         * @return {?}
-         */
-        get: function () {
-            return this._registry.slice();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(BreakPointRegistry.prototype, "sortedItems", {
-        /**
-         * Accessor to sorted list used for registration with matchMedia API
-         *
-         * NOTE: During breakpoint registration, we want to register the overlaps FIRST
-         *       so the non-overlaps will trigger the MatchMedia:BehaviorSubject last!
-         *       And the largest, non-overlap, matching breakpoint should be the lastReplay value
-         * @return {?}
-         */
-        get: function () {
-            var /** @type {?} */ overlaps = this._registry.filter(function (it) { return it.overlapping === true; });
-            var /** @type {?} */ nonOverlaps = this._registry.filter(function (it) { return it.overlapping !== true; });
-            return overlaps.concat(nonOverlaps);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    /**
-     * Search breakpoints by alias (e.g. gt-xs)
-     * @param {?} alias
-     * @return {?}
-     */
-    BreakPointRegistry.prototype.findByAlias = function (alias) {
-        return this._registry.find(function (bp) { return bp.alias == alias; }) || null;
-    };
-    /**
-     * @param {?} query
-     * @return {?}
-     */
-    BreakPointRegistry.prototype.findByQuery = function (query) {
-        return this._registry.find(function (bp) { return bp.mediaQuery == query; }) || null;
-    };
-    Object.defineProperty(BreakPointRegistry.prototype, "overlappings", {
-        /**
-         * Get all the breakpoints whose ranges could overlapping `normal` ranges;
-         * e.g. gt-sm overlaps md, lg, and xl
-         * @return {?}
-         */
-        get: function () {
-            return this._registry.filter(function (it) { return it.overlapping == true; });
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(BreakPointRegistry.prototype, "aliases", {
-        /**
-         * Get list of all registered (non-empty) breakpoint aliases
-         * @return {?}
-         */
-        get: function () {
-            return this._registry.map(function (it) { return it.alias; });
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(BreakPointRegistry.prototype, "suffixes", {
-        /**
-         * Aliases are mapped to properties using suffixes
-         * e.g.  'gt-sm' for property 'layout'  uses suffix 'GtSm'
-         * for property layoutGtSM.
-         * @return {?}
-         */
-        get: function () {
-            return this._registry.map(function (it) { return !!it.suffix ? it.suffix : ''; });
-        },
-        enumerable: true,
-        configurable: true
-    });
-    BreakPointRegistry.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */] },
-    ];
-    /**
-     * @nocollapse
-     */
-    BreakPointRegistry.ctorParameters = function () { return [
-        { type: Array, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["G" /* Inject */], args: [BREAKPOINTS,] },] },
-    ]; };
-    return BreakPointRegistry;
-}());
-
-/**
- * Class instances emitted [to observers] for each mql notification
- */
-var MediaChange = (function () {
-    /**
-     * @param {?=} matches
-     * @param {?=} mediaQuery
-     * @param {?=} mqAlias
-     * @param {?=} suffix
-     */
-    function MediaChange(matches, mediaQuery, mqAlias, suffix // e.g.   GtSM, Md, GtLg
-    ) {
-        if (matches === void 0) { matches = false; }
-        if (mediaQuery === void 0) { mediaQuery = 'all'; }
-        if (mqAlias === void 0) { mqAlias = ''; }
-        if (suffix === void 0) { suffix = ''; } // e.g.   GtSM, Md, GtLg
-        this.matches = matches;
-        this.mediaQuery = mediaQuery;
-        this.mqAlias = mqAlias;
-        this.suffix = suffix; // e.g.   GtSM, Md, GtLg
-    }
-    /**
-     * @return {?}
-     */
-    MediaChange.prototype.clone = function () {
-        return new MediaChange(this.matches, this.mediaQuery, this.mqAlias, this.suffix);
-    };
-    return MediaChange;
-}());
-
-/**
- * MediaMonitor configures listeners to mediaQuery changes and publishes an Observable facade to
- * convert mediaQuery change callbacks to subscriber notifications. These notifications will be
- * performed within the ng Zone to trigger change detections and component updates.
- *
- * NOTE: both mediaQuery activations and de-activations are announced in notifications
- */
-var MatchMedia = (function () {
-    /**
-     * @param {?} _zone
-     * @param {?} _document
-     */
-    function MatchMedia(_zone, _document) {
-        this._zone = _zone;
-        this._document = _document;
-        this._registry = new Map();
-        this._source = new __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__["BehaviorSubject"](new MediaChange(true));
-        this._observable$ = this._source.asObservable();
-    }
-    /**
-     * For the specified mediaQuery?
-     * @param {?} mediaQuery
-     * @return {?}
-     */
-    MatchMedia.prototype.isActive = function (mediaQuery) {
-        var /** @type {?} */ mql = this._registry.get(mediaQuery);
-        return !!mql ? mql.matches : false;
-    };
-    /**
-     * External observers can watch for all (or a specific) mql changes.
-     * Typically used by the MediaQueryAdaptor; optionally available to components
-     * who wish to use the MediaMonitor as mediaMonitor$ observable service.
-     *
-     * NOTE: if a mediaQuery is not specified, then ALL mediaQuery activations will
-     *       be announced.
-     * @param {?=} mediaQuery
-     * @return {?}
-     */
-    MatchMedia.prototype.observe = function (mediaQuery) {
-        if (mediaQuery) {
-            this.registerQuery(mediaQuery);
-        }
-        return this._observable$.pipe(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_rxjs_operators__["filter"])(function (change) {
-            return mediaQuery ? (change.mediaQuery === mediaQuery) : true;
-        }));
-    };
-    /**
-     * Based on the BreakPointRegistry provider, register internal listeners for each unique
-     * mediaQuery. Each listener emits specific MediaChange data to observers
-     * @param {?} mediaQuery
-     * @return {?}
-     */
-    MatchMedia.prototype.registerQuery = function (mediaQuery) {
-        var _this = this;
-        var /** @type {?} */ list = normalizeQuery(mediaQuery);
-        if (list.length > 0) {
-            prepareQueryCSS(list, this._document);
-            list.forEach(function (query) {
-                var /** @type {?} */ mql = _this._registry.get(query);
-                var /** @type {?} */ onMQLEvent = function (e) {
-                    _this._zone.run(function () {
-                        var /** @type {?} */ change = new MediaChange(e.matches, query);
-                        _this._source.next(change);
-                    });
-                };
-                if (!mql) {
-                    mql = _this._buildMQL(query);
-                    mql.addListener(onMQLEvent);
-                    _this._registry.set(query, mql);
-                }
-                if (mql.matches) {
-                    onMQLEvent(mql); // Announce activate range for initial subscribers
-                }
-            });
-        }
-    };
-    /**
-     * Call window.matchMedia() to build a MediaQueryList; which
-     * supports 0..n listeners for activation/deactivation
-     * @param {?} query
-     * @return {?}
-     */
-    MatchMedia.prototype._buildMQL = function (query) {
-        var /** @type {?} */ canListen = isBrowser() && !!((window)).matchMedia('all').addListener;
-        return canListen ? ((window)).matchMedia(query) : ({
-            matches: query === 'all' || query === '',
-            media: query,
-            addListener: function () {
-            },
-            removeListener: function () {
-            }
-        });
-    };
-    MatchMedia.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */] },
-    ];
-    /**
-     * @nocollapse
-     */
-    MatchMedia.ctorParameters = function () { return [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["Z" /* NgZone */], },
-        { type: undefined, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["G" /* Inject */], args: [__WEBPACK_IMPORTED_MODULE_4__angular_common__["i" /* DOCUMENT */],] },] },
-    ]; };
-    return MatchMedia;
-}());
-/**
- * Determine if SSR or Browser rendering.
- * @return {?}
- */
-function isBrowser() {
-    return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["b" /* ɵgetDOM */])().supportsDOMEvents();
-}
-/**
- * Private global registry for all dynamically-created, injected style tags
- * @see prepare(query)
- */
-var ALL_STYLES = {};
-/**
- * For Webkit engines that only trigger the MediaQueryList Listener
- * when there is at least one CSS selector for the respective media query.
- *
- * @param {?} mediaQueries
- * @param {?} _document
- * @return {?}
- */
-function prepareQueryCSS(mediaQueries, _document) {
-    var /** @type {?} */ list = mediaQueries.filter(function (it) { return !ALL_STYLES[it]; });
-    if (list.length > 0) {
-        var /** @type {?} */ query = list.join(', ');
-        try {
-            var /** @type {?} */ styleEl_1 = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["b" /* ɵgetDOM */])().createElement('style');
-            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["b" /* ɵgetDOM */])().setAttribute(styleEl_1, 'type', 'text/css');
-            if (!styleEl_1['styleSheet']) {
-                var /** @type {?} */ cssText = "/*\n  @angular/flex-layout - workaround for possible browser quirk with mediaQuery listeners\n  see http://bit.ly/2sd4HMP\n*/\n@media " + query + " {.fx-query-test{ }}";
-                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["b" /* ɵgetDOM */])().appendChild(styleEl_1, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["b" /* ɵgetDOM */])().createTextNode(cssText));
-            }
-            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["b" /* ɵgetDOM */])().appendChild(_document.head, styleEl_1);
-            // Store in private global registry
-            list.forEach(function (mq) { return ALL_STYLES[mq] = styleEl_1; });
-        }
-        catch (e) {
-            console.error(e);
-        }
-    }
-}
-/**
- * Always convert to unique list of queries; for iteration in ::registerQuery()
- * @param {?} mediaQuery
- * @return {?}
- */
-function normalizeQuery(mediaQuery) {
-    return (typeof mediaQuery === 'undefined') ? [] :
-        (typeof mediaQuery === 'string') ? [mediaQuery] : unique(/** @type {?} */ (mediaQuery));
-}
-/**
- * Filter duplicate mediaQueries in the list
- * @param {?} list
- * @return {?}
- */
-function unique(list) {
-    var /** @type {?} */ seen = {};
-    return list.filter(function (item) {
-        return seen.hasOwnProperty(item) ? false : (seen[item] = true);
-    });
-}
-
-/**
- * For the specified MediaChange, make sure it contains the breakpoint alias
- * and suffix (if available).
- * @param {?} dest
- * @param {?} source
- * @return {?}
- */
 function mergeAlias(dest, source) {
     return extendObject(dest, source ? {
         mqAlias: source.alias,
         suffix: source.suffix
     } : {});
 }
-
-/**
- * MediaMonitor uses the MatchMedia service to observe mediaQuery changes (both activations and
- * deactivations). These changes are are published as MediaChange notifications.
- *
- * Note: all notifications will be performed within the
- * ng Zone to trigger change detections and component updates.
- *
- * It is the MediaMonitor that:
- *  - auto registers all known breakpoints
- *  - injects alias information into each raw MediaChange event
- *  - provides accessor to the currently active BreakPoint
- *  - publish list of overlapping BreakPoint(s); used by ResponsiveActivation
- */
 var MediaMonitor = (function () {
-    /**
-     * @param {?} _breakpoints
-     * @param {?} _matchMedia
-     */
     function MediaMonitor(_breakpoints, _matchMedia) {
         this._breakpoints = _breakpoints;
         this._matchMedia = _matchMedia;
         this._registerBreakpoints();
     }
     Object.defineProperty(MediaMonitor.prototype, "breakpoints", {
-        /**
-         * Read-only accessor to the list of breakpoints configured in the BreakPointRegistry provider
-         * @return {?}
-         */
         get: function () {
             return this._breakpoints.items.slice();
         },
@@ -20203,12 +10930,9 @@ var MediaMonitor = (function () {
         configurable: true
     });
     Object.defineProperty(MediaMonitor.prototype, "activeOverlaps", {
-        /**
-         * @return {?}
-         */
         get: function () {
             var _this = this;
-            var /** @type {?} */ items = this._breakpoints.overlappings.reverse();
+            var items = this._breakpoints.overlappings.reverse();
             return items.filter(function (bp) {
                 return _this._matchMedia.isActive(bp.mediaQuery);
             });
@@ -20217,12 +10941,9 @@ var MediaMonitor = (function () {
         configurable: true
     });
     Object.defineProperty(MediaMonitor.prototype, "active", {
-        /**
-         * @return {?}
-         */
         get: function () {
             var _this = this;
-            var /** @type {?} */ found = null, /** @type {?} */ items = this.breakpoints.reverse();
+            var found = null, items = this.breakpoints.reverse();
             items.forEach(function (bp) {
                 if (bp.alias !== '') {
                     if (!found && _this._matchMedia.isActive(bp.mediaQuery)) {
@@ -20230,3970 +10951,118 @@ var MediaMonitor = (function () {
                     }
                 }
             });
-            var /** @type {?} */ first = this.breakpoints[0];
+            var first = this.breakpoints[0];
             return found || (this._matchMedia.isActive(first.mediaQuery) ? first : null);
         },
         enumerable: true,
         configurable: true
     });
-    /**
-     * For the specified mediaQuery alias, is the mediaQuery range active?
-     * @param {?} alias
-     * @return {?}
-     */
     MediaMonitor.prototype.isActive = function (alias) {
-        var /** @type {?} */ bp = this._breakpoints.findByAlias(alias) || this._breakpoints.findByQuery(alias);
+        var bp = this._breakpoints.findByAlias(alias) || this._breakpoints.findByQuery(alias);
         return this._matchMedia.isActive(bp ? bp.mediaQuery : alias);
     };
-    /**
-     * External observers can watch for all (or a specific) mql changes.
-     * If specific breakpoint is observed, only return *activated* events
-     * otherwise return all events for BOTH activated + deactivated changes.
-     * @param {?=} alias
-     * @return {?}
-     */
     MediaMonitor.prototype.observe = function (alias) {
-        var /** @type {?} */ bp = this._breakpoints.findByAlias(alias || '') ||
-            this._breakpoints.findByQuery(alias || '');
-        var /** @type {?} */ hasAlias = function (change) { return (bp ? change.mqAlias !== '' : true); };
-        // Note: the raw MediaChange events [from MatchMedia] do not contain important alias information
-        var /** @type {?} */ media$ = this._matchMedia.observe(bp ? bp.mediaQuery : alias);
-        return media$.pipe(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_rxjs_operators__["map"])(function (change) { return mergeAlias(change, bp); }), __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_rxjs_operators__["filter"])(hasAlias));
+        var bp = this._breakpoints.findByAlias(alias) || this._breakpoints.findByQuery(alias);
+        var hasAlias = function (change) { return (bp ? change.mqAlias !== '' : true); };
+        var media$ = this._matchMedia.observe(bp ? bp.mediaQuery : alias);
+        return __WEBPACK_IMPORTED_MODULE_4_rxjs_operator_filter__["filter"].call(__WEBPACK_IMPORTED_MODULE_5_rxjs_operator_map__["map"].call(media$, function (change) { return mergeAlias(change, bp); }), hasAlias);
     };
-    /**
-     * Immediate calls to matchMedia() to establish listeners
-     * and prepare for immediate subscription notifications
-     * @return {?}
-     */
     MediaMonitor.prototype._registerBreakpoints = function () {
-        var /** @type {?} */ queries = this._breakpoints.sortedItems.map(function (bp) { return bp.mediaQuery; });
+        var queries = this._breakpoints.sortedItems.map(function (bp) { return bp.mediaQuery; });
         this._matchMedia.registerQuery(queries);
     };
-    MediaMonitor.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */] },
-    ];
-    /**
-     * @nocollapse
-     */
-    MediaMonitor.ctorParameters = function () { return [
-        { type: BreakPointRegistry, },
-        { type: MatchMedia, },
-    ]; };
     return MediaMonitor;
 }());
-
-/**
- * 'layout' flexbox styling directive
- * Defines the positioning flow direction for the child elements: row or column
- * Optional values: column or row (default)
- * @see https://css-tricks.com/almanac/properties/f/flex-direction/
- *
- */
-var LayoutDirective = (function (_super) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_tslib__["a" /* __extends */])(LayoutDirective, _super);
-    /**
-     *
-     * @param {?} monitor
-     * @param {?} elRef
-     * @param {?} renderer
-     */
-    function LayoutDirective(monitor, elRef, renderer) {
-        var _this = _super.call(this, monitor, elRef, renderer) || this;
-        _this._announcer = new __WEBPACK_IMPORTED_MODULE_6_rxjs_ReplaySubject__["ReplaySubject"](1);
-        _this.layout$ = _this._announcer.asObservable();
-        return _this;
+MediaMonitor.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["c" /* Injectable */] },
+];
+MediaMonitor.ctorParameters = function () { return [
+    { type: BreakPointRegistry, },
+    { type: MatchMedia, },
+]; };
+var ObservableMedia = (function () {
+    function ObservableMedia() {
     }
-    Object.defineProperty(LayoutDirective.prototype, "layout", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('layout', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutDirective.prototype, "layoutXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('layoutXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutDirective.prototype, "layoutSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('layoutSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutDirective.prototype, "layoutMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('layoutMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutDirective.prototype, "layoutLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('layoutLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutDirective.prototype, "layoutXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('layoutXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutDirective.prototype, "layoutGtXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('layoutGtXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutDirective.prototype, "layoutGtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('layoutGtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutDirective.prototype, "layoutGtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('layoutGtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutDirective.prototype, "layoutGtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('layoutGtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutDirective.prototype, "layoutLtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('layoutLtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutDirective.prototype, "layoutLtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('layoutLtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutDirective.prototype, "layoutLtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('layoutLtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutDirective.prototype, "layoutLtXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('layoutLtXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    /**
-     * On changes to any \@Input properties...
-     * Default to use the non-responsive Input value ('fxLayout')
-     * Then conditionally override with the mq-activated Input's current value
-     * @param {?} changes
-     * @return {?}
-     */
-    LayoutDirective.prototype.ngOnChanges = function (changes) {
-        if (changes['layout'] != null || this._mqActivation) {
-            this._updateWithDirection();
-        }
-    };
-    /**
-     * After the initial onChanges, build an mqActivation object that bridges
-     * mql change events to onMediaQueryChange handlers
-     * @return {?}
-     */
-    LayoutDirective.prototype.ngOnInit = function () {
-        var _this = this;
-        _super.prototype.ngOnInit.call(this);
-        this._listenForMediaQueryChanges('layout', 'row', function (changes) {
-            _this._updateWithDirection(changes.value);
-        });
-        this._updateWithDirection();
-    };
-    /**
-     * Validate the direction value and then update the host's inline flexbox styles
-     * @param {?=} value
-     * @return {?}
-     */
-    LayoutDirective.prototype._updateWithDirection = function (value) {
-        value = value || this._queryInput('layout') || 'row';
-        if (this._mqActivation) {
-            value = this._mqActivation.activatedInput;
-        }
-        // Update styles and announce to subscribers the *new* direction
-        var /** @type {?} */ css = buildLayoutCSS(!!value ? value : '');
-        this._applyStyleToElement(css);
-        this._announcer.next(css['flex-direction']);
-    };
-    LayoutDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* Directive */], args: [{ selector: "\n  [fxLayout],\n  [fxLayout.xs], [fxLayout.sm], [fxLayout.md], [fxLayout.lg], [fxLayout.xl],\n  [fxLayout.lt-sm], [fxLayout.lt-md], [fxLayout.lt-lg], [fxLayout.lt-xl],\n  [fxLayout.gt-xs], [fxLayout.gt-sm], [fxLayout.gt-md], [fxLayout.gt-lg]\n" },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    LayoutDirective.ctorParameters = function () { return [
-        { type: MediaMonitor, },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */], },
-    ]; };
-    LayoutDirective.propDecorators = {
-        'layout': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayout',] },],
-        'layoutXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayout.xs',] },],
-        'layoutSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayout.sm',] },],
-        'layoutMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayout.md',] },],
-        'layoutLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayout.lg',] },],
-        'layoutXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayout.xl',] },],
-        'layoutGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayout.gt-xs',] },],
-        'layoutGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayout.gt-sm',] },],
-        'layoutGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayout.gt-md',] },],
-        'layoutGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayout.gt-lg',] },],
-        'layoutLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayout.lt-sm',] },],
-        'layoutLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayout.lt-md',] },],
-        'layoutLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayout.lt-lg',] },],
-        'layoutLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayout.lt-xl',] },],
-    };
-    return LayoutDirective;
-}(BaseFxDirective));
-
-/**
- * 'layout-align' flexbox styling directive
- *  Defines positioning of child elements along main and cross axis in a layout container
- *  Optional values: {main-axis} values or {main-axis cross-axis} value pairs
- *
- *  \@see https://css-tricks.com/almanac/properties/j/justify-content/
- *  \@see https://css-tricks.com/almanac/properties/a/align-items/
- *  \@see https://css-tricks.com/almanac/properties/a/align-content/
- */
-var LayoutAlignDirective = (function (_super) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_tslib__["a" /* __extends */])(LayoutAlignDirective, _super);
-    /**
-     * @param {?} monitor
-     * @param {?} elRef
-     * @param {?} renderer
-     * @param {?} container
-     */
-    function LayoutAlignDirective(monitor, elRef, renderer, container) {
-        var _this = _super.call(this, monitor, elRef, renderer) || this;
-        _this._layout = 'row'; // default flex-direction
-        if (container) {
-            _this._layoutWatcher = container.layout$.subscribe(_this._onLayoutChange.bind(_this));
-        }
-        return _this;
-    }
-    Object.defineProperty(LayoutAlignDirective.prototype, "align", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('align', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(LayoutAlignDirective.prototype, "alignXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(LayoutAlignDirective.prototype, "alignSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutAlignDirective.prototype, "alignMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutAlignDirective.prototype, "alignLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutAlignDirective.prototype, "alignXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutAlignDirective.prototype, "alignGtXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignGtXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutAlignDirective.prototype, "alignGtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignGtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutAlignDirective.prototype, "alignGtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignGtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutAlignDirective.prototype, "alignGtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignGtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutAlignDirective.prototype, "alignLtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignLtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutAlignDirective.prototype, "alignLtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignLtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutAlignDirective.prototype, "alignLtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignLtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutAlignDirective.prototype, "alignLtXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignLtXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    /**
-     * @param {?} changes
-     * @return {?}
-     */
-    LayoutAlignDirective.prototype.ngOnChanges = function (changes) {
-        if (changes['align'] != null || this._mqActivation) {
-            this._updateWithValue();
-        }
-    };
-    /**
-     * After the initial onChanges, build an mqActivation object that bridges
-     * mql change events to onMediaQueryChange handlers
-     * @return {?}
-     */
-    LayoutAlignDirective.prototype.ngOnInit = function () {
-        var _this = this;
-        _super.prototype.ngOnInit.call(this);
-        this._listenForMediaQueryChanges('align', 'start stretch', function (changes) {
-            _this._updateWithValue(changes.value);
-        });
-        this._updateWithValue();
-    };
-    /**
-     * @return {?}
-     */
-    LayoutAlignDirective.prototype.ngOnDestroy = function () {
-        _super.prototype.ngOnDestroy.call(this);
-        if (this._layoutWatcher) {
-            this._layoutWatcher.unsubscribe();
-        }
-    };
-    /**
-     *
-     * @param {?=} value
-     * @return {?}
-     */
-    LayoutAlignDirective.prototype._updateWithValue = function (value) {
-        value = value || this._queryInput('align') || 'start stretch';
-        if (this._mqActivation) {
-            value = this._mqActivation.activatedInput;
-        }
-        this._applyStyleToElement(this._buildCSS(value));
-        this._allowStretching(value, !this._layout ? 'row' : this._layout);
-    };
-    /**
-     * Cache the parent container 'flex-direction' and update the 'flex' styles
-     * @param {?} direction
-     * @return {?}
-     */
-    LayoutAlignDirective.prototype._onLayoutChange = function (direction) {
-        var _this = this;
-        this._layout = (direction || '').toLowerCase();
-        if (!LAYOUT_VALUES.find(function (x) { return x === _this._layout; })) {
-            this._layout = 'row';
-        }
-        var /** @type {?} */ value = this._queryInput('align') || 'start stretch';
-        if (this._mqActivation) {
-            value = this._mqActivation.activatedInput;
-        }
-        this._allowStretching(value, this._layout || 'row');
-    };
-    /**
-     * @param {?} align
-     * @return {?}
-     */
-    LayoutAlignDirective.prototype._buildCSS = function (align) {
-        var /** @type {?} */ css = {}, _a = align.split(' '), main_axis = _a[0], cross_axis = _a[1]; // tslint:disable-line:variable-name
-        // Main axis
-        switch (main_axis) {
-            case 'center':
-                css['justify-content'] = 'center';
-                break;
-            case 'space-around':
-                css['justify-content'] = 'space-around';
-                break;
-            case 'space-between':
-                css['justify-content'] = 'space-between';
-                break;
-            case 'space-evenly':
-                css['justify-content'] = 'space-evenly';
-                break;
-            case 'end':
-            case 'flex-end':
-                css['justify-content'] = 'flex-end';
-                break;
-            case 'start':
-            case 'flex-start':
-            default:
-                css['justify-content'] = 'flex-start'; // default main axis
-                break;
-        }
-        // Cross-axis
-        switch (cross_axis) {
-            case 'start':
-            case 'flex-start':
-                css['align-items'] = css['align-content'] = 'flex-start';
-                break;
-            case 'baseline':
-                css['align-items'] = 'baseline';
-                break;
-            case 'center':
-                css['align-items'] = css['align-content'] = 'center';
-                break;
-            case 'end':
-            case 'flex-end':
-                css['align-items'] = css['align-content'] = 'flex-end';
-                break;
-            case 'stretch':
-            default:// 'stretch'
-                css['align-items'] = css['align-content'] = 'stretch'; // default cross axis
-                break;
-        }
-        return extendObject(css, {
-            'display': 'flex',
-            'flex-direction': this._layout || 'row',
-            'box-sizing': 'border-box'
-        });
-    };
-    /**
-     * Update container element to 'stretch' as needed...
-     * NOTE: this is only done if the crossAxis is explicitly set to 'stretch'
-     * @param {?} align
-     * @param {?} layout
-     * @return {?}
-     */
-    LayoutAlignDirective.prototype._allowStretching = function (align, layout) {
-        var _a = align.split(' '), cross_axis = _a[1]; // tslint:disable-line:variable-name
-        if (cross_axis == 'stretch') {
-            // Use `null` values to remove style
-            this._applyStyleToElement({
-                'box-sizing': 'border-box',
-                'max-width': !isFlowHorizontal(layout) ? '100%' : null,
-                'max-height': isFlowHorizontal(layout) ? '100%' : null
-            });
-        }
-    };
-    LayoutAlignDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* Directive */], args: [{ selector: "\n  [fxLayoutAlign],\n  [fxLayoutAlign.xs], [fxLayoutAlign.sm], [fxLayoutAlign.md], [fxLayoutAlign.lg],[fxLayoutAlign.xl],\n  [fxLayoutAlign.lt-sm], [fxLayoutAlign.lt-md], [fxLayoutAlign.lt-lg], [fxLayoutAlign.lt-xl],\n  [fxLayoutAlign.gt-xs], [fxLayoutAlign.gt-sm], [fxLayoutAlign.gt-md], [fxLayoutAlign.gt-lg]\n" },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    LayoutAlignDirective.ctorParameters = function () { return [
-        { type: MediaMonitor, },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */], },
-        { type: LayoutDirective, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["W" /* Self */] },] },
-    ]; };
-    LayoutAlignDirective.propDecorators = {
-        'align': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutAlign',] },],
-        'alignXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutAlign.xs',] },],
-        'alignSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutAlign.sm',] },],
-        'alignMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutAlign.md',] },],
-        'alignLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutAlign.lg',] },],
-        'alignXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutAlign.xl',] },],
-        'alignGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutAlign.gt-xs',] },],
-        'alignGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutAlign.gt-sm',] },],
-        'alignGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutAlign.gt-md',] },],
-        'alignGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutAlign.gt-lg',] },],
-        'alignLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutAlign.lt-sm',] },],
-        'alignLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutAlign.lt-md',] },],
-        'alignLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutAlign.lt-lg',] },],
-        'alignLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutAlign.lt-xl',] },],
-    };
-    return LayoutAlignDirective;
-}(BaseFxDirective));
-
-/**
- * 'layout-padding' styling directive
- *  Defines padding of child elements in a layout container
- */
-var LayoutGapDirective = (function (_super) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_tslib__["a" /* __extends */])(LayoutGapDirective, _super);
-    /**
-     * @param {?} monitor
-     * @param {?} elRef
-     * @param {?} renderer
-     * @param {?} container
-     * @param {?} _zone
-     */
-    function LayoutGapDirective(monitor, elRef, renderer, container, _zone) {
-        var _this = _super.call(this, monitor, elRef, renderer) || this;
-        _this._zone = _zone;
-        _this._layout = 'row'; // default flex-direction
-        if (container) {
-            _this._layoutWatcher = container.layout$.subscribe(_this._onLayoutChange.bind(_this));
-        }
-        return _this;
-    }
-    Object.defineProperty(LayoutGapDirective.prototype, "gap", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('gap', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(LayoutGapDirective.prototype, "gapXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('gapXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(LayoutGapDirective.prototype, "gapSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('gapSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutGapDirective.prototype, "gapMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('gapMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutGapDirective.prototype, "gapLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('gapLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutGapDirective.prototype, "gapXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('gapXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutGapDirective.prototype, "gapGtXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('gapGtXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutGapDirective.prototype, "gapGtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('gapGtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutGapDirective.prototype, "gapGtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('gapGtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutGapDirective.prototype, "gapGtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('gapGtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutGapDirective.prototype, "gapLtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('gapLtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutGapDirective.prototype, "gapLtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('gapLtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutGapDirective.prototype, "gapLtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('gapLtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutGapDirective.prototype, "gapLtXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('gapLtXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    /**
-     * @param {?} changes
-     * @return {?}
-     */
-    LayoutGapDirective.prototype.ngOnChanges = function (changes) {
-        if (changes['gap'] != null || this._mqActivation) {
-            this._updateWithValue();
-        }
-    };
-    /**
-     * After the initial onChanges, build an mqActivation object that bridges
-     * mql change events to onMediaQueryChange handlers
-     * @return {?}
-     */
-    LayoutGapDirective.prototype.ngAfterContentInit = function () {
-        var _this = this;
-        this._watchContentChanges();
-        this._listenForMediaQueryChanges('gap', '0', function (changes) {
-            _this._updateWithValue(changes.value);
-        });
-        this._updateWithValue();
-    };
-    /**
-     * @return {?}
-     */
-    LayoutGapDirective.prototype.ngOnDestroy = function () {
-        _super.prototype.ngOnDestroy.call(this);
-        if (this._layoutWatcher) {
-            this._layoutWatcher.unsubscribe();
-        }
-        if (this._observer) {
-            this._observer.disconnect();
-        }
-    };
-    /**
-     * Watch for child nodes to be added... and apply the layout gap styles to each.
-     * NOTE: this does NOT! differentiate between viewChildren and contentChildren
-     * @return {?}
-     */
-    LayoutGapDirective.prototype._watchContentChanges = function () {
-        var _this = this;
-        this._zone.runOutsideAngular(function () {
-            if (typeof MutationObserver !== 'undefined') {
-                _this._observer = new MutationObserver(function (mutations) {
-                    var /** @type {?} */ validatedChanges = function (it) {
-                        return (it.addedNodes && it.addedNodes.length > 0) ||
-                            (it.removedNodes && it.removedNodes.length > 0);
-                    };
-                    // update gap styles only for child 'added' or 'removed' events
-                    if (mutations.some(validatedChanges)) {
-                        _this._updateWithValue();
-                    }
-                });
-                _this._observer.observe(_this.nativeElement, { childList: true });
-            }
-        });
-    };
-    /**
-     * Cache the parent container 'flex-direction' and update the 'margin' styles
-     * @param {?} direction
-     * @return {?}
-     */
-    LayoutGapDirective.prototype._onLayoutChange = function (direction) {
-        var _this = this;
-        this._layout = (direction || '').toLowerCase();
-        if (!LAYOUT_VALUES.find(function (x) { return x === _this._layout; })) {
-            this._layout = 'row';
-        }
-        this._updateWithValue();
-    };
-    /**
-     *
-     * @param {?=} value
-     * @return {?}
-     */
-    LayoutGapDirective.prototype._updateWithValue = function (value) {
-        var _this = this;
-        value = value || this._queryInput('gap') || '0';
-        if (this._mqActivation) {
-            value = this._mqActivation.activatedInput;
-        }
-        // Gather all non-hidden Element nodes
-        var /** @type {?} */ items = this.childrenNodes
-            .filter(function (el) { return el.nodeType === 1 && _this._getDisplayStyle(el) != 'none'; });
-        var /** @type {?} */ numItems = items.length;
-        if (numItems > 0) {
-            var /** @type {?} */ lastItem = items[numItems - 1];
-            // For each `element` children EXCEPT the last,
-            // set the margin right/bottom styles...
-            items = items.filter(function (_, j) { return j < numItems - 1; });
-            this._applyStyleToElements(this._buildCSS(value), items);
-            // Clear all gaps for all visible elements
-            this._applyStyleToElements(this._buildCSS(), [lastItem]);
-        }
-    };
-    /**
-     * Prepare margin CSS, remove any previous explicitly
-     * assigned margin assignments
-     * @param {?=} value
-     * @return {?}
-     */
-    LayoutGapDirective.prototype._buildCSS = function (value) {
-        if (value === void 0) { value = null; }
-        var /** @type {?} */ key, /** @type {?} */ margins = {
-            'margin-left': null,
-            'margin-right': null,
-            'margin-top': null,
-            'margin-bottom': null
-        };
-        switch (this._layout) {
-            case 'column':
-            case 'column-reverse':
-                key = 'margin-bottom';
-                break;
-            case 'row':
-            case 'row-reverse':
-            default:
-                key = 'margin-right';
-                break;
-        }
-        margins[key] = value;
-        return margins;
-    };
-    LayoutGapDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* Directive */], args: [{
-                    selector: "\n  [fxLayoutGap],\n  [fxLayoutGap.xs], [fxLayoutGap.sm], [fxLayoutGap.md], [fxLayoutGap.lg], [fxLayoutGap.xl],\n  [fxLayoutGap.lt-sm], [fxLayoutGap.lt-md], [fxLayoutGap.lt-lg], [fxLayoutGap.lt-xl],\n  [fxLayoutGap.gt-xs], [fxLayoutGap.gt-sm], [fxLayoutGap.gt-md], [fxLayoutGap.gt-lg]\n"
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    LayoutGapDirective.ctorParameters = function () { return [
-        { type: MediaMonitor, },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */], },
-        { type: LayoutDirective, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["W" /* Self */] },] },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["Z" /* NgZone */], },
-    ]; };
-    LayoutGapDirective.propDecorators = {
-        'gap': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutGap',] },],
-        'gapXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutGap.xs',] },],
-        'gapSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutGap.sm',] },],
-        'gapMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutGap.md',] },],
-        'gapLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutGap.lg',] },],
-        'gapXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutGap.xl',] },],
-        'gapGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutGap.gt-xs',] },],
-        'gapGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutGap.gt-sm',] },],
-        'gapGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutGap.gt-md',] },],
-        'gapGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutGap.gt-lg',] },],
-        'gapLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutGap.lt-sm',] },],
-        'gapLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutGap.lt-md',] },],
-        'gapLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutGap.lt-lg',] },],
-        'gapLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutGap.lt-xl',] },],
-    };
-    return LayoutGapDirective;
-}(BaseFxDirective));
-
-/**
- * @deprecated
- * This functionality is now part of the `fxLayout` API
- *
- * 'layout-wrap' flexbox styling directive
- * Defines wrapping of child elements in layout container
- * Optional values: reverse, wrap-reverse, none, nowrap, wrap (default)]
- *
- *
- * @see https://css-tricks.com/almanac/properties/f/flex-wrap/
- */
-var LayoutWrapDirective = (function (_super) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_tslib__["a" /* __extends */])(LayoutWrapDirective, _super);
-    /**
-     * @param {?} monitor
-     * @param {?} elRef
-     * @param {?} renderer
-     * @param {?} container
-     */
-    function LayoutWrapDirective(monitor, elRef, renderer, container) {
-        var _this = _super.call(this, monitor, elRef, renderer) || this;
-        _this._layout = 'row'; // default flex-direction
-        if (container) {
-            _this._layoutWatcher = container.layout$.subscribe(_this._onLayoutChange.bind(_this));
-        }
-        return _this;
-    }
-    Object.defineProperty(LayoutWrapDirective.prototype, "wrap", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('wrap', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(LayoutWrapDirective.prototype, "wrapXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('wrapXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(LayoutWrapDirective.prototype, "wrapSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('wrapSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutWrapDirective.prototype, "wrapMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('wrapMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutWrapDirective.prototype, "wrapLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('wrapLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutWrapDirective.prototype, "wrapXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('wrapXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutWrapDirective.prototype, "wrapGtXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('wrapGtXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutWrapDirective.prototype, "wrapGtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('wrapGtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutWrapDirective.prototype, "wrapGtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('wrapGtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutWrapDirective.prototype, "wrapGtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('wrapGtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutWrapDirective.prototype, "wrapLtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('wrapLtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutWrapDirective.prototype, "wrapLtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('wrapLtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutWrapDirective.prototype, "wrapLtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('wrapLtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(LayoutWrapDirective.prototype, "wrapLtXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('wrapLtXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    /**
-     * @param {?} changes
-     * @return {?}
-     */
-    LayoutWrapDirective.prototype.ngOnChanges = function (changes) {
-        if (changes['wrap'] != null || this._mqActivation) {
-            this._updateWithValue();
-        }
-    };
-    /**
-     * After the initial onChanges, build an mqActivation object that bridges
-     * mql change events to onMediaQueryChange handlers
-     * @return {?}
-     */
-    LayoutWrapDirective.prototype.ngOnInit = function () {
-        var _this = this;
-        _super.prototype.ngOnInit.call(this);
-        this._listenForMediaQueryChanges('wrap', 'wrap', function (changes) {
-            _this._updateWithValue(changes.value);
-        });
-        this._updateWithValue();
-    };
-    /**
-     * @return {?}
-     */
-    LayoutWrapDirective.prototype.ngOnDestroy = function () {
-        _super.prototype.ngOnDestroy.call(this);
-        if (this._layoutWatcher) {
-            this._layoutWatcher.unsubscribe();
-        }
-    };
-    /**
-     * Cache the parent container 'flex-direction' and update the 'flex' styles
-     * @param {?} direction
-     * @return {?}
-     */
-    LayoutWrapDirective.prototype._onLayoutChange = function (direction) {
-        var _this = this;
-        this._layout = (direction || '').toLowerCase().replace('-reverse', '');
-        if (!LAYOUT_VALUES.find(function (x) { return x === _this._layout; })) {
-            this._layout = 'row';
-        }
-        this._updateWithValue();
-    };
-    /**
-     * @param {?=} value
-     * @return {?}
-     */
-    LayoutWrapDirective.prototype._updateWithValue = function (value) {
-        value = value || this._queryInput('wrap');
-        if (this._mqActivation) {
-            value = this._mqActivation.activatedInput;
-        }
-        value = validateWrapValue(value || 'wrap');
-        this._applyStyleToElement(this._buildCSS(value));
-    };
-    /**
-     * Build the CSS that should be assigned to the element instance
-     * @param {?} value
-     * @return {?}
-     */
-    LayoutWrapDirective.prototype._buildCSS = function (value) {
-        return {
-            'display': 'flex',
-            'flex-wrap': value,
-            'flex-direction': this.flowDirection
-        };
-    };
-    Object.defineProperty(LayoutWrapDirective.prototype, "flowDirection", {
-        /**
-         * @return {?}
-         */
-        get: function () {
-            var _this = this;
-            var /** @type {?} */ computeFlowDirection = function () { return _this._getFlowDirection(_this.nativeElement); };
-            return this._layoutWatcher ? this._layout : computeFlowDirection();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    LayoutWrapDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* Directive */], args: [{ selector: "\n  [fxLayoutWrap], [fxLayoutWrap.xs], [fxLayoutWrap.sm], [fxLayoutWrap.lg], [fxLayoutWrap.xl],\n  [fxLayoutWrap.gt-xs], [fxLayoutWrap.gt-sm], [fxLayoutWrap.gt-md], [fxLayoutWrap.gt-lg],\n  [fxLayoutWrap.lt-xs], [fxLayoutWrap.lt-sm], [fxLayoutWrap.lt-md], [fxLayoutWrap.lt-lg]\n" },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    LayoutWrapDirective.ctorParameters = function () { return [
-        { type: MediaMonitor, },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */], },
-        { type: LayoutDirective, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["W" /* Self */] },] },
-    ]; };
-    LayoutWrapDirective.propDecorators = {
-        'wrap': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutWrap',] },],
-        'wrapXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutWrap.xs',] },],
-        'wrapSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutWrap.sm',] },],
-        'wrapMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutWrap.md',] },],
-        'wrapLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutWrap.lg',] },],
-        'wrapXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutWrap.xl',] },],
-        'wrapGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutWrap.gt-xs',] },],
-        'wrapGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutWrap.gt-sm',] },],
-        'wrapGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutWrap.gt-md',] },],
-        'wrapGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutWrap.gt-lg',] },],
-        'wrapLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutWrap.lt-sm',] },],
-        'wrapLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutWrap.lt-md',] },],
-        'wrapLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutWrap.lt-lg',] },],
-        'wrapLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxLayoutWrap.lt-xl',] },],
-    };
-    return LayoutWrapDirective;
-}(BaseFxDirective));
-
-/**
- * The flex API permits 3 or 1 parts of the value:
- *    - `flex-grow flex-shrink flex-basis`, or
- *    - `flex-basis`
- * @param {?} basis
- * @param {?=} grow
- * @param {?=} shrink
- * @return {?}
- */
-function validateBasis(basis, grow, shrink) {
-    if (grow === void 0) { grow = '1'; }
-    if (shrink === void 0) { shrink = '1'; }
-    var /** @type {?} */ parts = [grow, shrink, basis];
-    var /** @type {?} */ j = basis.indexOf('calc');
-    if (j > 0) {
-        parts[2] = _validateCalcValue(basis.substring(j).trim());
-        var /** @type {?} */ matches = basis.substr(0, j).trim().split(' ');
-        if (matches.length == 2) {
-            parts[0] = matches[0];
-            parts[1] = matches[1];
-        }
-    }
-    else if (j == 0) {
-        parts[2] = _validateCalcValue(basis.trim());
-    }
-    else {
-        var /** @type {?} */ matches = basis.split(' ');
-        parts = (matches.length === 3) ? matches : [
-            grow, shrink, basis
-        ];
-    }
-    return parts;
-}
-/**
- * Calc expressions require whitespace before & after any expression operators
- * This is a simple, crude whitespace padding solution.
- *   - '3 3 calc(15em + 20px)'
- *   - calc(100% / 7 * 2)
- *   - 'calc(15em + 20px)'
- *   - 'calc(15em+20px)'
- *   - '37px'
- *   = '43%'
- * @param {?} calc
- * @return {?}
- */
-function _validateCalcValue(calc) {
-    return calc.replace(/[\s]/g, '').replace(/[\/\*\+\-]/g, ' $& ');
-}
-
-/**
- * Directive to control the size of a flex item using flex-basis, flex-grow, and flex-shrink.
- * Corresponds to the css `flex` shorthand property.
- *
- * @see https://css-tricks.com/snippets/css/a-guide-to-flexbox/
- */
-var FlexDirective = (function (_super) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_tslib__["a" /* __extends */])(FlexDirective, _super);
-    /**
-     * @param {?} monitor
-     * @param {?} elRef
-     * @param {?} renderer
-     * @param {?} _container
-     * @param {?} _wrap
-     */
-    function FlexDirective(monitor, elRef, renderer, _container, _wrap) {
-        var _this = _super.call(this, monitor, elRef, renderer) || this;
-        _this._container = _container;
-        _this._wrap = _wrap;
-        _this._cacheInput('flex', '');
-        _this._cacheInput('shrink', 1);
-        _this._cacheInput('grow', 1);
-        if (_container) {
-            // If this flex item is inside of a flex container marked with
-            // Subscribe to layout immediate parent direction changes
-            _this._layoutWatcher = _container.layout$.subscribe(function (direction) {
-                // `direction` === null if parent container does not have a `fxLayout`
-                _this._onLayoutChange(direction);
-            });
-        }
-        return _this;
-    }
-    Object.defineProperty(FlexDirective.prototype, "shrink", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('shrink', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "grow", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('grow', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "flex", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('flex', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "flexXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('flexXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "flexSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('flexSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "flexMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('flexMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "flexLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('flexLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "flexXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('flexXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "flexGtXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('flexGtXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "flexGtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('flexGtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "flexGtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('flexGtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "flexGtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('flexGtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "flexLtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('flexLtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "flexLtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('flexLtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "flexLtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('flexLtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexDirective.prototype, "flexLtXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('flexLtXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    /**
-     * For \@Input changes on the current mq activation property, see onMediaQueryChanges()
-     * @param {?} changes
-     * @return {?}
-     */
-    FlexDirective.prototype.ngOnChanges = function (changes) {
-        if (changes['flex'] != null || this._mqActivation) {
-            this._updateStyle();
-        }
-    };
-    /**
-     * After the initial onChanges, build an mqActivation object that bridges
-     * mql change events to onMediaQueryChange handlers
-     * @return {?}
-     */
-    FlexDirective.prototype.ngOnInit = function () {
-        var _this = this;
-        _super.prototype.ngOnInit.call(this);
-        this._listenForMediaQueryChanges('flex', '', function (changes) {
-            _this._updateStyle(changes.value);
-        });
-        this._updateStyle();
-    };
-    /**
-     * @return {?}
-     */
-    FlexDirective.prototype.ngOnDestroy = function () {
-        _super.prototype.ngOnDestroy.call(this);
-        if (this._layoutWatcher) {
-            this._layoutWatcher.unsubscribe();
-        }
-    };
-    /**
-     * Caches the parent container's 'flex-direction' and updates the element's style.
-     * Used as a handler for layout change events from the parent flex container.
-     * @param {?=} direction
-     * @return {?}
-     */
-    FlexDirective.prototype._onLayoutChange = function (direction) {
-        this._layout = direction || this._layout || 'row';
-        this._updateStyle();
-    };
-    /**
-     * @param {?=} value
-     * @return {?}
-     */
-    FlexDirective.prototype._updateStyle = function (value) {
-        var /** @type {?} */ flexBasis = value || this._queryInput('flex') || '';
-        if (this._mqActivation) {
-            flexBasis = this._mqActivation.activatedInput;
-        }
-        var /** @type {?} */ basis = String(flexBasis).replace(';', '');
-        var /** @type {?} */ parts = validateBasis(basis, this._queryInput('grow'), this._queryInput('shrink'));
-        this._applyStyleToElement(this._validateValue.apply(this, parts));
-    };
-    /**
-     * Validate the value to be one of the acceptable value options
-     * Use default fallback of 'row'
-     * @param {?} grow
-     * @param {?} shrink
-     * @param {?} basis
-     * @return {?}
-     */
-    FlexDirective.prototype._validateValue = function (grow, shrink, basis) {
-        // The flex-direction of this element's flex container. Defaults to 'row'.
-        var /** @type {?} */ layout = this._getFlowDirection(this.parentElement, true);
-        var /** @type {?} */ direction = (layout.indexOf('column') > -1) ? 'column' : 'row';
-        var /** @type {?} */ css, /** @type {?} */ isValue;
-        grow = (grow == '0') ? 0 : grow;
-        shrink = (shrink == '0') ? 0 : shrink;
-        // flex-basis allows you to specify the initial/starting main-axis size of the element,
-        // before anything else is computed. It can either be a percentage or an absolute value.
-        // It is, however, not the breaking point for flex-grow/shrink properties
-        //
-        // flex-grow can be seen as this:
-        //   0: Do not stretch. Either size to element's content width, or obey 'flex-basis'.
-        //   1: (Default value). Stretch; will be the same size to all other flex items on
-        //       the same row since they have a default value of 1.
-        //   ≥2 (integer n): Stretch. Will be n times the size of other elements
-        //      with 'flex-grow: 1' on the same row.
-        // Use `null` to clear existing styles.
-        var /** @type {?} */ clearStyles = {
-            'max-width': null,
-            'max-height': null,
-            'min-width': null,
-            'min-height': null
-        };
-        switch (basis || '') {
-            case '':
-                css = extendObject(clearStyles, { 'flex': grow + " " + shrink + " 0.000000001px" });
-                break;
-            case 'initial': // default
-            case 'nogrow':
-                grow = 0;
-                css = extendObject(clearStyles, { 'flex': '0 1 auto' });
-                break;
-            case 'grow':
-                css = extendObject(clearStyles, { 'flex': '1 1 100%' });
-                break;
-            case 'noshrink':
-                shrink = 0;
-                css = extendObject(clearStyles, { 'flex': '1 0 auto' });
-                break;
-            case 'auto':
-                css = extendObject(clearStyles, { 'flex': grow + " " + shrink + " auto" });
-                break;
-            case 'none':
-                grow = 0;
-                shrink = 0;
-                css = extendObject(clearStyles, { 'flex': '0 0 auto' });
-                break;
-            default:
-                var /** @type {?} */ hasCalc = String(basis).indexOf('calc') > -1;
-                var /** @type {?} */ isPercent = String(basis).indexOf('%') > -1 && !hasCalc;
-                isValue = hasCalc ||
-                    String(basis).indexOf('px') > -1 ||
-                    String(basis).indexOf('em') > -1 ||
-                    String(basis).indexOf('vw') > -1 ||
-                    String(basis).indexOf('vh') > -1;
-                // Defaults to percentage sizing unless `px` is explicitly set
-                if (!isValue && !isPercent && !isNaN(/** @type {?} */ (basis))) {
-                    basis = basis + '%';
-                }
-                if (basis === '0px') {
-                    basis = '0%';
-                }
-                // Set max-width = basis if using layout-wrap
-                // tslint:disable-next-line:max-line-length
-                // @see https://github.com/philipwalton/flexbugs#11-min-and-max-size-declarations-are-ignored-when-wrapping-flex-items
-                css = extendObject(clearStyles, {
-                    'flex-grow': "" + grow,
-                    'flex-shrink': "" + shrink,
-                    'flex-basis': (isValue || this._wrap) ? "" + basis : '100%'
-                });
-                break;
-        }
-        var /** @type {?} */ max = isFlowHorizontal(direction) ? 'max-width' : 'max-height';
-        var /** @type {?} */ min = isFlowHorizontal(direction) ? 'min-width' : 'min-height';
-        var /** @type {?} */ usingCalc = (String(basis).indexOf('calc') > -1) || (basis == 'auto');
-        var /** @type {?} */ isPx = String(basis).indexOf('px') > -1 || usingCalc;
-        // make box inflexible when shrink and grow are both zero
-        // should not set a min when the grow is zero
-        // should not set a max when the shrink is zero
-        var /** @type {?} */ isFixed = !grow && !shrink;
-        css[min] = (basis == '0%') ? 0 : isFixed || (isPx && grow) ? basis : null;
-        css[max] = (basis == '0%') ? 0 : isFixed || (!usingCalc && shrink) ? basis : null;
-        return extendObject(css, { 'box-sizing': 'border-box' });
-    };
-    FlexDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* Directive */], args: [{ selector: "\n  [fxFlex],\n  [fxFlex.xs], [fxFlex.sm], [fxFlex.md], [fxFlex.lg], [fxFlex.xl],\n  [fxFlex.lt-sm], [fxFlex.lt-md], [fxFlex.lt-lg], [fxFlex.lt-xl],\n  [fxFlex.gt-xs], [fxFlex.gt-sm], [fxFlex.gt-md], [fxFlex.gt-lg],\n"
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    FlexDirective.ctorParameters = function () { return [
-        { type: MediaMonitor, },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */], },
-        { type: LayoutDirective, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* SkipSelf */] },] },
-        { type: LayoutWrapDirective, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* SkipSelf */] },] },
-    ]; };
-    FlexDirective.propDecorators = {
-        'shrink': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShrink',] },],
-        'grow': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxGrow',] },],
-        'flex': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlex',] },],
-        'flexXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlex.xs',] },],
-        'flexSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlex.sm',] },],
-        'flexMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlex.md',] },],
-        'flexLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlex.lg',] },],
-        'flexXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlex.xl',] },],
-        'flexGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlex.gt-xs',] },],
-        'flexGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlex.gt-sm',] },],
-        'flexGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlex.gt-md',] },],
-        'flexGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlex.gt-lg',] },],
-        'flexLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlex.lt-sm',] },],
-        'flexLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlex.lt-md',] },],
-        'flexLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlex.lt-lg',] },],
-        'flexLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlex.lt-xl',] },],
-    };
-    return FlexDirective;
-}(BaseFxDirective));
-
-/**
- * 'flex-align' flexbox styling directive
- * Allows element-specific overrides for cross-axis alignments in a layout container
- * @see https://css-tricks.com/almanac/properties/a/align-self/
- */
-var FlexAlignDirective = (function (_super) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_tslib__["a" /* __extends */])(FlexAlignDirective, _super);
-    /**
-     * @param {?} monitor
-     * @param {?} elRef
-     * @param {?} renderer
-     */
-    function FlexAlignDirective(monitor, elRef, renderer) {
-        return _super.call(this, monitor, elRef, renderer) || this;
-    }
-    Object.defineProperty(FlexAlignDirective.prototype, "align", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('align', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexAlignDirective.prototype, "alignXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexAlignDirective.prototype, "alignSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexAlignDirective.prototype, "alignMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexAlignDirective.prototype, "alignLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexAlignDirective.prototype, "alignXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexAlignDirective.prototype, "alignLtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignLtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexAlignDirective.prototype, "alignLtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignLtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexAlignDirective.prototype, "alignLtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignLtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexAlignDirective.prototype, "alignLtXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignLtXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexAlignDirective.prototype, "alignGtXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignGtXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexAlignDirective.prototype, "alignGtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignGtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexAlignDirective.prototype, "alignGtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignGtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexAlignDirective.prototype, "alignGtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('alignGtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    /**
-     * For \@Input changes on the current mq activation property, see onMediaQueryChanges()
-     * @param {?} changes
-     * @return {?}
-     */
-    FlexAlignDirective.prototype.ngOnChanges = function (changes) {
-        if (changes['align'] != null || this._mqActivation) {
-            this._updateWithValue();
-        }
-    };
-    /**
-     * After the initial onChanges, build an mqActivation object that bridges
-     * mql change events to onMediaQueryChange handlers
-     * @return {?}
-     */
-    FlexAlignDirective.prototype.ngOnInit = function () {
-        var _this = this;
-        _super.prototype.ngOnInit.call(this);
-        this._listenForMediaQueryChanges('align', 'stretch', function (changes) {
-            _this._updateWithValue(changes.value);
-        });
-        this._updateWithValue();
-    };
-    /**
-     * @param {?=} value
-     * @return {?}
-     */
-    FlexAlignDirective.prototype._updateWithValue = function (value) {
-        value = value || this._queryInput('align') || 'stretch';
-        if (this._mqActivation) {
-            value = this._mqActivation.activatedInput;
-        }
-        this._applyStyleToElement(this._buildCSS(value));
-    };
-    /**
-     * @param {?} align
-     * @return {?}
-     */
-    FlexAlignDirective.prototype._buildCSS = function (align) {
-        var /** @type {?} */ css = {};
-        // Cross-axis
-        switch (align) {
-            case 'start':
-                css['align-self'] = 'flex-start';
-                break;
-            case 'end':
-                css['align-self'] = 'flex-end';
-                break;
-            default:
-                css['align-self'] = align;
-                break;
-        }
-        return css;
-    };
-    FlexAlignDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* Directive */], args: [{
-                    selector: "\n  [fxFlexAlign],\n  [fxFlexAlign.xs], [fxFlexAlign.sm], [fxFlexAlign.md], [fxFlexAlign.lg], [fxFlexAlign.xl],\n  [fxFlexAlign.lt-sm], [fxFlexAlign.lt-md], [fxFlexAlign.lt-lg], [fxFlexAlign.lt-xl],\n  [fxFlexAlign.gt-xs], [fxFlexAlign.gt-sm], [fxFlexAlign.gt-md], [fxFlexAlign.gt-lg]\n"
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    FlexAlignDirective.ctorParameters = function () { return [
-        { type: MediaMonitor, },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */], },
-    ]; };
-    FlexAlignDirective.propDecorators = {
-        'align': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexAlign',] },],
-        'alignXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexAlign.xs',] },],
-        'alignSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexAlign.sm',] },],
-        'alignMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexAlign.md',] },],
-        'alignLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexAlign.lg',] },],
-        'alignXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexAlign.xl',] },],
-        'alignLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexAlign.lt-sm',] },],
-        'alignLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexAlign.lt-md',] },],
-        'alignLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexAlign.lt-lg',] },],
-        'alignLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexAlign.lt-xl',] },],
-        'alignGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexAlign.gt-xs',] },],
-        'alignGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexAlign.gt-sm',] },],
-        'alignGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexAlign.gt-md',] },],
-        'alignGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexAlign.gt-lg',] },],
-    };
-    return FlexAlignDirective;
-}(BaseFxDirective));
-
-var FLEX_FILL_CSS = {
-    'margin': 0,
-    'width': '100%',
-    'height': '100%',
-    'min-width': '100%',
-    'min-height': '100%'
-};
-/**
- * 'fxFill' flexbox styling directive
- *  Maximizes width and height of element in a layout container
- *
- *  NOTE: fxFill is NOT responsive API!!
- */
-var FlexFillDirective = (function (_super) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_tslib__["a" /* __extends */])(FlexFillDirective, _super);
-    /**
-     * @param {?} monitor
-     * @param {?} elRef
-     * @param {?} renderer
-     */
-    function FlexFillDirective(monitor, elRef, renderer) {
-        var _this = _super.call(this, monitor, elRef, renderer) || this;
-        _this.elRef = elRef;
-        _this.renderer = renderer;
-        _this._applyStyleToElement(FLEX_FILL_CSS);
-        return _this;
-    }
-    FlexFillDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* Directive */], args: [{ selector: "\n  [fxFill],\n  [fxFlexFill]\n" },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    FlexFillDirective.ctorParameters = function () { return [
-        { type: MediaMonitor, },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */], },
-    ]; };
-    return FlexFillDirective;
-}(BaseFxDirective));
-
-/**
- * 'flex-offset' flexbox styling directive
- * Configures the 'margin-left' of the element in a layout container
- */
-var FlexOffsetDirective = (function (_super) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_tslib__["a" /* __extends */])(FlexOffsetDirective, _super);
-    /**
-     * @param {?} monitor
-     * @param {?} elRef
-     * @param {?} renderer
-     * @param {?} _container
-     */
-    function FlexOffsetDirective(monitor, elRef, renderer, _container) {
-        var _this = _super.call(this, monitor, elRef, renderer) || this;
-        _this._container = _container;
-        /**
-         * The flex-direction of this element's host container. Defaults to 'row'.
-         */
-        _this._layout = 'row';
-        _this.watchParentFlow();
-        return _this;
-    }
-    Object.defineProperty(FlexOffsetDirective.prototype, "offset", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('offset', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(FlexOffsetDirective.prototype, "offsetXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('offsetXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(FlexOffsetDirective.prototype, "offsetSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('offsetSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOffsetDirective.prototype, "offsetMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('offsetMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOffsetDirective.prototype, "offsetLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('offsetLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOffsetDirective.prototype, "offsetXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('offsetXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOffsetDirective.prototype, "offsetLtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('offsetLtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOffsetDirective.prototype, "offsetLtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('offsetLtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOffsetDirective.prototype, "offsetLtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('offsetLtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOffsetDirective.prototype, "offsetLtXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('offsetLtXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOffsetDirective.prototype, "offsetGtXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('offsetGtXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOffsetDirective.prototype, "offsetGtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('offsetGtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOffsetDirective.prototype, "offsetGtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('offsetGtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOffsetDirective.prototype, "offsetGtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('offsetGtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    /**
-     * For \@Input changes on the current mq activation property, see onMediaQueryChanges()
-     * @param {?} changes
-     * @return {?}
-     */
-    FlexOffsetDirective.prototype.ngOnChanges = function (changes) {
-        if (changes['offset'] != null || this._mqActivation) {
-            this._updateWithValue();
-        }
-    };
-    /**
-     * Cleanup
-     * @return {?}
-     */
-    FlexOffsetDirective.prototype.ngOnDestroy = function () {
-        _super.prototype.ngOnDestroy.call(this);
-        if (this._layoutWatcher) {
-            this._layoutWatcher.unsubscribe();
-        }
-    };
-    /**
-     * After the initial onChanges, build an mqActivation object that bridges
-     * mql change events to onMediaQueryChange handlers
-     * @return {?}
-     */
-    FlexOffsetDirective.prototype.ngOnInit = function () {
-        var _this = this;
-        _super.prototype.ngOnInit.call(this);
-        this._listenForMediaQueryChanges('offset', 0, function (changes) {
-            _this._updateWithValue(changes.value);
-        });
-    };
-    /**
-     * If parent flow-direction changes, then update the margin property
-     * used to offset
-     * @return {?}
-     */
-    FlexOffsetDirective.prototype.watchParentFlow = function () {
-        var _this = this;
-        if (this._container) {
-            // Subscribe to layout immediate parent direction changes (if any)
-            this._layoutWatcher = this._container.layout$.subscribe(function (direction) {
-                // `direction` === null if parent container does not have a `fxLayout`
-                _this._onLayoutChange(direction);
-            });
-        }
-    };
-    /**
-     * Caches the parent container's 'flex-direction' and updates the element's style.
-     * Used as a handler for layout change events from the parent flex container.
-     * @param {?=} direction
-     * @return {?}
-     */
-    FlexOffsetDirective.prototype._onLayoutChange = function (direction) {
-        this._layout = direction || this._layout || 'row';
-        this._updateWithValue();
-    };
-    /**
-     * Using the current fxFlexOffset value, update the inline CSS
-     * NOTE: this will assign `margin-left` if the parent flex-direction == 'row',
-     *       otherwise `margin-top` is used for the offset.
-     * @param {?=} value
-     * @return {?}
-     */
-    FlexOffsetDirective.prototype._updateWithValue = function (value) {
-        value = value || this._queryInput('offset') || 0;
-        if (this._mqActivation) {
-            value = this._mqActivation.activatedInput;
-        }
-        this._applyStyleToElement(this._buildCSS(value));
-    };
-    /**
-     * @param {?} offset
-     * @return {?}
-     */
-    FlexOffsetDirective.prototype._buildCSS = function (offset) {
-        var /** @type {?} */ isPercent = String(offset).indexOf('%') > -1;
-        var /** @type {?} */ isPx = String(offset).indexOf('px') > -1;
-        if (!isPx && !isPercent && !isNaN(offset)) {
-            offset = offset + '%';
-        }
-        // The flex-direction of this element's flex container. Defaults to 'row'.
-        var /** @type {?} */ layout = this._getFlowDirection(this.parentElement, true);
-        return isFlowHorizontal(layout) ? { 'margin-left': "" + offset } : { 'margin-top': "" + offset };
-    };
-    FlexOffsetDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* Directive */], args: [{ selector: "\n  [fxFlexOffset],\n  [fxFlexOffset.xs], [fxFlexOffset.sm], [fxFlexOffset.md], [fxFlexOffset.lg], [fxFlexOffset.xl],\n  [fxFlexOffset.lt-sm], [fxFlexOffset.lt-md], [fxFlexOffset.lt-lg], [fxFlexOffset.lt-xl],\n  [fxFlexOffset.gt-xs], [fxFlexOffset.gt-sm], [fxFlexOffset.gt-md], [fxFlexOffset.gt-lg]\n" },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    FlexOffsetDirective.ctorParameters = function () { return [
-        { type: MediaMonitor, },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */], },
-        { type: LayoutDirective, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* SkipSelf */] },] },
-    ]; };
-    FlexOffsetDirective.propDecorators = {
-        'offset': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOffset',] },],
-        'offsetXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOffset.xs',] },],
-        'offsetSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOffset.sm',] },],
-        'offsetMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOffset.md',] },],
-        'offsetLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOffset.lg',] },],
-        'offsetXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOffset.xl',] },],
-        'offsetLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOffset.lt-sm',] },],
-        'offsetLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOffset.lt-md',] },],
-        'offsetLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOffset.lt-lg',] },],
-        'offsetLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOffset.lt-xl',] },],
-        'offsetGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOffset.gt-xs',] },],
-        'offsetGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOffset.gt-sm',] },],
-        'offsetGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOffset.gt-md',] },],
-        'offsetGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOffset.gt-lg',] },],
-    };
-    return FlexOffsetDirective;
-}(BaseFxDirective));
-
-/**
- * 'flex-order' flexbox styling directive
- * Configures the positional ordering of the element in a sorted layout container
- * @see https://css-tricks.com/almanac/properties/o/order/
- */
-var FlexOrderDirective = (function (_super) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_tslib__["a" /* __extends */])(FlexOrderDirective, _super);
-    /**
-     * @param {?} monitor
-     * @param {?} elRef
-     * @param {?} renderer
-     */
-    function FlexOrderDirective(monitor, elRef, renderer) {
-        return _super.call(this, monitor, elRef, renderer) || this;
-    }
-    Object.defineProperty(FlexOrderDirective.prototype, "order", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('order', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(FlexOrderDirective.prototype, "orderXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('orderXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(FlexOrderDirective.prototype, "orderSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('orderSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOrderDirective.prototype, "orderMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('orderMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOrderDirective.prototype, "orderLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('orderLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOrderDirective.prototype, "orderXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('orderXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOrderDirective.prototype, "orderGtXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('orderGtXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOrderDirective.prototype, "orderGtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('orderGtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOrderDirective.prototype, "orderGtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('orderGtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOrderDirective.prototype, "orderGtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('orderGtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOrderDirective.prototype, "orderLtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('orderLtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOrderDirective.prototype, "orderLtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('orderLtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOrderDirective.prototype, "orderLtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('orderLtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(FlexOrderDirective.prototype, "orderLtXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('orderLtXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    /**
-     * For \@Input changes on the current mq activation property, see onMediaQueryChanges()
-     * @param {?} changes
-     * @return {?}
-     */
-    FlexOrderDirective.prototype.ngOnChanges = function (changes) {
-        if (changes['order'] != null || this._mqActivation) {
-            this._updateWithValue();
-        }
-    };
-    /**
-     * After the initial onChanges, build an mqActivation object that bridges
-     * mql change events to onMediaQueryChange handlers
-     * @return {?}
-     */
-    FlexOrderDirective.prototype.ngOnInit = function () {
-        var _this = this;
-        _super.prototype.ngOnInit.call(this);
-        this._listenForMediaQueryChanges('order', '0', function (changes) {
-            _this._updateWithValue(changes.value);
-        });
-        this._updateWithValue();
-    };
-    /**
-     * @param {?=} value
-     * @return {?}
-     */
-    FlexOrderDirective.prototype._updateWithValue = function (value) {
-        value = value || this._queryInput('order') || '0';
-        if (this._mqActivation) {
-            value = this._mqActivation.activatedInput;
-        }
-        this._applyStyleToElement(this._buildCSS(value));
-    };
-    /**
-     * @param {?} value
-     * @return {?}
-     */
-    FlexOrderDirective.prototype._buildCSS = function (value) {
-        value = parseInt(value, 10);
-        return { order: isNaN(value) ? 0 : value };
-    };
-    FlexOrderDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* Directive */], args: [{ selector: "\n  [fxFlexOrder],\n  [fxFlexOrder.xs], [fxFlexOrder.sm], [fxFlexOrder.md], [fxFlexOrder.lg], [fxFlexOrder.xl],\n  [fxFlexOrder.lt-sm], [fxFlexOrder.lt-md], [fxFlexOrder.lt-lg], [fxFlexOrder.lt-xl],\n  [fxFlexOrder.gt-xs], [fxFlexOrder.gt-sm], [fxFlexOrder.gt-md], [fxFlexOrder.gt-lg]\n" },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    FlexOrderDirective.ctorParameters = function () { return [
-        { type: MediaMonitor, },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */], },
-    ]; };
-    FlexOrderDirective.propDecorators = {
-        'order': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOrder',] },],
-        'orderXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOrder.xs',] },],
-        'orderSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOrder.sm',] },],
-        'orderMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOrder.md',] },],
-        'orderLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOrder.lg',] },],
-        'orderXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOrder.xl',] },],
-        'orderGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOrder.gt-xs',] },],
-        'orderGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOrder.gt-sm',] },],
-        'orderGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOrder.gt-md',] },],
-        'orderGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOrder.gt-lg',] },],
-        'orderLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOrder.lt-sm',] },],
-        'orderLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOrder.lt-md',] },],
-        'orderLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOrder.lt-lg',] },],
-        'orderLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxFlexOrder.lt-xl',] },],
-    };
-    return FlexOrderDirective;
-}(BaseFxDirective));
-
-/**
- * Adapts the 'deprecated' Angular Renderer v1 API to use the new Renderer2 instance
- * This is required for older versions of NgStyle and NgClass that require
- * the v1 API (but should use the v2 instances)
- */
-var RendererAdapter = (function () {
-    /**
-     * @param {?} _renderer
-     */
-    function RendererAdapter(_renderer) {
-        this._renderer = _renderer;
-    }
-    /**
-     * @param {?} el
-     * @param {?} className
-     * @param {?} isAdd
-     * @return {?}
-     */
-    RendererAdapter.prototype.setElementClass = function (el, className, isAdd) {
-        if (isAdd) {
-            this._renderer.addClass(el, className);
-        }
-        else {
-            this._renderer.removeClass(el, className);
-        }
-    };
-    /**
-     * @param {?} el
-     * @param {?} styleName
-     * @param {?} styleValue
-     * @return {?}
-     */
-    RendererAdapter.prototype.setElementStyle = function (el, styleName, styleValue) {
-        if (styleValue) {
-            this._renderer.setStyle(el, styleName, styleValue);
-        }
-        else {
-            this._renderer.removeStyle(el, styleName);
-        }
-    };
-    /**
-     * @param {?} el
-     * @param {?} name
-     * @return {?}
-     */
-    RendererAdapter.prototype.addClass = function (el, name) {
-        this._renderer.addClass(el, name);
-    };
-    /**
-     * @param {?} el
-     * @param {?} name
-     * @return {?}
-     */
-    RendererAdapter.prototype.removeClass = function (el, name) {
-        this._renderer.removeClass(el, name);
-    };
-    /**
-     * @param {?} el
-     * @param {?} style
-     * @param {?} value
-     * @param {?=} flags
-     * @return {?}
-     */
-    RendererAdapter.prototype.setStyle = function (el, style, value, flags) {
-        this._renderer.setStyle(el, style, value, flags);
-    };
-    /**
-     * @param {?} el
-     * @param {?} style
-     * @param {?=} flags
-     * @return {?}
-     */
-    RendererAdapter.prototype.removeStyle = function (el, style, flags) {
-        this._renderer.removeStyle(el, style, flags);
-    };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.animate = function () { throw _notImplemented('animate'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.attachViewAfter = function () { throw _notImplemented('attachViewAfter'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.detachView = function () { throw _notImplemented('detachView'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.destroyView = function () { throw _notImplemented('destroyView'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.createElement = function () { throw _notImplemented('createElement'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.createViewRoot = function () { throw _notImplemented('createViewRoot'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.createTemplateAnchor = function () { throw _notImplemented('createTemplateAnchor'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.createText = function () { throw _notImplemented('createText'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.invokeElementMethod = function () { throw _notImplemented('invokeElementMethod'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.projectNodes = function () { throw _notImplemented('projectNodes'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.selectRootElement = function () { throw _notImplemented('selectRootElement'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.setBindingDebugInfo = function () { throw _notImplemented('setBindingDebugInfo'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.setElementProperty = function () { throw _notImplemented('setElementProperty'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.setElementAttribute = function () { throw _notImplemented('setElementAttribute'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.setText = function () { throw _notImplemented('setText'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.listen = function () { throw _notImplemented('listen'); };
-    /**
-     * @return {?}
-     */
-    RendererAdapter.prototype.listenGlobal = function () { throw _notImplemented('listenGlobal'); };
-    return RendererAdapter;
+    ObservableMedia.prototype.isActive = function (query) { };
+    ObservableMedia.prototype.asObservable = function () { };
+    ObservableMedia.prototype.subscribe = function (next, error, complete) { };
+    return ObservableMedia;
 }());
-/**
- * @param {?} methodName
- * @return {?}
- */
-function _notImplemented(methodName) {
-    return new Error("The method RendererAdapter::" + methodName + "() has not been implemented");
-}
-
-/**
- * Directive to add responsive support for ngClass.
- * This maintains the core functionality of 'ngClass' and adds responsive API
- *
- */
-var ClassDirective = (function (_super) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_tslib__["a" /* __extends */])(ClassDirective, _super);
-    /**
-     * @param {?} monitor
-     * @param {?} _iterableDiffers
-     * @param {?} _keyValueDiffers
-     * @param {?} _ngEl
-     * @param {?} _renderer
-     * @param {?} _ngClassInstance
-     */
-    function ClassDirective(monitor, _iterableDiffers, _keyValueDiffers, _ngEl, _renderer, _ngClassInstance) {
-        var _this = _super.call(this, monitor, _ngEl, _renderer) || this;
-        _this.monitor = monitor;
-        _this._iterableDiffers = _iterableDiffers;
-        _this._keyValueDiffers = _keyValueDiffers;
-        _this._ngEl = _ngEl;
-        _this._renderer = _renderer;
-        _this._ngClassInstance = _ngClassInstance;
-        _this._configureAdapters();
-        return _this;
+var MediaService = (function () {
+    function MediaService(breakpoints, mediaWatcher) {
+        this.breakpoints = breakpoints;
+        this.mediaWatcher = mediaWatcher;
+        this.filterOverlaps = true;
+        this._registerBreakPoints();
+        this.observable$ = this._buildObservable();
     }
-    Object.defineProperty(ClassDirective.prototype, "ngClassBase", {
-        /**
-         * Intercept ngClass assignments so we cache the default classes
-         * which are merged with activated styles or used as fallbacks.
-         * Note: Base ngClass values are applied during ngDoCheck()
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) {
-            var /** @type {?} */ key = 'ngClass';
-            this._base.cacheInput(key, val, true);
-            this._ngClassInstance.ngClass = this._base.queryInput(key);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ClassDirective.prototype, "klazz", {
-        /**
-         * Capture class assignments so we cache the default classes
-         * which are merged with activated styles and used as fallbacks.
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) {
-            var /** @type {?} */ key = 'class';
-            this._base.cacheInput(key, val);
-            this._ngClassInstance.klass = val;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ClassDirective.prototype, "ngClassXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngClassXs', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ClassDirective.prototype, "ngClassSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngClassSm', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ClassDirective.prototype, "ngClassMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngClassMd', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ClassDirective.prototype, "ngClassLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngClassLg', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ClassDirective.prototype, "ngClassXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngClassXl', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ClassDirective.prototype, "ngClassLtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngClassLtSm', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ClassDirective.prototype, "ngClassLtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngClassLtMd', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ClassDirective.prototype, "ngClassLtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngClassLtLg', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ClassDirective.prototype, "ngClassLtXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngClassLtXl', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ClassDirective.prototype, "ngClassGtXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngClassGtXs', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ClassDirective.prototype, "ngClassGtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngClassGtSm', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ClassDirective.prototype, "ngClassGtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngClassGtMd', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ClassDirective.prototype, "ngClassGtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngClassGtLg', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    /**
-     * For \@Input changes on the current mq activation property
-     * @param {?} changes
-     * @return {?}
-     */
-    ClassDirective.prototype.ngOnChanges = function (changes) {
-        if (this._base.activeKey in changes) {
-            this._ngClassInstance.ngClass = this._base.mqActivation.activatedInput || '';
-        }
+    MediaService.prototype.isActive = function (alias) {
+        var query = this._toMediaQuery(alias);
+        return this.mediaWatcher.isActive(query);
     };
-    /**
-     * @return {?}
-     */
-    ClassDirective.prototype.ngOnInit = function () {
-        this._configureMQListener();
+    MediaService.prototype.subscribe = function (next, error, complete) {
+        return this.observable$.subscribe(next, error, complete);
     };
-    /**
-     * For ChangeDetectionStrategy.onPush and ngOnChanges() updates
-     * @return {?}
-     */
-    ClassDirective.prototype.ngDoCheck = function () {
-        this._ngClassInstance.ngDoCheck();
+    MediaService.prototype.asObservable = function () {
+        return this.observable$;
     };
-    /**
-     * @return {?}
-     */
-    ClassDirective.prototype.ngOnDestroy = function () {
-        this._base.ngOnDestroy();
-        this._ngClassInstance = null;
+    MediaService.prototype._registerBreakPoints = function () {
+        var queries = this.breakpoints.sortedItems.map(function (bp) { return bp.mediaQuery; });
+        this.mediaWatcher.registerQuery(queries);
     };
-    /**
-     * Configure adapters (that delegate to an internal ngClass instance) if responsive
-     * keys have been defined.
-     * @return {?}
-     */
-    ClassDirective.prototype._configureAdapters = function () {
-        this._base = new BaseFxDirectiveAdapter('ngClass', this.monitor, this._ngEl, this._renderer);
-        if (!this._ngClassInstance) {
-            // Create an instance NgClass Directive instance only if `ngClass=""` has NOT been defined on
-            // the same host element; since the responsive variations may be defined...
-            var /** @type {?} */ adapter = new RendererAdapter(this._renderer);
-            this._ngClassInstance = new __WEBPACK_IMPORTED_MODULE_4__angular_common__["l" /* NgClass */](this._iterableDiffers, this._keyValueDiffers, this._ngEl, /** @type {?} */ (adapter));
-        }
-    };
-    /**
-     * Build an mqActivation object that bridges mql change events to onMediaQueryChange handlers
-     * NOTE: We delegate subsequent activity to the NgClass logic
-     *       Identify the activated input value and update the ngClass iterables...
-     *       Use ngDoCheck() to actually apply the values to the element
-     * @param {?=} baseKey
-     * @return {?}
-     */
-    ClassDirective.prototype._configureMQListener = function (baseKey) {
+    MediaService.prototype._buildObservable = function () {
         var _this = this;
-        if (baseKey === void 0) { baseKey = 'ngClass'; }
-        var /** @type {?} */ fallbackValue = this._base.queryInput(baseKey);
-        this._base.listenForMediaQueryChanges(baseKey, fallbackValue, function (changes) {
-            _this._ngClassInstance.ngClass = changes.value || '';
-            _this._ngClassInstance.ngDoCheck();
-        });
+        var self = this;
+        var activationsOnly = function (change) {
+            return change.matches === true;
+        };
+        var addAliasInformation = function (change) {
+            return mergeAlias(change, _this._findByQuery(change.mediaQuery));
+        };
+        var excludeOverlaps = function (change) {
+            var bp = _this.breakpoints.findByQuery(change.mediaQuery);
+            return !bp ? true : !(self.filterOverlaps && bp.overlapping);
+        };
+        return __WEBPACK_IMPORTED_MODULE_4_rxjs_operator_filter__["filter"].call(__WEBPACK_IMPORTED_MODULE_5_rxjs_operator_map__["map"].call(__WEBPACK_IMPORTED_MODULE_4_rxjs_operator_filter__["filter"].call(this.mediaWatcher.observe(), activationsOnly), addAliasInformation), excludeOverlaps);
     };
-    ClassDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* Directive */], args: [{
-                    selector: "\n    [ngClass.xs], [ngClass.sm], [ngClass.md], [ngClass.lg], [ngClass.xl],\n    [ngClass.lt-sm], [ngClass.lt-md], [ngClass.lt-lg], [ngClass.lt-xl],\n    [ngClass.gt-xs], [ngClass.gt-sm], [ngClass.gt-md], [ngClass.gt-lg]\n  "
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ClassDirective.ctorParameters = function () { return [
-        { type: MediaMonitor, },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["N" /* IterableDiffers */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["O" /* KeyValueDiffers */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */], },
-        { type: __WEBPACK_IMPORTED_MODULE_4__angular_common__["l" /* NgClass */], decorators: [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["W" /* Self */] },] },
-    ]; };
-    ClassDirective.propDecorators = {
-        'ngClassBase': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngClass',] },],
-        'klazz': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['class',] },],
-        'ngClassXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngClass.xs',] },],
-        'ngClassSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngClass.sm',] },],
-        'ngClassMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngClass.md',] },],
-        'ngClassLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngClass.lg',] },],
-        'ngClassXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngClass.xl',] },],
-        'ngClassLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngClass.lt-sm',] },],
-        'ngClassLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngClass.lt-md',] },],
-        'ngClassLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngClass.lt-lg',] },],
-        'ngClassLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngClass.lt-xl',] },],
-        'ngClassGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngClass.gt-xs',] },],
-        'ngClassGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngClass.gt-sm',] },],
-        'ngClassGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngClass.gt-md',] },],
-        'ngClassGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngClass.gt-lg',] },],
+    MediaService.prototype._findByAlias = function (alias) {
+        return this.breakpoints.findByAlias(alias);
     };
-    return ClassDirective;
-}(BaseFxDirective));
-
-/**
- * NgStyle allowed inputs
- */
-var NgStyleKeyValue = (function () {
-    /**
-     * @param {?} key
-     * @param {?} value
-     * @param {?=} noQuotes
-     */
-    function NgStyleKeyValue(key, value, noQuotes) {
-        if (noQuotes === void 0) { noQuotes = true; }
-        this.key = key;
-        this.value = value;
-        this.key = noQuotes ? key.replace(/['"]/g, '').trim() : key.trim();
-        this.value = noQuotes ? value.replace(/['"]/g, '').trim() : value.trim();
-        this.value = this.value.replace(/;/, '');
-    }
-    return NgStyleKeyValue;
+    MediaService.prototype._findByQuery = function (query) {
+        return this.breakpoints.findByQuery(query);
+    };
+    MediaService.prototype._toMediaQuery = function (query) {
+        var bp = this._findByAlias(query) || this._findByQuery(query);
+        return bp ? bp.mediaQuery : query;
+    };
+    return MediaService;
 }());
-/**
- * Transform Operators for \@angular/flex-layout NgStyle Directive
- */
-var ngStyleUtils = {
-    getType: getType,
-    buildRawList: buildRawList,
-    buildMapFromList: buildMapFromList,
-    buildMapFromSet: buildMapFromSet
+MediaService.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["c" /* Injectable */] },
+];
+MediaService.ctorParameters = function () { return [
+    { type: BreakPointRegistry, },
+    { type: MatchMedia, },
+]; };
+function OBSERVABLE_MEDIA_PROVIDER_FACTORY(parentService, matchMedia, breakpoints) {
+    return parentService || new MediaService(breakpoints, matchMedia);
+}
+var OBSERVABLE_MEDIA_PROVIDER = {
+    provide: ObservableMedia,
+    deps: [
+        [new __WEBPACK_IMPORTED_MODULE_1__angular_core__["C" /* Optional */](), new __WEBPACK_IMPORTED_MODULE_1__angular_core__["F" /* SkipSelf */](), ObservableMedia],
+        MatchMedia,
+        BreakPointRegistry
+    ],
+    useFactory: OBSERVABLE_MEDIA_PROVIDER_FACTORY
 };
-/**
- * @param {?} target
- * @return {?}
- */
-function getType(target) {
-    var /** @type {?} */ what = typeof target;
-    if (what === 'object') {
-        return (target.constructor === Array) ? 'array' :
-            (target.constructor === Set) ? 'set' : 'object';
-    }
-    return what;
-}
-/**
- * Split string of key:value pairs into Array of k-v pairs
- * e.g.  'key:value; key:value; key:value;' -> ['key:value',...]
- * @param {?} source
- * @param {?=} delimiter
- * @return {?}
- */
-function buildRawList(source, delimiter) {
-    if (delimiter === void 0) { delimiter = ';'; }
-    return String(source)
-        .trim()
-        .split(delimiter)
-        .map(function (val) { return val.trim(); })
-        .filter(function (val) { return val !== ''; });
-}
-/**
- * Convert array of key:value strings to a iterable map object
- * @param {?} styles
- * @param {?=} sanitize
- * @return {?}
- */
-function buildMapFromList(styles, sanitize) {
-    var /** @type {?} */ sanitizeValue = function (it) {
-        if (sanitize) {
-            it.value = sanitize(it.value);
-        }
-        return it;
-    };
-    return styles
-        .map(stringToKeyValue)
-        .filter(function (entry) { return !!entry; })
-        .map(sanitizeValue)
-        .reduce(keyValuesToMap, {});
-}
-/**
- * Convert Set<string> or raw Object to an iterable NgStyleMap
- * @param {?} source
- * @param {?=} sanitize
- * @return {?}
- */
-function buildMapFromSet(source, sanitize) {
-    var /** @type {?} */ list = new Array();
-    if (getType(source) == 'set') {
-        source.forEach(function (entry) { return list.push(entry); });
-    }
-    else {
-        Object.keys(source).forEach(function (key) {
-            list.push(key + ":" + source[key]);
-        });
-    }
-    return buildMapFromList(list, sanitize);
-}
-/**
- * Convert 'key:value' -> [key, value]
- * @param {?} it
- * @return {?}
- */
-function stringToKeyValue(it) {
-    var _a = it.split(':'), key = _a[0], val = _a[1];
-    return val ? new NgStyleKeyValue(key, val) : null;
-}
-/**
- * Convert [ [key,value] ] -> { key : value }
- * @param {?} map
- * @param {?} entry
- * @return {?}
- */
-function keyValuesToMap(map$$1, entry) {
-    if (!!entry.key) {
-        map$$1[entry.key] = entry.value;
-    }
-    return map$$1;
-}
-
-/**
- * Directive to add responsive support for ngStyle.
- *
- */
-var StyleDirective = (function (_super) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_tslib__["a" /* __extends */])(StyleDirective, _super);
-    /**
-     *  Constructor for the ngStyle subclass; which adds selectors and
-     *  a MediaQuery Activation Adapter
-     * @param {?} monitor
-     * @param {?} _sanitizer
-     * @param {?} _ngEl
-     * @param {?} _renderer
-     * @param {?} _differs
-     * @param {?} _ngStyleInstance
-     */
-    function StyleDirective(monitor, _sanitizer, _ngEl, _renderer, _differs, _ngStyleInstance) {
-        var _this = _super.call(this, monitor, _ngEl, _renderer) || this;
-        _this.monitor = monitor;
-        _this._sanitizer = _sanitizer;
-        _this._ngEl = _ngEl;
-        _this._renderer = _renderer;
-        _this._differs = _differs;
-        _this._ngStyleInstance = _ngStyleInstance;
-        _this._configureAdapters();
-        return _this;
-    }
-    Object.defineProperty(StyleDirective.prototype, "ngStyleBase", {
-        /**
-         * Intercept ngStyle assignments so we cache the default styles
-         * which are merged with activated styles or used as fallbacks.
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) {
-            var /** @type {?} */ key = 'ngStyle';
-            this._base.cacheInput(key, val, true); // convert val to hashmap
-            this._ngStyleInstance.ngStyle = this._base.queryInput(key);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(StyleDirective.prototype, "ngStyleXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngStyleXs', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(StyleDirective.prototype, "ngStyleSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngStyleSm', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(StyleDirective.prototype, "ngStyleMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngStyleMd', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(StyleDirective.prototype, "ngStyleLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngStyleLg', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(StyleDirective.prototype, "ngStyleXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngStyleXl', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(StyleDirective.prototype, "ngStyleLtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngStyleLtSm', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(StyleDirective.prototype, "ngStyleLtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngStyleLtMd', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(StyleDirective.prototype, "ngStyleLtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngStyleLtLg', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(StyleDirective.prototype, "ngStyleLtXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngStyleLtXl', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(StyleDirective.prototype, "ngStyleGtXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngStyleGtXs', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(StyleDirective.prototype, "ngStyleGtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngStyleGtSm', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(StyleDirective.prototype, "ngStyleGtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngStyleGtMd', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(StyleDirective.prototype, "ngStyleGtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._base.cacheInput('ngStyleGtLg', val, true); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    /**
-     * For \@Input changes on the current mq activation property
-     * @param {?} changes
-     * @return {?}
-     */
-    StyleDirective.prototype.ngOnChanges = function (changes) {
-        if (this._base.activeKey in changes) {
-            this._ngStyleInstance.ngStyle = this._base.mqActivation.activatedInput || '';
-        }
-    };
-    /**
-     * @return {?}
-     */
-    StyleDirective.prototype.ngOnInit = function () {
-        this._configureMQListener();
-    };
-    /**
-     * For ChangeDetectionStrategy.onPush and ngOnChanges() updates
-     * @return {?}
-     */
-    StyleDirective.prototype.ngDoCheck = function () {
-        this._ngStyleInstance.ngDoCheck();
-    };
-    /**
-     * @return {?}
-     */
-    StyleDirective.prototype.ngOnDestroy = function () {
-        this._base.ngOnDestroy();
-        this._ngStyleInstance = null;
-    };
-    /**
-     * Configure adapters (that delegate to an internal ngClass instance) if responsive
-     * keys have been defined.
-     * @return {?}
-     */
-    StyleDirective.prototype._configureAdapters = function () {
-        this._base = new BaseFxDirectiveAdapter('ngStyle', this.monitor, this._ngEl, this._renderer);
-        if (!this._ngStyleInstance) {
-            // Create an instance NgClass Directive instance only if `ngClass=""` has NOT been
-            // defined on the same host element; since the responsive variations may be defined...
-            var /** @type {?} */ adapter = new RendererAdapter(this._renderer);
-            this._ngStyleInstance = new __WEBPACK_IMPORTED_MODULE_4__angular_common__["m" /* NgStyle */](this._differs, this._ngEl, /** @type {?} */ (adapter));
-        }
-        this._buildCacheInterceptor();
-        this._fallbackToStyle();
-    };
-    /**
-     * Build an mqActivation object that bridges
-     * mql change events to onMediaQueryChange handlers
-     * @param {?=} baseKey
-     * @return {?}
-     */
-    StyleDirective.prototype._configureMQListener = function (baseKey) {
-        var _this = this;
-        if (baseKey === void 0) { baseKey = 'ngStyle'; }
-        var /** @type {?} */ fallbackValue = this._base.queryInput(baseKey);
-        this._base.listenForMediaQueryChanges(baseKey, fallbackValue, function (changes) {
-            _this._ngStyleInstance.ngStyle = changes.value || '';
-            _this._ngStyleInstance.ngDoCheck();
-        });
-    };
-    /**
-     * Build intercept to convert raw strings to ngStyleMap
-     * @return {?}
-     */
-    StyleDirective.prototype._buildCacheInterceptor = function () {
-        var _this = this;
-        var /** @type {?} */ cacheInput = this._base.cacheInput.bind(this._base);
-        this._base.cacheInput = function (key, source, cacheRaw, merge) {
-            if (cacheRaw === void 0) { cacheRaw = false; }
-            if (merge === void 0) { merge = true; }
-            var /** @type {?} */ styles = _this._buildStyleMap(source);
-            if (merge) {
-                styles = extendObject({}, _this._base.inputMap['ngStyle'], styles);
-            }
-            cacheInput(key, styles, cacheRaw);
-        };
-    };
-    /**
-     * Convert raw strings to ngStyleMap; which is required by ngStyle
-     * NOTE: Raw string key-value pairs MUST be delimited by `;`
-     *       Comma-delimiters are not supported due to complexities of
-     *       possible style values such as `rgba(x,x,x,x)` and others
-     * @param {?} styles
-     * @return {?}
-     */
-    StyleDirective.prototype._buildStyleMap = function (styles) {
-        var _this = this;
-        var /** @type {?} */ sanitizer = function (val) {
-            // Always safe-guard (aka sanitize) style property values
-            return _this._sanitizer.sanitize(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* SecurityContext */].STYLE, val);
-        };
-        if (styles) {
-            switch (ngStyleUtils.getType(styles)) {
-                case 'string': return ngStyleUtils.buildMapFromList(ngStyleUtils.buildRawList(styles), sanitizer);
-                case 'array': return ngStyleUtils.buildMapFromList(/** @type {?} */ (styles), sanitizer);
-                case 'set': return ngStyleUtils.buildMapFromSet(styles, sanitizer);
-                default: return ngStyleUtils.buildMapFromSet(styles, sanitizer);
-            }
-        }
-        return styles;
-    };
-    /**
-     * Initial lookup of raw 'class' value (if any)
-     * @return {?}
-     */
-    StyleDirective.prototype._fallbackToStyle = function () {
-        if (!this._base.queryInput('ngStyle')) {
-            this.ngStyleBase = this._getAttributeValue('style') || '';
-        }
-    };
-    StyleDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* Directive */], args: [{
-                    selector: "\n    [ngStyle.xs], [ngStyle.sm], [ngStyle.md], [ngStyle.lg], [ngStyle.xl],\n    [ngStyle.lt-sm], [ngStyle.lt-md], [ngStyle.lt-lg], [ngStyle.lt-xl],\n    [ngStyle.gt-xs], [ngStyle.gt-sm], [ngStyle.gt-md], [ngStyle.gt-lg]\n  "
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    StyleDirective.ctorParameters = function () { return [
-        { type: MediaMonitor, },
-        { type: __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["e" /* DomSanitizer */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["O" /* KeyValueDiffers */], },
-        { type: __WEBPACK_IMPORTED_MODULE_4__angular_common__["m" /* NgStyle */], decorators: [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["W" /* Self */] },] },
-    ]; };
-    StyleDirective.propDecorators = {
-        'ngStyleBase': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngStyle',] },],
-        'ngStyleXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngStyle.xs',] },],
-        'ngStyleSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngStyle.sm',] },],
-        'ngStyleMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngStyle.md',] },],
-        'ngStyleLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngStyle.lg',] },],
-        'ngStyleXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngStyle.xl',] },],
-        'ngStyleLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngStyle.lt-sm',] },],
-        'ngStyleLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngStyle.lt-md',] },],
-        'ngStyleLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngStyle.lt-lg',] },],
-        'ngStyleLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngStyle.lt-xl',] },],
-        'ngStyleGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngStyle.gt-xs',] },],
-        'ngStyleGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngStyle.gt-sm',] },],
-        'ngStyleGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngStyle.gt-md',] },],
-        'ngStyleGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['ngStyle.gt-lg',] },],
-    };
-    return StyleDirective;
-}(BaseFxDirective));
-
-var FALSY = ['false', false, 0];
-/**
- * For fxHide selectors, we invert the 'value'
- * and assign to the equivalent fxShow selector cache
- *  - When 'hide' === '' === true, do NOT show the element
- *  - When 'hide' === false or 0... we WILL show the element
- * @param {?} hide
- * @return {?}
- */
-function negativeOf(hide) {
-    return (hide === '') ? false :
-        ((hide === 'false') || (hide === 0)) ? true : !hide;
-}
-/**
- * 'show' Layout API directive
- *
- */
-var ShowHideDirective = (function (_super) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_tslib__["a" /* __extends */])(ShowHideDirective, _super);
-    /**
-     *
-     * @param {?} monitor
-     * @param {?} _layout
-     * @param {?} elRef
-     * @param {?} renderer
-     */
-    function ShowHideDirective(monitor, _layout, elRef, renderer) {
-        var _this = _super.call(this, monitor, elRef, renderer) || this;
-        _this._layout = _layout;
-        _this.elRef = elRef;
-        _this.renderer = renderer;
-        if (_layout) {
-            /**
-             * The Layout can set the display:flex (and incorrectly affect the Hide/Show directives.
-             * Whenever Layout [on the same element] resets its CSS, then update the Hide/Show CSS
-             */
-            _this._layoutWatcher = _layout.layout$.subscribe(function () { return _this._updateWithValue(); });
-        }
-        return _this;
-    }
-    Object.defineProperty(ShowHideDirective.prototype, "show", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('show', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ShowHideDirective.prototype, "showXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ShowHideDirective.prototype, "showSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "showMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "showLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "showXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "showLtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showLtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "showLtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showLtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "showLtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showLtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "showLtXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showLtXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "showGtXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showGtXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "showGtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showGtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "showGtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showGtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "showGtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showGtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "hide", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('show', negativeOf(val)); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ShowHideDirective.prototype, "hideXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showXs', negativeOf(val)); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ShowHideDirective.prototype, "hideSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showSm', negativeOf(val)); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "hideMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showMd', negativeOf(val)); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "hideLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showLg', negativeOf(val)); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "hideXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showXl', negativeOf(val)); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "hideLtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showLtSm', negativeOf(val)); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "hideLtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showLtMd', negativeOf(val)); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "hideLtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showLtLg', negativeOf(val)); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "hideLtXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showLtXl', negativeOf(val)); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "hideGtXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showGtXs', negativeOf(val)); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "hideGtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showGtSm', negativeOf(val)); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "hideGtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showGtMd', negativeOf(val)); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    Object.defineProperty(ShowHideDirective.prototype, "hideGtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('showGtLg', negativeOf(val)); },
-        enumerable: true,
-        configurable: true
-    });
-    
-    /**
-     * Override accessor to the current HTMLElement's `display` style
-     * Note: Show/Hide will not change the display to 'flex' but will set it to 'block'
-     * unless it was already explicitly specified inline or in a CSS stylesheet.
-     * @return {?}
-     */
-    ShowHideDirective.prototype._getDisplayStyle = function () {
-        return this._layout ? 'flex' : _super.prototype._getDisplayStyle.call(this);
-    };
-    /**
-     * On changes to any \@Input properties...
-     * Default to use the non-responsive Input value ('fxShow')
-     * Then conditionally override with the mq-activated Input's current value
-     * @param {?} changes
-     * @return {?}
-     */
-    ShowHideDirective.prototype.ngOnChanges = function (changes) {
-        if (this.hasInitialized && (changes['show'] != null || this._mqActivation)) {
-            this._updateWithValue();
-        }
-    };
-    /**
-     * After the initial onChanges, build an mqActivation object that bridges
-     * mql change events to onMediaQueryChange handlers
-     * @return {?}
-     */
-    ShowHideDirective.prototype.ngOnInit = function () {
-        var _this = this;
-        _super.prototype.ngOnInit.call(this);
-        var /** @type {?} */ value = this._getDefaultVal('show', true);
-        // Build _mqActivation controller
-        this._listenForMediaQueryChanges('show', value, function (changes) {
-            _this._updateWithValue(changes.value);
-        });
-        this._updateWithValue();
-    };
-    /**
-     * @return {?}
-     */
-    ShowHideDirective.prototype.ngOnDestroy = function () {
-        _super.prototype.ngOnDestroy.call(this);
-        if (this._layoutWatcher) {
-            this._layoutWatcher.unsubscribe();
-        }
-    };
-    /**
-     * Validate the visibility value and then update the host's inline display style
-     * @param {?=} value
-     * @return {?}
-     */
-    ShowHideDirective.prototype._updateWithValue = function (value) {
-        value = value || this._getDefaultVal('show', true);
-        if (this._mqActivation) {
-            value = this._mqActivation.activatedInput;
-        }
-        var /** @type {?} */ shouldShow = this._validateTruthy(value);
-        this._applyStyleToElement(this._buildCSS(shouldShow));
-    };
-    /**
-     * Build the CSS that should be assigned to the element instance
-     * @param {?} show
-     * @return {?}
-     */
-    ShowHideDirective.prototype._buildCSS = function (show) {
-        return { 'display': show ? this._display : 'none' };
-    };
-    /**
-     * Validate the to be not FALSY
-     * @param {?} show
-     * @return {?}
-     */
-    ShowHideDirective.prototype._validateTruthy = function (show) {
-        return (FALSY.indexOf(show) == -1);
-    };
-    ShowHideDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* Directive */], args: [{
-                    selector: "\n  [fxShow],\n  [fxShow.xs], [fxShow.sm], [fxShow.md], [fxShow.lg], [fxShow.xl],\n  [fxShow.lt-sm], [fxShow.lt-md], [fxShow.lt-lg], [fxShow.lt-xl],\n  [fxShow.gt-xs], [fxShow.gt-sm], [fxShow.gt-md], [fxShow.gt-lg],\n  [fxHide],\n  [fxHide.xs], [fxHide.sm], [fxHide.md], [fxHide.lg], [fxHide.xl],\n  [fxHide.lt-sm], [fxHide.lt-md], [fxHide.lt-lg], [fxHide.lt-xl],\n  [fxHide.gt-xs], [fxHide.gt-sm], [fxHide.gt-md], [fxHide.gt-lg]\n"
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ShowHideDirective.ctorParameters = function () { return [
-        { type: MediaMonitor, },
-        { type: LayoutDirective, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["W" /* Self */] },] },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */], },
-    ]; };
-    ShowHideDirective.propDecorators = {
-        'show': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShow',] },],
-        'showXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShow.xs',] },],
-        'showSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShow.sm',] },],
-        'showMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShow.md',] },],
-        'showLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShow.lg',] },],
-        'showXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShow.xl',] },],
-        'showLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShow.lt-sm',] },],
-        'showLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShow.lt-md',] },],
-        'showLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShow.lt-lg',] },],
-        'showLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShow.lt-xl',] },],
-        'showGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShow.gt-xs',] },],
-        'showGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShow.gt-sm',] },],
-        'showGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShow.gt-md',] },],
-        'showGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxShow.gt-lg',] },],
-        'hide': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxHide',] },],
-        'hideXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxHide.xs',] },],
-        'hideSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxHide.sm',] },],
-        'hideMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxHide.md',] },],
-        'hideLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxHide.lg',] },],
-        'hideXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxHide.xl',] },],
-        'hideLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxHide.lt-sm',] },],
-        'hideLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxHide.lt-md',] },],
-        'hideLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxHide.lt-lg',] },],
-        'hideLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxHide.lt-xl',] },],
-        'hideGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxHide.gt-xs',] },],
-        'hideGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxHide.gt-sm',] },],
-        'hideGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxHide.gt-md',] },],
-        'hideGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['fxHide.gt-lg',] },],
-    };
-    return ShowHideDirective;
-}(BaseFxDirective));
-
-/**
- * This directive provides a responsive API for the HTML <img> 'src' attribute
- * and will update the img.src property upon each responsive activation.
- *
- * e.g.
- *      <img src="defaultScene.jpg" src.xs="mobileScene.jpg"></img>
- *
- * @see https://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-src/
- */
-var ImgSrcDirective = (function (_super) {
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_tslib__["a" /* __extends */])(ImgSrcDirective, _super);
-    /**
-     * @param {?} elRef
-     * @param {?} renderer
-     * @param {?} monitor
-     */
-    function ImgSrcDirective(elRef, renderer, monitor) {
-        var _this = _super.call(this, monitor, elRef, renderer) || this;
-        _this._cacheInput('src', elRef.nativeElement.getAttribute('src') || '');
-        return _this;
-    }
-    Object.defineProperty(ImgSrcDirective.prototype, "srcBase", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this.cacheDefaultSrc(val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ImgSrcDirective.prototype, "srcXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('srcXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ImgSrcDirective.prototype, "srcSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('srcSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ImgSrcDirective.prototype, "srcMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('srcMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ImgSrcDirective.prototype, "srcLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('srcLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ImgSrcDirective.prototype, "srcXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('srcXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ImgSrcDirective.prototype, "srcLtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('srcLtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ImgSrcDirective.prototype, "srcLtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('srcLtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ImgSrcDirective.prototype, "srcLtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('srcLtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ImgSrcDirective.prototype, "srcLtXl", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('srcLtXl', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ImgSrcDirective.prototype, "srcGtXs", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('srcGtXs', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ImgSrcDirective.prototype, "srcGtSm", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('srcGtSm', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ImgSrcDirective.prototype, "srcGtMd", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('srcGtMd', val); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ImgSrcDirective.prototype, "srcGtLg", {
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) { this._cacheInput('srcGtLg', val); },
-        enumerable: true,
-        configurable: true
-    });
-    /**
-     * Listen for responsive changes to update the img.src attribute
-     * @return {?}
-     */
-    ImgSrcDirective.prototype.ngOnInit = function () {
-        var _this = this;
-        _super.prototype.ngOnInit.call(this);
-        if (this.hasResponsiveKeys) {
-            // Listen for responsive changes
-            this._listenForMediaQueryChanges('src', this.defaultSrc, function () {
-                _this._updateSrcFor();
-            });
-        }
-        this._updateSrcFor();
-    };
-    /**
-     * Update the 'src' property of the host <img> element
-     * @return {?}
-     */
-    ImgSrcDirective.prototype.ngOnChanges = function () {
-        if (this.hasInitialized) {
-            this._updateSrcFor();
-        }
-    };
-    /**
-     * Use the [responsively] activated input value to update
-     * the host img src attribute or assign a default `img.src=''`
-     * if the src has not been defined.
-     *
-     * Do nothing to standard `<img src="">` usages, only when responsive
-     * keys are present do we actually call `setAttribute()`
-     * @return {?}
-     */
-    ImgSrcDirective.prototype._updateSrcFor = function () {
-        if (this.hasResponsiveKeys) {
-            var /** @type {?} */ url = this.activatedValue || this.defaultSrc;
-            this._renderer.setAttribute(this.nativeElement, 'src', String(url));
-        }
-    };
-    /**
-     * Cache initial value of 'src', this will be used as fallback when breakpoint
-     * activations change.
-     * NOTE: The default 'src' property is not bound using \@Input(), so perform
-     * a post-ngOnInit() lookup of the default src value (if any).
-     * @param {?=} value
-     * @return {?}
-     */
-    ImgSrcDirective.prototype.cacheDefaultSrc = function (value) {
-        this._cacheInput('src', value || '');
-    };
-    Object.defineProperty(ImgSrcDirective.prototype, "defaultSrc", {
-        /**
-         * Empty values are maintained, undefined values are exposed as ''
-         * @return {?}
-         */
-        get: function () {
-            return this._queryInput('src') || '';
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ImgSrcDirective.prototype, "hasResponsiveKeys", {
-        /**
-         * Does the <img> have 1 or more src.<xxx> responsive inputs
-         * defined... these will be mapped to activated breakpoints.
-         * @return {?}
-         */
-        get: function () {
-            return Object.keys(this._inputMap).length > 1;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    ImgSrcDirective.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* Directive */], args: [{
-                    selector: "\n  img[src.xs],    img[src.sm],    img[src.md],    img[src.lg],   img[src.xl],\n  img[src.lt-sm], img[src.lt-md], img[src.lt-lg], img[src.lt-xl],\n  img[src.gt-xs], img[src.gt-sm], img[src.gt-md], img[src.gt-lg]\n"
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    ImgSrcDirective.ctorParameters = function () { return [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */], },
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */], },
-        { type: MediaMonitor, },
-    ]; };
-    ImgSrcDirective.propDecorators = {
-        'srcBase': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['src',] },],
-        'srcXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['src.xs',] },],
-        'srcSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['src.sm',] },],
-        'srcMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['src.md',] },],
-        'srcLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['src.lg',] },],
-        'srcXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['src.xl',] },],
-        'srcLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['src.lt-sm',] },],
-        'srcLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['src.lt-md',] },],
-        'srcLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['src.lt-lg',] },],
-        'srcLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['src.lt-xl',] },],
-        'srcGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['src.gt-xs',] },],
-        'srcGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['src.gt-sm',] },],
-        'srcGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['src.gt-md',] },],
-        'srcGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Input */], args: ['src.gt-lg',] },],
-    };
-    return ImgSrcDirective;
-}(BaseFxDirective));
-
 var RESPONSIVE_ALIASES = [
     'xs', 'gt-xs', 'sm', 'gt-sm', 'md', 'gt-md', 'lg', 'gt-lg', 'xl'
 ];
 var DEFAULT_BREAKPOINTS = [
     {
         alias: 'xs',
-        mediaQuery: '(min-width: 0px) and (max-width: 599px)'
+        mediaQuery: '(max-width: 599px)'
     },
     {
         alias: 'gt-xs',
@@ -24252,8 +11121,6 @@ var DEFAULT_BREAKPOINTS = [
         mediaQuery: '(min-width: 1920px) and (max-width: 5000px)'
     }
 ];
-
-/* tslint:disable */
 var HANDSET_PORTRAIT = '(orientations: portrait) and (max-width: 599px)';
 var HANDSET_LANDSCAPE = '(orientations: landscape) and (max-width: 959px)';
 var TABLET_LANDSCAPE = '(orientations: landscape) and (min-width: 960px) and (max-width: 1279px)';
@@ -24271,9 +11138,6 @@ var ScreenTypes = {
     'TABLET_LANDSCAPE': "" + TABLET_LANDSCAPE,
     'WEB_LANDSCAPE': "" + WEB_LANDSCAPE
 };
-/**
- * Extended Breakpoints for handset/tablets with landscape or portrait orientations
- */
 var ORIENTATION_BREAKPOINTS = [
     { 'alias': 'handset', 'mediaQuery': ScreenTypes.HANDSET },
     { 'alias': 'handset.landscape', 'mediaQuery': ScreenTypes.HANDSET_LANDSCAPE },
@@ -24285,210 +11149,12 @@ var ORIENTATION_BREAKPOINTS = [
     { 'alias': 'web.landscape', 'mediaQuery': ScreenTypes.WEB_LANDSCAPE, overlapping: true },
     { 'alias': 'web.portrait', 'mediaQuery': ScreenTypes.WEB_PORTRAIT, overlapping: true }
 ];
-
-/**
- * Base class for MediaService and pseudo-token for
- * @abstract
- */
-var ObservableMedia = (function () {
-    function ObservableMedia() {
-    }
-    /**
-     * @abstract
-     * @param {?} query
-     * @return {?}
-     */
-    ObservableMedia.prototype.isActive = function (query) { };
-    /**
-     * @abstract
-     * @return {?}
-     */
-    ObservableMedia.prototype.asObservable = function () { };
-    /**
-     * @abstract
-     * @param {?=} next
-     * @param {?=} error
-     * @param {?=} complete
-     * @return {?}
-     */
-    ObservableMedia.prototype.subscribe = function (next, error, complete) { };
-    return ObservableMedia;
-}());
-/**
- * Class internalizes a MatchMedia service and exposes an Subscribable and Observable interface.
- * This an Observable with that exposes a feature to subscribe to mediaQuery
- * changes and a validator method (`isActive(<alias>)`) to test if a mediaQuery (or alias) is
- * currently active.
- *
- * !! Only mediaChange activations (not de-activations) are announced by the ObservableMedia
- *
- * This class uses the BreakPoint Registry to inject alias information into the raw MediaChange
- * notification. For custom mediaQuery notifications, alias information will not be injected and
- * those fields will be ''.
- *
- * !! This is not an actual Observable. It is a wrapper of an Observable used to publish additional
- * methods like `isActive(<alias>). To access the Observable and use RxJS operators, use
- * `.asObservable()` with syntax like media.asObservable().map(....).
- *
- *  \@usage
- *
- *  // RxJS
- *  import 'rxjs/add/operator/filter';
- *  import { ObservableMedia } from '\@angular/flex-layout';
- *
- *  \@Component({ ... })
- *  export class AppComponent {
- *    status : string = '';
- *
- *    constructor(  media:ObservableMedia ) {
- *      let onChange = (change:MediaChange) => {
- *        this.status = change ? `'${change.mqAlias}' = (${change.mediaQuery})` : '';
- *      };
- *
- *      // Subscribe directly or access observable to use filter/map operators
- *      // e.g.
- *      //      media.subscribe(onChange);
- *
- *      media.asObservable()
- *        .filter((change:MediaChange) => true)   // silly noop filter
- *        .subscribe(onChange);
- *    }
- *  }
- */
-var MediaService = (function () {
-    /**
-     * @param {?} breakpoints
-     * @param {?} mediaWatcher
-     */
-    function MediaService(breakpoints, mediaWatcher) {
-        this.breakpoints = breakpoints;
-        this.mediaWatcher = mediaWatcher;
-        /**
-         * Should we announce gt-<xxx> breakpoint activations ?
-         */
-        this.filterOverlaps = true;
-        this._registerBreakPoints();
-        this.observable$ = this._buildObservable();
-    }
-    /**
-     * Test if specified query/alias is active.
-     * @param {?} alias
-     * @return {?}
-     */
-    MediaService.prototype.isActive = function (alias) {
-        var /** @type {?} */ query = this._toMediaQuery(alias);
-        return this.mediaWatcher.isActive(query);
-    };
-    /**
-     * Proxy to the Observable subscribe method
-     * @param {?=} next
-     * @param {?=} error
-     * @param {?=} complete
-     * @return {?}
-     */
-    MediaService.prototype.subscribe = function (next, error, complete) {
-        return this.observable$.subscribe(next, error, complete);
-    };
-    /**
-     * Access to observable for use with operators like
-     * .filter(), .map(), etc.
-     * @return {?}
-     */
-    MediaService.prototype.asObservable = function () {
-        return this.observable$;
-    };
-    /**
-     * Register all the mediaQueries registered in the BreakPointRegistry
-     * This is needed so subscribers can be auto-notified of all standard, registered
-     * mediaQuery activations
-     * @return {?}
-     */
-    MediaService.prototype._registerBreakPoints = function () {
-        var /** @type {?} */ queries = this.breakpoints.sortedItems.map(function (bp) { return bp.mediaQuery; });
-        this.mediaWatcher.registerQuery(queries);
-    };
-    /**
-     * Prepare internal observable
-     *
-     * NOTE: the raw MediaChange events [from MatchMedia] do not
-     *       contain important alias information; as such this info
-     *       must be injected into the MediaChange
-     * @return {?}
-     */
-    MediaService.prototype._buildObservable = function () {
-        var _this = this;
-        var /** @type {?} */ self = this;
-        var /** @type {?} */ media$ = this.mediaWatcher.observe();
-        var /** @type {?} */ activationsOnly = function (change) {
-            return change.matches === true;
-        };
-        var /** @type {?} */ addAliasInformation = function (change) {
-            return mergeAlias(change, _this._findByQuery(change.mediaQuery));
-        };
-        var /** @type {?} */ excludeOverlaps = function (change) {
-            var /** @type {?} */ bp = _this.breakpoints.findByQuery(change.mediaQuery);
-            return !bp ? true : !(self.filterOverlaps && bp.overlapping);
-        };
-        /**
-         * Only pass/announce activations (not de-activations)
-         * Inject associated (if any) alias information into the MediaChange event
-         * Exclude mediaQuery activations for overlapping mQs. List bounded mQ ranges only
-         */
-        return media$.pipe(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_rxjs_operators__["filter"])(activationsOnly), __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_rxjs_operators__["filter"])(excludeOverlaps), __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_rxjs_operators__["map"])(addAliasInformation));
-    };
-    /**
-     * Breakpoint locator by alias
-     * @param {?} alias
-     * @return {?}
-     */
-    MediaService.prototype._findByAlias = function (alias) {
-        return this.breakpoints.findByAlias(alias);
-    };
-    /**
-     * Breakpoint locator by mediaQuery
-     * @param {?} query
-     * @return {?}
-     */
-    MediaService.prototype._findByQuery = function (query) {
-        return this.breakpoints.findByQuery(query);
-    };
-    /**
-     * Find associated breakpoint (if any)
-     * @param {?} query
-     * @return {?}
-     */
-    MediaService.prototype._toMediaQuery = function (query) {
-        var /** @type {?} */ bp = this._findByAlias(query) || this._findByQuery(query);
-        return bp ? bp.mediaQuery : query;
-    };
-    MediaService.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */] },
-    ];
-    /**
-     * @nocollapse
-     */
-    MediaService.ctorParameters = function () { return [
-        { type: BreakPointRegistry, },
-        { type: MatchMedia, },
-    ]; };
-    return MediaService;
-}());
-
 var ALIAS_DELIMITERS = /(\.|-|_)/g;
-/**
- * @param {?} part
- * @return {?}
- */
 function firstUpperCase(part) {
-    var /** @type {?} */ first = part.length > 0 ? part.charAt(0) : '';
-    var /** @type {?} */ remainder = (part.length > 1) ? part.slice(1) : '';
+    var first = part.length > 0 ? part.charAt(0) : '';
+    var remainder = (part.length > 1) ? part.slice(1) : '';
     return first.toUpperCase() + remainder;
 }
-/**
- * Converts snake-case to SnakeCase.
- * @param {?} name Text to UpperCamelCase
- * @return {?}
- */
 function camelCase(name) {
     return name
         .replace(ALIAS_DELIMITERS, '|')
@@ -24496,38 +11162,23 @@ function camelCase(name) {
         .map(firstUpperCase)
         .join('');
 }
-/**
- * For each breakpoint, ensure that a Suffix is defined;
- * fallback to UpperCamelCase the unique Alias value
- * @param {?} list
- * @return {?}
- */
 function validateSuffixes(list) {
     list.forEach(function (bp) {
         if (!bp.suffix || bp.suffix === '') {
-            bp.suffix = camelCase(bp.alias); // create Suffix value based on alias
-            bp.overlapping = bp.overlapping || false; // ensure default value
+            bp.suffix = camelCase(bp.alias);
+            bp.overlapping = bp.overlapping || false;
         }
     });
     return list;
 }
-/**
- * Merge a custom breakpoint list with the default list based on unique alias values
- *  - Items are added if the alias is not in the default list
- *  - Items are merged with the custom override if the alias exists in the default list
- * @param {?} defaults
- * @param {?=} custom
- * @return {?}
- */
 function mergeByAlias(defaults, custom) {
     if (custom === void 0) { custom = []; }
-    var /** @type {?} */ merged = defaults.map(function (bp) { return extendObject({}, bp); });
-    var /** @type {?} */ findByAlias = function (alias) { return merged.reduce(function (result, bp) {
+    var merged = defaults.map(function (bp) { return extendObject({}, bp); });
+    var findByAlias = function (alias) { return merged.reduce(function (result, bp) {
         return result || ((bp.alias === alias) ? bp : null);
     }, null); };
-    // Merge custom breakpoints
     custom.forEach(function (bp) {
-        var /** @type {?} */ target = findByAlias(bp.alias);
+        var target = findByAlias(bp.alias);
         if (target) {
             extendObject(target, bp);
         }
@@ -24537,137 +11188,2858 @@ function mergeByAlias(defaults, custom) {
     });
     return validateSuffixes(merged);
 }
-
-/**
- * Add new custom items to the default list or override existing default with custom overrides
- * @param {?=} _custom
- * @param {?=} options
- * @return {?}
- */
 function buildMergedBreakPoints(_custom, options) {
     options = extendObject({}, {
         defaults: true,
-        orientation: false // exclude pre-configured, internal orientations breakpoints
+        orientation: false
     }, options || {});
     return function () {
-        // Order so the defaults are loaded last; so ObservableMedia will report these last!
-        var /** @type {?} */ defaults = options.orientations ? ORIENTATION_BREAKPOINTS.concat(DEFAULT_BREAKPOINTS) :
+        var defaults = options.orientations ? ORIENTATION_BREAKPOINTS.concat(DEFAULT_BREAKPOINTS) :
             DEFAULT_BREAKPOINTS;
         return options.defaults ? mergeByAlias(defaults, _custom || []) : mergeByAlias(_custom);
     };
 }
-/**
- *  Ensure that only a single global BreakPoint list is instantiated...
- * @return {?}
- */
 function DEFAULT_BREAKPOINTS_PROVIDER_FACTORY() {
     return validateSuffixes(DEFAULT_BREAKPOINTS);
 }
-/**
- * Default Provider that does not support external customization nor provide
- * the extra extended breakpoints:   "handset", "tablet", and "web"
- *
- *  NOTE: !! breakpoints are considered to have unique 'alias' properties,
- *        custom breakpoints matching existing breakpoints will override the properties
- *        of the existing (and not be added as an extra breakpoint entry).
- *        [xs, gt-xs, sm, gt-sm, md, gt-md, lg, gt-lg, xl]
- */
 var DEFAULT_BREAKPOINTS_PROVIDER = {
     provide: BREAKPOINTS,
     useFactory: DEFAULT_BREAKPOINTS_PROVIDER_FACTORY
 };
-/**
- * Use with FlexLayoutModule.CUSTOM_BREAKPOINTS_PROVIDER_FACTORY!
- * @param {?=} _custom
- * @param {?=} options
- * @return {?}
- */
 function CUSTOM_BREAKPOINTS_PROVIDER_FACTORY(_custom, options) {
     return {
         provide: BREAKPOINTS,
         useFactory: buildMergedBreakPoints(_custom, options)
     };
 }
-
-/**
- * Ensure a single global ObservableMedia service provider
- * @param {?} parentService
- * @param {?} matchMedia
- * @param {?} breakpoints
- * @return {?}
- */
-function OBSERVABLE_MEDIA_PROVIDER_FACTORY(parentService, matchMedia, breakpoints) {
-    return parentService || new MediaService(breakpoints, matchMedia);
-}
-/**
- *  Provider to return global service for observable service for all MediaQuery activations
- */
-var OBSERVABLE_MEDIA_PROVIDER = {
-    provide: ObservableMedia,
-    deps: [
-        [new __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Optional */](), new __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* SkipSelf */](), ObservableMedia],
-        MatchMedia,
-        BreakPointRegistry
-    ],
-    useFactory: OBSERVABLE_MEDIA_PROVIDER_FACTORY
-};
-
-/**
- * Ensure a single global service provider
- * @param {?} parentMonitor
- * @param {?} breakpoints
- * @param {?} matchMedia
- * @return {?}
- */
+var MediaQueriesModule = (function () {
+    function MediaQueriesModule() {
+    }
+    return MediaQueriesModule;
+}());
+MediaQueriesModule.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["b" /* NgModule */], args: [{
+                providers: [
+                    DEFAULT_BREAKPOINTS_PROVIDER,
+                    BreakPointRegistry,
+                    MatchMedia,
+                    MediaMonitor,
+                    OBSERVABLE_MEDIA_PROVIDER
+                ]
+            },] },
+];
+MediaQueriesModule.ctorParameters = function () { return []; };
 function MEDIA_MONITOR_PROVIDER_FACTORY(parentMonitor, breakpoints, matchMedia) {
     return parentMonitor || new MediaMonitor(breakpoints, matchMedia);
 }
-/**
- * Export provider that uses a global service factory (above)
- */
 var MEDIA_MONITOR_PROVIDER = {
     provide: MediaMonitor,
     deps: [
-        [new __WEBPACK_IMPORTED_MODULE_0__angular_core__["C" /* Optional */](), new __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* SkipSelf */](), MediaMonitor],
+        [new __WEBPACK_IMPORTED_MODULE_1__angular_core__["C" /* Optional */](), new __WEBPACK_IMPORTED_MODULE_1__angular_core__["F" /* SkipSelf */](), MediaMonitor],
         BreakPointRegistry,
         MatchMedia,
     ],
     useFactory: MEDIA_MONITOR_PROVIDER_FACTORY
 };
-
-/**
- * *****************************************************************
- * Define module for the MediaQuery API
- * *****************************************************************
- */
-var MediaQueriesModule = (function () {
-    function MediaQueriesModule() {
+var LAYOUT_VALUES = ['row', 'column', 'row-reverse', 'column-reverse'];
+function buildLayoutCSS(value) {
+    var _a = validateValue(value), direction = _a[0], wrap = _a[1];
+    return buildCSS(direction, wrap);
+}
+function validateValue(value) {
+    value = value ? value.toLowerCase() : '';
+    var _a = value.split(' '), direction = _a[0], wrap = _a[1];
+    if (!LAYOUT_VALUES.find(function (x) { return x === direction; })) {
+        direction = LAYOUT_VALUES[0];
     }
-    MediaQueriesModule.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["b" /* NgModule */], args: [{
-                    providers: [
-                        DEFAULT_BREAKPOINTS_PROVIDER,
-                        BreakPointRegistry,
-                        MatchMedia,
-                        MediaMonitor,
-                        OBSERVABLE_MEDIA_PROVIDER // easy subscription injectable `media$` matchMedia observable
-                    ]
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    MediaQueriesModule.ctorParameters = function () { return []; };
-    return MediaQueriesModule;
+    return [direction, validateWrapValue(wrap)];
+}
+function isFlowHorizontal(value) {
+    var _a = validateValue(value), flow = _a[0], _ = _a[1];
+    return flow.indexOf('row') > -1;
+}
+function validateWrapValue(value) {
+    if (!!value) {
+        switch (value.toLowerCase()) {
+            case 'reverse':
+            case 'wrap-reverse':
+            case 'reverse-wrap':
+                value = 'wrap-reverse';
+                break;
+            case 'no':
+            case 'none':
+            case 'nowrap':
+                value = 'nowrap';
+                break;
+            default:
+                value = 'wrap';
+                break;
+        }
+    }
+    return value;
+}
+function buildCSS(direction, wrap) {
+    if (wrap === void 0) { wrap = null; }
+    return {
+        'display': 'flex',
+        'box-sizing': 'border-box',
+        'flex-direction': direction,
+        'flex-wrap': !!wrap ? wrap : null
+    };
+}
+function applyCssPrefixes(target) {
+    for (var key in target) {
+        var value = target[key] || '';
+        switch (key) {
+            case 'display':
+                if (value === 'flex') {
+                    target['display'] = [
+                        '-webkit-flex',
+                        'flex'
+                    ];
+                }
+                else if (value === 'inline-flex') {
+                    target['display'] = [
+                        '-webkit-inline-flex',
+                        'inline-flex'
+                    ];
+                }
+                else {
+                    target['display'] = value;
+                }
+                break;
+            case 'align-items':
+            case 'align-self':
+            case 'align-content':
+            case 'flex':
+            case 'flex-basis':
+            case 'flex-flow':
+            case 'flex-grow':
+            case 'flex-shrink':
+            case 'flex-wrap':
+            case 'justify-content':
+                target['-webkit-' + key] = value;
+                break;
+            case 'flex-direction':
+                value = value || 'row';
+                target['-webkit-flex-direction'] = value;
+                target['flex-direction'] = value;
+                break;
+            case 'order':
+                target['order'] = target['-webkit-' + key] = isNaN(value) ? '0' : value;
+                break;
+        }
+    }
+    return target;
+}
+function applyStyleToElement(renderer, element, style, value) {
+    var styles = {};
+    if (typeof style === 'string') {
+        styles[style] = value;
+        style = styles;
+    }
+    styles = applyCssPrefixes(style);
+    applyMultiValueStyleToElement(styles, element, renderer);
+}
+function applyStyleToElements(renderer, style, elements) {
+    var styles = applyCssPrefixes(style);
+    elements.forEach(function (el) {
+        applyMultiValueStyleToElement(styles, el, renderer);
+    });
+}
+function applyMultiValueStyleToElement(styles, element, renderer) {
+    Object.keys(styles).forEach(function (key) {
+        var values = Array.isArray(styles[key]) ? styles[key] : [styles[key]];
+        for (var _i = 0, values_1 = values; _i < values_1.length; _i++) {
+            var value = values_1[_i];
+            renderer.setStyle(element, key, value);
+        }
+    });
+}
+function lookupInlineStyle(element, styleName) {
+    return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__angular_platform_browser__["b" /* ɵgetDOM */])().getStyle(element, styleName);
+}
+function lookupStyle(element, styleName, inlineOnly) {
+    if (inlineOnly === void 0) { inlineOnly = false; }
+    var value = '';
+    if (element) {
+        try {
+            var immediateValue = value = lookupInlineStyle(element, styleName);
+            if (!inlineOnly) {
+                value = immediateValue || __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__angular_platform_browser__["b" /* ɵgetDOM */])().getComputedStyle(element).getPropertyValue(styleName);
+            }
+        }
+        catch (e) {
+        }
+    }
+    return value ? value.trim() : 'block';
+}
+var KeyOptions = (function () {
+    function KeyOptions(baseKey, defaultValue, inputKeys) {
+        this.baseKey = baseKey;
+        this.defaultValue = defaultValue;
+        this.inputKeys = inputKeys;
+    }
+    return KeyOptions;
 }());
-
-/**
- * Since the equivalent results are easily achieved with a css class attached to each
- * layout child, these have been deprecated and removed from the API.
- *
- *  import {LayoutPaddingDirective} from './api/flexbox/layout-padding';
- *  import {LayoutMarginDirective} from './api/flexbox/layout-margin';
- */
+var ResponsiveActivation = (function () {
+    function ResponsiveActivation(_options, _mediaMonitor, _onMediaChanges) {
+        this._options = _options;
+        this._mediaMonitor = _mediaMonitor;
+        this._onMediaChanges = _onMediaChanges;
+        this._subscribers = [];
+        this._subscribers = this._configureChangeObservers();
+    }
+    Object.defineProperty(ResponsiveActivation.prototype, "mediaMonitor", {
+        get: function () {
+            return this._mediaMonitor;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ResponsiveActivation.prototype, "activatedInputKey", {
+        get: function () {
+            return this._activatedInputKey || this._options.baseKey;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ResponsiveActivation.prototype, "activatedInput", {
+        get: function () {
+            var key = this.activatedInputKey;
+            return this.hasKeyValue(key) ? this._lookupKeyValue(key) : this._options.defaultValue;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ResponsiveActivation.prototype.hasKeyValue = function (key) {
+        var value = this._options.inputKeys[key];
+        return typeof value !== 'undefined';
+    };
+    ResponsiveActivation.prototype.destroy = function () {
+        this._subscribers.forEach(function (link) {
+            link.unsubscribe();
+        });
+        this._subscribers = [];
+    };
+    ResponsiveActivation.prototype._configureChangeObservers = function () {
+        var _this = this;
+        var subscriptions = [];
+        this._buildRegistryMap().forEach(function (bp) {
+            if (_this._keyInUse(bp.key)) {
+                var buildChanges = function (change) {
+                    change = change.clone();
+                    change.property = _this._options.baseKey;
+                    return change;
+                };
+                subscriptions.push(__WEBPACK_IMPORTED_MODULE_5_rxjs_operator_map__["map"].call(_this.mediaMonitor.observe(bp.alias), buildChanges)
+                    .subscribe(function (change) {
+                    _this._onMonitorEvents(change);
+                }));
+            }
+        });
+        return subscriptions;
+    };
+    ResponsiveActivation.prototype._buildRegistryMap = function () {
+        var _this = this;
+        return this.mediaMonitor.breakpoints
+            .map(function (bp) {
+            return (extendObject({}, bp, {
+                baseKey: _this._options.baseKey,
+                key: _this._options.baseKey + bp.suffix
+            }));
+        })
+            .filter(function (bp) { return _this._keyInUse(bp.key); });
+    };
+    ResponsiveActivation.prototype._onMonitorEvents = function (change) {
+        if (change.property == this._options.baseKey) {
+            change.value = this._calculateActivatedValue(change);
+            this._onMediaChanges(change);
+        }
+    };
+    ResponsiveActivation.prototype._keyInUse = function (key) {
+        return this._lookupKeyValue(key) !== undefined;
+    };
+    ResponsiveActivation.prototype._calculateActivatedValue = function (current) {
+        var currentKey = this._options.baseKey + current.suffix;
+        var newKey = this._activatedInputKey;
+        newKey = current.matches ? currentKey : ((newKey == currentKey) ? null : newKey);
+        this._activatedInputKey = this._validateInputKey(newKey);
+        return this.activatedInput;
+    };
+    ResponsiveActivation.prototype._validateInputKey = function (inputKey) {
+        var _this = this;
+        var items = this.mediaMonitor.activeOverlaps;
+        var isMissingKey = function (key) { return !_this._keyInUse(key); };
+        if (isMissingKey(inputKey)) {
+            items.some(function (bp) {
+                var key = _this._options.baseKey + bp.suffix;
+                if (!isMissingKey(key)) {
+                    inputKey = key;
+                    return true;
+                }
+                return false;
+            });
+        }
+        return inputKey;
+    };
+    ResponsiveActivation.prototype._lookupKeyValue = function (key) {
+        return this._options.inputKeys[key];
+    };
+    return ResponsiveActivation;
+}());
+var BaseFxDirective = (function () {
+    function BaseFxDirective(_mediaMonitor, _elementRef, _renderer) {
+        this._mediaMonitor = _mediaMonitor;
+        this._elementRef = _elementRef;
+        this._renderer = _renderer;
+        this._inputMap = {};
+        this._hasInitialized = false;
+    }
+    Object.defineProperty(BaseFxDirective.prototype, "hasMediaQueryListener", {
+        get: function () {
+            return !!this._mqActivation;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BaseFxDirective.prototype, "activatedValue", {
+        get: function () {
+            return this._mqActivation ? this._mqActivation.activatedInput : undefined;
+        },
+        set: function (value) {
+            var key = 'baseKey', previousVal;
+            if (this._mqActivation) {
+                key = this._mqActivation.activatedInputKey;
+                previousVal = this._inputMap[key];
+                this._inputMap[key] = value;
+            }
+            var change = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["_19" /* SimpleChange */](previousVal, value, false);
+            this.ngOnChanges((_a = {}, _a[key] = change, _a));
+            var _a;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BaseFxDirective.prototype, "parentElement", {
+        get: function () {
+            return this._elementRef.nativeElement.parentNode;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    BaseFxDirective.prototype._queryInput = function (key) {
+        return this._inputMap[key];
+    };
+    BaseFxDirective.prototype.ngOnInit = function () {
+        this._display = this._getDisplayStyle();
+        this._hasInitialized = true;
+    };
+    BaseFxDirective.prototype.ngOnChanges = function (change) {
+        throw new Error("BaseFxDirective::ngOnChanges should be overridden in subclass: " + change);
+    };
+    BaseFxDirective.prototype.ngOnDestroy = function () {
+        if (this._mqActivation) {
+            this._mqActivation.destroy();
+        }
+        this._mediaMonitor = null;
+    };
+    BaseFxDirective.prototype._getDefaultVal = function (key, fallbackVal) {
+        var val = this._queryInput(key);
+        var hasDefaultVal = (val !== undefined && val !== null);
+        return (hasDefaultVal && val !== '') ? val : fallbackVal;
+    };
+    BaseFxDirective.prototype._getDisplayStyle = function (source) {
+        var element = source || this._elementRef.nativeElement;
+        return lookupStyle(element, 'display');
+    };
+    BaseFxDirective.prototype._getFlowDirection = function (target, addIfMissing) {
+        if (addIfMissing === void 0) { addIfMissing = false; }
+        var value = 'row';
+        if (target) {
+            value = lookupStyle(target, 'flex-direction') || 'row';
+            var hasInlineValue = lookupInlineStyle(target, 'flex-direction');
+            if (!hasInlineValue && addIfMissing) {
+                applyStyleToElements(this._renderer, buildLayoutCSS(value), [target]);
+            }
+        }
+        return value.trim();
+    };
+    BaseFxDirective.prototype._applyStyleToElement = function (style, value, nativeElement) {
+        var element = nativeElement || this._elementRef.nativeElement;
+        applyStyleToElement(this._renderer, element, style, value);
+    };
+    BaseFxDirective.prototype._applyStyleToElements = function (style, elements) {
+        applyStyleToElements(this._renderer, style, elements || []);
+    };
+    BaseFxDirective.prototype._cacheInput = function (key, source) {
+        if (typeof source === 'object') {
+            for (var prop in source) {
+                this._inputMap[prop] = source[prop];
+            }
+        }
+        else {
+            this._inputMap[key] = source;
+        }
+    };
+    BaseFxDirective.prototype._listenForMediaQueryChanges = function (key, defaultValue, onMediaQueryChange) {
+        if (!this._mqActivation) {
+            var keyOptions = new KeyOptions(key, defaultValue, this._inputMap);
+            this._mqActivation = new ResponsiveActivation(keyOptions, this._mediaMonitor, function (change) { return onMediaQueryChange(change); });
+        }
+        return this._mqActivation;
+    };
+    Object.defineProperty(BaseFxDirective.prototype, "childrenNodes", {
+        get: function () {
+            var obj = this._elementRef.nativeElement.children;
+            var buffer = [];
+            for (var i = obj.length; i--;) {
+                buffer[i] = obj[i];
+            }
+            return buffer;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    BaseFxDirective.prototype.hasKeyValue = function (key) {
+        return this._mqActivation.hasKeyValue(key);
+    };
+    Object.defineProperty(BaseFxDirective.prototype, "hasInitialized", {
+        get: function () {
+            return this._hasInitialized;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return BaseFxDirective;
+}());
+var LayoutDirective = (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __extends */](LayoutDirective, _super);
+    function LayoutDirective(monitor, elRef, renderer) {
+        var _this = _super.call(this, monitor, elRef, renderer) || this;
+        _this._announcer = new __WEBPACK_IMPORTED_MODULE_3_rxjs_BehaviorSubject__["BehaviorSubject"]('row');
+        _this.layout$ = _this._announcer.asObservable();
+        return _this;
+    }
+    Object.defineProperty(LayoutDirective.prototype, "layout", {
+        set: function (val) { this._cacheInput('layout', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutDirective.prototype, "layoutXs", {
+        set: function (val) { this._cacheInput('layoutXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutDirective.prototype, "layoutSm", {
+        set: function (val) { this._cacheInput('layoutSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutDirective.prototype, "layoutMd", {
+        set: function (val) { this._cacheInput('layoutMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutDirective.prototype, "layoutLg", {
+        set: function (val) { this._cacheInput('layoutLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutDirective.prototype, "layoutXl", {
+        set: function (val) { this._cacheInput('layoutXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutDirective.prototype, "layoutGtXs", {
+        set: function (val) { this._cacheInput('layoutGtXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutDirective.prototype, "layoutGtSm", {
+        set: function (val) { this._cacheInput('layoutGtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutDirective.prototype, "layoutGtMd", {
+        set: function (val) { this._cacheInput('layoutGtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutDirective.prototype, "layoutGtLg", {
+        set: function (val) { this._cacheInput('layoutGtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutDirective.prototype, "layoutLtSm", {
+        set: function (val) { this._cacheInput('layoutLtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutDirective.prototype, "layoutLtMd", {
+        set: function (val) { this._cacheInput('layoutLtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutDirective.prototype, "layoutLtLg", {
+        set: function (val) { this._cacheInput('layoutLtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutDirective.prototype, "layoutLtXl", {
+        set: function (val) { this._cacheInput('layoutLtXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    LayoutDirective.prototype.ngOnChanges = function (changes) {
+        if (changes['layout'] != null || this._mqActivation) {
+            this._updateWithDirection();
+        }
+    };
+    LayoutDirective.prototype.ngOnInit = function () {
+        var _this = this;
+        _super.prototype.ngOnInit.call(this);
+        this._listenForMediaQueryChanges('layout', 'row', function (changes) {
+            _this._updateWithDirection(changes.value);
+        });
+        this._updateWithDirection();
+    };
+    LayoutDirective.prototype._updateWithDirection = function (value) {
+        value = value || this._queryInput('layout') || 'row';
+        if (this._mqActivation) {
+            value = this._mqActivation.activatedInput;
+        }
+        var css = buildLayoutCSS(value);
+        this._applyStyleToElement(css);
+        this._announcer.next(css['flex-direction']);
+    };
+    return LayoutDirective;
+}(BaseFxDirective));
+LayoutDirective.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["l" /* Directive */], args: [{ selector: "\n  [fxLayout],\n  [fxLayout.xs], [fxLayout.sm], [fxLayout.md], [fxLayout.lg], [fxLayout.xl],\n  [fxLayout.lt-sm], [fxLayout.lt-md], [fxLayout.lt-lg], [fxLayout.lt-xl],\n  [fxLayout.gt-xs], [fxLayout.gt-sm], [fxLayout.gt-md], [fxLayout.gt-lg]\n" },] },
+];
+LayoutDirective.ctorParameters = function () { return [
+    { type: MediaMonitor, },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["o" /* ElementRef */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Renderer2 */], },
+]; };
+LayoutDirective.propDecorators = {
+    'layout': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayout',] },],
+    'layoutXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayout.xs',] },],
+    'layoutSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayout.sm',] },],
+    'layoutMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayout.md',] },],
+    'layoutLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayout.lg',] },],
+    'layoutXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayout.xl',] },],
+    'layoutGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayout.gt-xs',] },],
+    'layoutGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayout.gt-sm',] },],
+    'layoutGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayout.gt-md',] },],
+    'layoutGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayout.gt-lg',] },],
+    'layoutLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayout.lt-sm',] },],
+    'layoutLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayout.lt-md',] },],
+    'layoutLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayout.lt-lg',] },],
+    'layoutLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayout.lt-xl',] },],
+};
+var LayoutWrapDirective = (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __extends */](LayoutWrapDirective, _super);
+    function LayoutWrapDirective(monitor, elRef, renderer, container) {
+        var _this = _super.call(this, monitor, elRef, renderer) || this;
+        _this._layout = 'row';
+        if (container) {
+            _this._layoutWatcher = container.layout$.subscribe(_this._onLayoutChange.bind(_this));
+        }
+        return _this;
+    }
+    Object.defineProperty(LayoutWrapDirective.prototype, "wrap", {
+        set: function (val) { this._cacheInput('wrap', val); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LayoutWrapDirective.prototype, "wrapXs", {
+        set: function (val) { this._cacheInput('wrapXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LayoutWrapDirective.prototype, "wrapSm", {
+        set: function (val) { this._cacheInput('wrapSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutWrapDirective.prototype, "wrapMd", {
+        set: function (val) { this._cacheInput('wrapMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutWrapDirective.prototype, "wrapLg", {
+        set: function (val) { this._cacheInput('wrapLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutWrapDirective.prototype, "wrapXl", {
+        set: function (val) { this._cacheInput('wrapXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutWrapDirective.prototype, "wrapGtXs", {
+        set: function (val) { this._cacheInput('wrapGtXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutWrapDirective.prototype, "wrapGtSm", {
+        set: function (val) { this._cacheInput('wrapGtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutWrapDirective.prototype, "wrapGtMd", {
+        set: function (val) { this._cacheInput('wrapGtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutWrapDirective.prototype, "wrapGtLg", {
+        set: function (val) { this._cacheInput('wrapGtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutWrapDirective.prototype, "wrapLtSm", {
+        set: function (val) { this._cacheInput('wrapLtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutWrapDirective.prototype, "wrapLtMd", {
+        set: function (val) { this._cacheInput('wrapLtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutWrapDirective.prototype, "wrapLtLg", {
+        set: function (val) { this._cacheInput('wrapLtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutWrapDirective.prototype, "wrapLtXl", {
+        set: function (val) { this._cacheInput('wrapLtXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    LayoutWrapDirective.prototype.ngOnChanges = function (changes) {
+        if (changes['wrap'] != null || this._mqActivation) {
+            this._updateWithValue();
+        }
+    };
+    LayoutWrapDirective.prototype.ngOnInit = function () {
+        var _this = this;
+        _super.prototype.ngOnInit.call(this);
+        this._listenForMediaQueryChanges('wrap', 'wrap', function (changes) {
+            _this._updateWithValue(changes.value);
+        });
+        this._updateWithValue();
+    };
+    LayoutWrapDirective.prototype.ngOnDestroy = function () {
+        _super.prototype.ngOnDestroy.call(this);
+        if (this._layoutWatcher) {
+            this._layoutWatcher.unsubscribe();
+        }
+    };
+    LayoutWrapDirective.prototype._onLayoutChange = function (direction) {
+        var _this = this;
+        this._layout = (direction || '').toLowerCase().replace('-reverse', '');
+        if (!LAYOUT_VALUES.find(function (x) { return x === _this._layout; })) {
+            this._layout = 'row';
+        }
+        this._updateWithValue();
+    };
+    LayoutWrapDirective.prototype._updateWithValue = function (value) {
+        value = value || this._queryInput('wrap');
+        if (this._mqActivation) {
+            value = this._mqActivation.activatedInput;
+        }
+        value = validateWrapValue(value || 'wrap');
+        this._applyStyleToElement(this._buildCSS(value));
+    };
+    LayoutWrapDirective.prototype._buildCSS = function (value) {
+        return {
+            'display': 'flex',
+            'flex-wrap': value,
+            'flex-direction': this.flowDirection
+        };
+    };
+    Object.defineProperty(LayoutWrapDirective.prototype, "flowDirection", {
+        get: function () {
+            var _this = this;
+            var computeFlowDirection = function () { return _this._getFlowDirection(_this._elementRef.nativeElement); };
+            return this._layoutWatcher ? this._layout : computeFlowDirection();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return LayoutWrapDirective;
+}(BaseFxDirective));
+LayoutWrapDirective.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["l" /* Directive */], args: [{ selector: "\n  [fxLayoutWrap], [fxLayoutWrap.xs], [fxLayoutWrap.sm], [fxLayoutWrap.lg], [fxLayoutWrap.xl],\n  [fxLayoutWrap.gt-xs], [fxLayoutWrap.gt-sm], [fxLayoutWrap.gt-md], [fxLayoutWrap.gt-lg],\n  [fxLayoutWrap.lt-xs], [fxLayoutWrap.lt-sm], [fxLayoutWrap.lt-md], [fxLayoutWrap.lt-lg]\n" },] },
+];
+LayoutWrapDirective.ctorParameters = function () { return [
+    { type: MediaMonitor, },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["o" /* ElementRef */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Renderer2 */], },
+    { type: LayoutDirective, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["W" /* Self */] },] },
+]; };
+LayoutWrapDirective.propDecorators = {
+    'wrap': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutWrap',] },],
+    'wrapXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutWrap.xs',] },],
+    'wrapSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutWrap.sm',] },],
+    'wrapMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutWrap.md',] },],
+    'wrapLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutWrap.lg',] },],
+    'wrapXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutWrap.xl',] },],
+    'wrapGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutWrap.gt-xs',] },],
+    'wrapGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutWrap.gt-sm',] },],
+    'wrapGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutWrap.gt-md',] },],
+    'wrapGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutWrap.gt-lg',] },],
+    'wrapLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutWrap.lt-sm',] },],
+    'wrapLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutWrap.lt-md',] },],
+    'wrapLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutWrap.lt-lg',] },],
+    'wrapLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutWrap.lt-xl',] },],
+};
+function validateBasis(basis, grow, shrink) {
+    if (grow === void 0) { grow = '1'; }
+    if (shrink === void 0) { shrink = '1'; }
+    var parts = [grow, shrink, basis];
+    var j = basis.indexOf('calc');
+    if (j > 0) {
+        parts[2] = _validateCalcValue(basis.substring(j).trim());
+        var matches = basis.substr(0, j).trim().split(' ');
+        if (matches.length == 2) {
+            parts[0] = matches[0];
+            parts[1] = matches[1];
+        }
+    }
+    else if (j == 0) {
+        parts[2] = _validateCalcValue(basis.trim());
+    }
+    else {
+        var matches = basis.split(' ');
+        parts = (matches.length === 3) ? matches : [
+            grow, shrink, basis
+        ];
+    }
+    return parts;
+}
+function _validateCalcValue(calc) {
+    return calc.replace(/[\s]/g, '').replace(/[\/\*\+\-]/g, ' $& ');
+}
+var FlexDirective = (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __extends */](FlexDirective, _super);
+    function FlexDirective(monitor, elRef, renderer, _container, _wrap) {
+        var _this = _super.call(this, monitor, elRef, renderer) || this;
+        _this._container = _container;
+        _this._wrap = _wrap;
+        _this._layout = 'row';
+        _this._cacheInput('flex', '');
+        _this._cacheInput('shrink', 1);
+        _this._cacheInput('grow', 1);
+        if (_container) {
+            _this._layoutWatcher = _container.layout$.subscribe(function (direction) {
+                _this._onLayoutChange(direction);
+            });
+        }
+        return _this;
+    }
+    Object.defineProperty(FlexDirective.prototype, "shrink", {
+        set: function (val) { this._cacheInput('shrink', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "grow", {
+        set: function (val) { this._cacheInput('grow', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "flex", {
+        set: function (val) { this._cacheInput('flex', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "flexXs", {
+        set: function (val) { this._cacheInput('flexXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "flexSm", {
+        set: function (val) { this._cacheInput('flexSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "flexMd", {
+        set: function (val) { this._cacheInput('flexMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "flexLg", {
+        set: function (val) { this._cacheInput('flexLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "flexXl", {
+        set: function (val) { this._cacheInput('flexXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "flexGtXs", {
+        set: function (val) { this._cacheInput('flexGtXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "flexGtSm", {
+        set: function (val) { this._cacheInput('flexGtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "flexGtMd", {
+        set: function (val) { this._cacheInput('flexGtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "flexGtLg", {
+        set: function (val) { this._cacheInput('flexGtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "flexLtSm", {
+        set: function (val) { this._cacheInput('flexLtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "flexLtMd", {
+        set: function (val) { this._cacheInput('flexLtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "flexLtLg", {
+        set: function (val) { this._cacheInput('flexLtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexDirective.prototype, "flexLtXl", {
+        set: function (val) { this._cacheInput('flexLtXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    FlexDirective.prototype.ngOnChanges = function (changes) {
+        if (changes['flex'] != null || this._mqActivation) {
+            this._updateStyle();
+        }
+    };
+    FlexDirective.prototype.ngOnInit = function () {
+        var _this = this;
+        _super.prototype.ngOnInit.call(this);
+        this._listenForMediaQueryChanges('flex', '', function (changes) {
+            _this._updateStyle(changes.value);
+        });
+        this._updateStyle();
+    };
+    FlexDirective.prototype.ngOnDestroy = function () {
+        _super.prototype.ngOnDestroy.call(this);
+        if (this._layoutWatcher) {
+            this._layoutWatcher.unsubscribe();
+        }
+    };
+    FlexDirective.prototype._onLayoutChange = function (direction) {
+        this._layout = direction || this._layout || 'row';
+        this._updateStyle();
+    };
+    FlexDirective.prototype._updateStyle = function (value) {
+        var flexBasis = value || this._queryInput('flex') || '';
+        if (this._mqActivation) {
+            flexBasis = this._mqActivation.activatedInput;
+        }
+        var basis = String(flexBasis).replace(';', '');
+        var parts = validateBasis(basis, this._queryInput('grow'), this._queryInput('shrink'));
+        this._applyStyleToElement(this._validateValue.apply(this, parts));
+    };
+    FlexDirective.prototype._validateValue = function (grow, shrink, basis) {
+        var layout = this._getFlowDirection(this.parentElement, true);
+        var direction = (layout.indexOf('column') > -1) ? 'column' : 'row';
+        var css, isValue;
+        grow = (grow == '0') ? 0 : grow;
+        shrink = (shrink == '0') ? 0 : shrink;
+        var clearStyles = {
+            'max-width': null,
+            'max-height': null,
+            'min-width': null,
+            'min-height': null
+        };
+        switch (basis || '') {
+            case '':
+                css = extendObject(clearStyles, { 'flex': '1 1 0.000000001px' });
+                break;
+            case 'initial':
+            case 'nogrow':
+                grow = 0;
+                css = extendObject(clearStyles, { 'flex': '0 1 auto' });
+                break;
+            case 'grow':
+                css = extendObject(clearStyles, { 'flex': '1 1 100%' });
+                break;
+            case 'noshrink':
+                shrink = 0;
+                css = extendObject(clearStyles, { 'flex': '1 0 auto' });
+                break;
+            case 'auto':
+                css = extendObject(clearStyles, { 'flex': grow + " " + shrink + " auto" });
+                break;
+            case 'none':
+                grow = 0;
+                shrink = 0;
+                css = extendObject(clearStyles, { 'flex': '0 0 auto' });
+                break;
+            default:
+                var hasCalc = String(basis).indexOf('calc') > -1;
+                var isPercent = String(basis).indexOf('%') > -1 && !hasCalc;
+                isValue = hasCalc ||
+                    String(basis).indexOf('px') > -1 ||
+                    String(basis).indexOf('em') > -1 ||
+                    String(basis).indexOf('vw') > -1 ||
+                    String(basis).indexOf('vh') > -1;
+                if (!isValue && !isPercent && !isNaN((basis))) {
+                    basis = basis + '%';
+                }
+                if (basis === '0px') {
+                    basis = '0%';
+                }
+                css = extendObject(clearStyles, {
+                    'flex': grow + " " + shrink + " " + ((isValue || this._wrap) ? basis : '100%'),
+                });
+                break;
+        }
+        var max = isFlowHorizontal(direction) ? 'max-width' : 'max-height';
+        var min = isFlowHorizontal(direction) ? 'min-width' : 'min-height';
+        var usingCalc = (String(basis).indexOf('calc') > -1) || (basis == 'auto');
+        var isPx = String(basis).indexOf('px') > -1 || usingCalc;
+        var isFixed = !grow && !shrink;
+        css[min] = (basis == '0%') ? 0 : isFixed || (isPx && grow) ? basis : null;
+        css[max] = (basis == '0%') ? 0 : isFixed || (!usingCalc && shrink) ? basis : null;
+        return extendObject(css, { 'box-sizing': 'border-box' });
+    };
+    return FlexDirective;
+}(BaseFxDirective));
+FlexDirective.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["l" /* Directive */], args: [{ selector: "\n  [fxFlex],\n  [fxFlex.xs], [fxFlex.sm], [fxFlex.md], [fxFlex.lg], [fxFlex.xl],\n  [fxFlex.lt-sm], [fxFlex.lt-md], [fxFlex.lt-lg], [fxFlex.lt-xl],\n  [fxFlex.gt-xs], [fxFlex.gt-sm], [fxFlex.gt-md], [fxFlex.gt-lg],\n"
+            },] },
+];
+FlexDirective.ctorParameters = function () { return [
+    { type: MediaMonitor, },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["o" /* ElementRef */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Renderer2 */], },
+    { type: LayoutDirective, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["F" /* SkipSelf */] },] },
+    { type: LayoutWrapDirective, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["F" /* SkipSelf */] },] },
+]; };
+FlexDirective.propDecorators = {
+    'shrink': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShrink',] },],
+    'grow': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxGrow',] },],
+    'flex': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlex',] },],
+    'flexXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlex.xs',] },],
+    'flexSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlex.sm',] },],
+    'flexMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlex.md',] },],
+    'flexLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlex.lg',] },],
+    'flexXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlex.xl',] },],
+    'flexGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlex.gt-xs',] },],
+    'flexGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlex.gt-sm',] },],
+    'flexGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlex.gt-md',] },],
+    'flexGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlex.gt-lg',] },],
+    'flexLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlex.lt-sm',] },],
+    'flexLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlex.lt-md',] },],
+    'flexLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlex.lt-lg',] },],
+    'flexLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlex.lt-xl',] },],
+};
+var FALSY = ['false', false, 0];
+function negativeOf(hide) {
+    return (hide === '') ? false :
+        ((hide === 'false') || (hide === 0)) ? true : !hide;
+}
+var ShowHideDirective = (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __extends */](ShowHideDirective, _super);
+    function ShowHideDirective(monitor, _layout, elRef, renderer) {
+        var _this = _super.call(this, monitor, elRef, renderer) || this;
+        _this._layout = _layout;
+        _this.elRef = elRef;
+        _this.renderer = renderer;
+        if (_layout) {
+            _this._layoutWatcher = _layout.layout$.subscribe(function () { return _this._updateWithValue(); });
+        }
+        return _this;
+    }
+    Object.defineProperty(ShowHideDirective.prototype, "show", {
+        set: function (val) { this._cacheInput('show', val); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ShowHideDirective.prototype, "showXs", {
+        set: function (val) { this._cacheInput('showXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ShowHideDirective.prototype, "showSm", {
+        set: function (val) { this._cacheInput('showSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "showMd", {
+        set: function (val) { this._cacheInput('showMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "showLg", {
+        set: function (val) { this._cacheInput('showLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "showXl", {
+        set: function (val) { this._cacheInput('showXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "showLtSm", {
+        set: function (val) { this._cacheInput('showLtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "showLtMd", {
+        set: function (val) { this._cacheInput('showLtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "showLtLg", {
+        set: function (val) { this._cacheInput('showLtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "showLtXl", {
+        set: function (val) { this._cacheInput('showLtXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "showGtXs", {
+        set: function (val) { this._cacheInput('showGtXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "showGtSm", {
+        set: function (val) { this._cacheInput('showGtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "showGtMd", {
+        set: function (val) { this._cacheInput('showGtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "showGtLg", {
+        set: function (val) { this._cacheInput('showGtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "hide", {
+        set: function (val) { this._cacheInput('show', negativeOf(val)); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ShowHideDirective.prototype, "hideXs", {
+        set: function (val) { this._cacheInput('showXs', negativeOf(val)); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ShowHideDirective.prototype, "hideSm", {
+        set: function (val) { this._cacheInput('showSm', negativeOf(val)); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "hideMd", {
+        set: function (val) { this._cacheInput('showMd', negativeOf(val)); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "hideLg", {
+        set: function (val) { this._cacheInput('showLg', negativeOf(val)); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "hideXl", {
+        set: function (val) { this._cacheInput('showXl', negativeOf(val)); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "hideLtSm", {
+        set: function (val) { this._cacheInput('showLtSm', negativeOf(val)); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "hideLtMd", {
+        set: function (val) { this._cacheInput('showLtMd', negativeOf(val)); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "hideLtLg", {
+        set: function (val) { this._cacheInput('showLtLg', negativeOf(val)); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "hideLtXl", {
+        set: function (val) { this._cacheInput('showLtXl', negativeOf(val)); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "hideGtXs", {
+        set: function (val) { this._cacheInput('showGtXs', negativeOf(val)); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "hideGtSm", {
+        set: function (val) { this._cacheInput('showGtSm', negativeOf(val)); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "hideGtMd", {
+        set: function (val) { this._cacheInput('showGtMd', negativeOf(val)); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(ShowHideDirective.prototype, "hideGtLg", {
+        set: function (val) { this._cacheInput('showGtLg', negativeOf(val)); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    ShowHideDirective.prototype._getDisplayStyle = function () {
+        return this._layout ? 'flex' : _super.prototype._getDisplayStyle.call(this);
+    };
+    ShowHideDirective.prototype.ngOnChanges = function (changes) {
+        if (this.hasInitialized && (changes['show'] != null || this._mqActivation)) {
+            this._updateWithValue();
+        }
+    };
+    ShowHideDirective.prototype.ngOnInit = function () {
+        var _this = this;
+        _super.prototype.ngOnInit.call(this);
+        var value = this._getDefaultVal('show', true);
+        this._listenForMediaQueryChanges('show', value, function (changes) {
+            _this._updateWithValue(changes.value);
+        });
+        this._updateWithValue();
+    };
+    ShowHideDirective.prototype.ngOnDestroy = function () {
+        _super.prototype.ngOnDestroy.call(this);
+        if (this._layoutWatcher) {
+            this._layoutWatcher.unsubscribe();
+        }
+    };
+    ShowHideDirective.prototype._updateWithValue = function (value) {
+        value = value || this._getDefaultVal('show', true);
+        if (this._mqActivation) {
+            value = this._mqActivation.activatedInput;
+        }
+        var shouldShow = this._validateTruthy(value);
+        this._applyStyleToElement(this._buildCSS(shouldShow));
+    };
+    ShowHideDirective.prototype._buildCSS = function (show) {
+        return { 'display': show ? this._display : 'none' };
+    };
+    ShowHideDirective.prototype._validateTruthy = function (show) {
+        return (FALSY.indexOf(show) == -1);
+    };
+    return ShowHideDirective;
+}(BaseFxDirective));
+ShowHideDirective.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["l" /* Directive */], args: [{
+                selector: "\n  [fxShow],\n  [fxShow.xs], [fxShow.sm], [fxShow.md], [fxShow.lg], [fxShow.xl],\n  [fxShow.lt-sm], [fxShow.lt-md], [fxShow.lt-lg], [fxShow.lt-xl],\n  [fxShow.gt-xs], [fxShow.gt-sm], [fxShow.gt-md], [fxShow.gt-lg],\n  [fxHide],\n  [fxHide.xs], [fxHide.sm], [fxHide.md], [fxHide.lg], [fxHide.xl],\n  [fxHide.lt-sm], [fxHide.lt-md], [fxHide.lt-lg], [fxHide.lt-xl],\n  [fxHide.gt-xs], [fxHide.gt-sm], [fxHide.gt-md], [fxHide.gt-lg]\n"
+            },] },
+];
+ShowHideDirective.ctorParameters = function () { return [
+    { type: MediaMonitor, },
+    { type: LayoutDirective, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["W" /* Self */] },] },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["o" /* ElementRef */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Renderer2 */], },
+]; };
+ShowHideDirective.propDecorators = {
+    'show': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShow',] },],
+    'showXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShow.xs',] },],
+    'showSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShow.sm',] },],
+    'showMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShow.md',] },],
+    'showLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShow.lg',] },],
+    'showXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShow.xl',] },],
+    'showLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShow.lt-sm',] },],
+    'showLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShow.lt-md',] },],
+    'showLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShow.lt-lg',] },],
+    'showLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShow.lt-xl',] },],
+    'showGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShow.gt-xs',] },],
+    'showGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShow.gt-sm',] },],
+    'showGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShow.gt-md',] },],
+    'showGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxShow.gt-lg',] },],
+    'hide': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxHide',] },],
+    'hideXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxHide.xs',] },],
+    'hideSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxHide.sm',] },],
+    'hideMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxHide.md',] },],
+    'hideLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxHide.lg',] },],
+    'hideXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxHide.xl',] },],
+    'hideLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxHide.lt-sm',] },],
+    'hideLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxHide.lt-md',] },],
+    'hideLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxHide.lt-lg',] },],
+    'hideLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxHide.lt-xl',] },],
+    'hideGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxHide.gt-xs',] },],
+    'hideGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxHide.gt-sm',] },],
+    'hideGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxHide.gt-md',] },],
+    'hideGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxHide.gt-lg',] },],
+};
+var FlexAlignDirective = (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __extends */](FlexAlignDirective, _super);
+    function FlexAlignDirective(monitor, elRef, renderer) {
+        return _super.call(this, monitor, elRef, renderer) || this;
+    }
+    Object.defineProperty(FlexAlignDirective.prototype, "align", {
+        set: function (val) { this._cacheInput('align', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexAlignDirective.prototype, "alignXs", {
+        set: function (val) { this._cacheInput('alignXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexAlignDirective.prototype, "alignSm", {
+        set: function (val) { this._cacheInput('alignSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexAlignDirective.prototype, "alignMd", {
+        set: function (val) { this._cacheInput('alignMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexAlignDirective.prototype, "alignLg", {
+        set: function (val) { this._cacheInput('alignLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexAlignDirective.prototype, "alignXl", {
+        set: function (val) { this._cacheInput('alignXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexAlignDirective.prototype, "alignLtSm", {
+        set: function (val) { this._cacheInput('alignLtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexAlignDirective.prototype, "alignLtMd", {
+        set: function (val) { this._cacheInput('alignLtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexAlignDirective.prototype, "alignLtLg", {
+        set: function (val) { this._cacheInput('alignLtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexAlignDirective.prototype, "alignLtXl", {
+        set: function (val) { this._cacheInput('alignLtXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexAlignDirective.prototype, "alignGtXs", {
+        set: function (val) { this._cacheInput('alignGtXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexAlignDirective.prototype, "alignGtSm", {
+        set: function (val) { this._cacheInput('alignGtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexAlignDirective.prototype, "alignGtMd", {
+        set: function (val) { this._cacheInput('alignGtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexAlignDirective.prototype, "alignGtLg", {
+        set: function (val) { this._cacheInput('alignGtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    FlexAlignDirective.prototype.ngOnChanges = function (changes) {
+        if (changes['align'] != null || this._mqActivation) {
+            this._updateWithValue();
+        }
+    };
+    FlexAlignDirective.prototype.ngOnInit = function () {
+        var _this = this;
+        _super.prototype.ngOnInit.call(this);
+        this._listenForMediaQueryChanges('align', 'stretch', function (changes) {
+            _this._updateWithValue(changes.value);
+        });
+        this._updateWithValue();
+    };
+    FlexAlignDirective.prototype._updateWithValue = function (value) {
+        value = value || this._queryInput('align') || 'stretch';
+        if (this._mqActivation) {
+            value = this._mqActivation.activatedInput;
+        }
+        this._applyStyleToElement(this._buildCSS(value));
+    };
+    FlexAlignDirective.prototype._buildCSS = function (align) {
+        var css = {};
+        switch (align) {
+            case 'start':
+                css['align-self'] = 'flex-start';
+                break;
+            case 'end':
+                css['align-self'] = 'flex-end';
+                break;
+            default:
+                css['align-self'] = align;
+                break;
+        }
+        return css;
+    };
+    return FlexAlignDirective;
+}(BaseFxDirective));
+FlexAlignDirective.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["l" /* Directive */], args: [{
+                selector: "\n  [fxFlexAlign],\n  [fxFlexAlign.xs], [fxFlexAlign.sm], [fxFlexAlign.md], [fxFlexAlign.lg], [fxFlexAlign.xl],\n  [fxFlexAlign.lt-sm], [fxFlexAlign.lt-md], [fxFlexAlign.lt-lg], [fxFlexAlign.lt-xl],\n  [fxFlexAlign.gt-xs], [fxFlexAlign.gt-sm], [fxFlexAlign.gt-md], [fxFlexAlign.gt-lg]\n"
+            },] },
+];
+FlexAlignDirective.ctorParameters = function () { return [
+    { type: MediaMonitor, },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["o" /* ElementRef */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Renderer2 */], },
+]; };
+FlexAlignDirective.propDecorators = {
+    'align': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexAlign',] },],
+    'alignXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexAlign.xs',] },],
+    'alignSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexAlign.sm',] },],
+    'alignMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexAlign.md',] },],
+    'alignLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexAlign.lg',] },],
+    'alignXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexAlign.xl',] },],
+    'alignLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexAlign.lt-sm',] },],
+    'alignLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexAlign.lt-md',] },],
+    'alignLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexAlign.lt-lg',] },],
+    'alignLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexAlign.lt-xl',] },],
+    'alignGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexAlign.gt-xs',] },],
+    'alignGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexAlign.gt-sm',] },],
+    'alignGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexAlign.gt-md',] },],
+    'alignGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexAlign.gt-lg',] },],
+};
+var FLEX_FILL_CSS = {
+    'margin': 0,
+    'width': '100%',
+    'height': '100%',
+    'min-width': '100%',
+    'min-height': '100%'
+};
+var FlexFillDirective = (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __extends */](FlexFillDirective, _super);
+    function FlexFillDirective(monitor, elRef, renderer) {
+        var _this = _super.call(this, monitor, elRef, renderer) || this;
+        _this.elRef = elRef;
+        _this.renderer = renderer;
+        _this._applyStyleToElement(FLEX_FILL_CSS);
+        return _this;
+    }
+    return FlexFillDirective;
+}(BaseFxDirective));
+FlexFillDirective.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["l" /* Directive */], args: [{ selector: "\n  [fxFill],\n  [fxFlexFill]\n" },] },
+];
+FlexFillDirective.ctorParameters = function () { return [
+    { type: MediaMonitor, },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["o" /* ElementRef */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Renderer2 */], },
+]; };
+var FlexOffsetDirective = (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __extends */](FlexOffsetDirective, _super);
+    function FlexOffsetDirective(monitor, elRef, renderer, _container) {
+        var _this = _super.call(this, monitor, elRef, renderer) || this;
+        _this._container = _container;
+        _this._layout = 'row';
+        _this.watchParentFlow();
+        return _this;
+    }
+    Object.defineProperty(FlexOffsetDirective.prototype, "offset", {
+        set: function (val) { this._cacheInput('offset', val); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FlexOffsetDirective.prototype, "offsetXs", {
+        set: function (val) { this._cacheInput('offsetXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FlexOffsetDirective.prototype, "offsetSm", {
+        set: function (val) { this._cacheInput('offsetSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOffsetDirective.prototype, "offsetMd", {
+        set: function (val) { this._cacheInput('offsetMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOffsetDirective.prototype, "offsetLg", {
+        set: function (val) { this._cacheInput('offsetLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOffsetDirective.prototype, "offsetXl", {
+        set: function (val) { this._cacheInput('offsetXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOffsetDirective.prototype, "offsetLtSm", {
+        set: function (val) { this._cacheInput('offsetLtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOffsetDirective.prototype, "offsetLtMd", {
+        set: function (val) { this._cacheInput('offsetLtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOffsetDirective.prototype, "offsetLtLg", {
+        set: function (val) { this._cacheInput('offsetLtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOffsetDirective.prototype, "offsetLtXl", {
+        set: function (val) { this._cacheInput('offsetLtXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOffsetDirective.prototype, "offsetGtXs", {
+        set: function (val) { this._cacheInput('offsetGtXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOffsetDirective.prototype, "offsetGtSm", {
+        set: function (val) { this._cacheInput('offsetGtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOffsetDirective.prototype, "offsetGtMd", {
+        set: function (val) { this._cacheInput('offsetGtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOffsetDirective.prototype, "offsetGtLg", {
+        set: function (val) { this._cacheInput('offsetGtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    FlexOffsetDirective.prototype.ngOnChanges = function (changes) {
+        if (changes['offset'] != null || this._mqActivation) {
+            this._updateWithValue();
+        }
+    };
+    FlexOffsetDirective.prototype.ngOnDestroy = function () {
+        _super.prototype.ngOnDestroy.call(this);
+        if (this._layoutWatcher) {
+            this._layoutWatcher.unsubscribe();
+        }
+    };
+    FlexOffsetDirective.prototype.ngOnInit = function () {
+        var _this = this;
+        _super.prototype.ngOnInit.call(this);
+        this._listenForMediaQueryChanges('offset', 0, function (changes) {
+            _this._updateWithValue(changes.value);
+        });
+    };
+    FlexOffsetDirective.prototype.watchParentFlow = function () {
+        var _this = this;
+        if (this._container) {
+            this._layoutWatcher = this._container.layout$.subscribe(function (direction) {
+                _this._onLayoutChange(direction);
+            });
+        }
+    };
+    FlexOffsetDirective.prototype._onLayoutChange = function (direction) {
+        this._layout = direction || this._layout || 'row';
+        this._updateWithValue();
+    };
+    FlexOffsetDirective.prototype._updateWithValue = function (value) {
+        value = value || this._queryInput('offset') || 0;
+        if (this._mqActivation) {
+            value = this._mqActivation.activatedInput;
+        }
+        this._applyStyleToElement(this._buildCSS(value));
+    };
+    FlexOffsetDirective.prototype._buildCSS = function (offset) {
+        var isPercent = String(offset).indexOf('%') > -1;
+        var isPx = String(offset).indexOf('px') > -1;
+        if (!isPx && !isPercent && !isNaN(offset)) {
+            offset = offset + '%';
+        }
+        var layout = this._getFlowDirection(this.parentElement, true);
+        return isFlowHorizontal(layout) ? { 'margin-left': "" + offset } : { 'margin-top': "" + offset };
+    };
+    return FlexOffsetDirective;
+}(BaseFxDirective));
+FlexOffsetDirective.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["l" /* Directive */], args: [{ selector: "\n  [fxFlexOffset],\n  [fxFlexOffset.xs], [fxFlexOffset.sm], [fxFlexOffset.md], [fxFlexOffset.lg], [fxFlexOffset.xl],\n  [fxFlexOffset.lt-sm], [fxFlexOffset.lt-md], [fxFlexOffset.lt-lg], [fxFlexOffset.lt-xl],\n  [fxFlexOffset.gt-xs], [fxFlexOffset.gt-sm], [fxFlexOffset.gt-md], [fxFlexOffset.gt-lg]\n" },] },
+];
+FlexOffsetDirective.ctorParameters = function () { return [
+    { type: MediaMonitor, },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["o" /* ElementRef */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Renderer2 */], },
+    { type: LayoutDirective, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["F" /* SkipSelf */] },] },
+]; };
+FlexOffsetDirective.propDecorators = {
+    'offset': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOffset',] },],
+    'offsetXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOffset.xs',] },],
+    'offsetSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOffset.sm',] },],
+    'offsetMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOffset.md',] },],
+    'offsetLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOffset.lg',] },],
+    'offsetXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOffset.xl',] },],
+    'offsetLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOffset.lt-sm',] },],
+    'offsetLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOffset.lt-md',] },],
+    'offsetLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOffset.lt-lg',] },],
+    'offsetLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOffset.lt-xl',] },],
+    'offsetGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOffset.gt-xs',] },],
+    'offsetGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOffset.gt-sm',] },],
+    'offsetGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOffset.gt-md',] },],
+    'offsetGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOffset.gt-lg',] },],
+};
+var FlexOrderDirective = (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __extends */](FlexOrderDirective, _super);
+    function FlexOrderDirective(monitor, elRef, renderer) {
+        return _super.call(this, monitor, elRef, renderer) || this;
+    }
+    Object.defineProperty(FlexOrderDirective.prototype, "order", {
+        set: function (val) { this._cacheInput('order', val); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FlexOrderDirective.prototype, "orderXs", {
+        set: function (val) { this._cacheInput('orderXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FlexOrderDirective.prototype, "orderSm", {
+        set: function (val) { this._cacheInput('orderSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOrderDirective.prototype, "orderMd", {
+        set: function (val) { this._cacheInput('orderMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOrderDirective.prototype, "orderLg", {
+        set: function (val) { this._cacheInput('orderLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOrderDirective.prototype, "orderXl", {
+        set: function (val) { this._cacheInput('orderXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOrderDirective.prototype, "orderGtXs", {
+        set: function (val) { this._cacheInput('orderGtXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOrderDirective.prototype, "orderGtSm", {
+        set: function (val) { this._cacheInput('orderGtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOrderDirective.prototype, "orderGtMd", {
+        set: function (val) { this._cacheInput('orderGtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOrderDirective.prototype, "orderGtLg", {
+        set: function (val) { this._cacheInput('orderGtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOrderDirective.prototype, "orderLtSm", {
+        set: function (val) { this._cacheInput('orderLtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOrderDirective.prototype, "orderLtMd", {
+        set: function (val) { this._cacheInput('orderLtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOrderDirective.prototype, "orderLtLg", {
+        set: function (val) { this._cacheInput('orderLtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(FlexOrderDirective.prototype, "orderLtXl", {
+        set: function (val) { this._cacheInput('orderLtXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    FlexOrderDirective.prototype.ngOnChanges = function (changes) {
+        if (changes['order'] != null || this._mqActivation) {
+            this._updateWithValue();
+        }
+    };
+    FlexOrderDirective.prototype.ngOnInit = function () {
+        var _this = this;
+        _super.prototype.ngOnInit.call(this);
+        this._listenForMediaQueryChanges('order', '0', function (changes) {
+            _this._updateWithValue(changes.value);
+        });
+        this._updateWithValue();
+    };
+    FlexOrderDirective.prototype._updateWithValue = function (value) {
+        value = value || this._queryInput('order') || '0';
+        if (this._mqActivation) {
+            value = this._mqActivation.activatedInput;
+        }
+        this._applyStyleToElement(this._buildCSS(value));
+    };
+    FlexOrderDirective.prototype._buildCSS = function (value) {
+        value = parseInt(value, 10);
+        return { order: isNaN(value) ? 0 : value };
+    };
+    return FlexOrderDirective;
+}(BaseFxDirective));
+FlexOrderDirective.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["l" /* Directive */], args: [{ selector: "\n  [fxFlexOrder],\n  [fxFlexOrder.xs], [fxFlexOrder.sm], [fxFlexOrder.md], [fxFlexOrder.lg], [fxFlexOrder.xl],\n  [fxFlexOrder.lt-sm], [fxFlexOrder.lt-md], [fxFlexOrder.lt-lg], [fxFlexOrder.lt-xl],\n  [fxFlexOrder.gt-xs], [fxFlexOrder.gt-sm], [fxFlexOrder.gt-md], [fxFlexOrder.gt-lg]\n" },] },
+];
+FlexOrderDirective.ctorParameters = function () { return [
+    { type: MediaMonitor, },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["o" /* ElementRef */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Renderer2 */], },
+]; };
+FlexOrderDirective.propDecorators = {
+    'order': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOrder',] },],
+    'orderXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOrder.xs',] },],
+    'orderSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOrder.sm',] },],
+    'orderMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOrder.md',] },],
+    'orderLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOrder.lg',] },],
+    'orderXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOrder.xl',] },],
+    'orderGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOrder.gt-xs',] },],
+    'orderGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOrder.gt-sm',] },],
+    'orderGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOrder.gt-md',] },],
+    'orderGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOrder.gt-lg',] },],
+    'orderLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOrder.lt-sm',] },],
+    'orderLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOrder.lt-md',] },],
+    'orderLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOrder.lt-lg',] },],
+    'orderLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxFlexOrder.lt-xl',] },],
+};
+var LayoutAlignDirective = (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __extends */](LayoutAlignDirective, _super);
+    function LayoutAlignDirective(monitor, elRef, renderer, container) {
+        var _this = _super.call(this, monitor, elRef, renderer) || this;
+        _this._layout = 'row';
+        if (container) {
+            _this._layoutWatcher = container.layout$.subscribe(_this._onLayoutChange.bind(_this));
+        }
+        return _this;
+    }
+    Object.defineProperty(LayoutAlignDirective.prototype, "align", {
+        set: function (val) { this._cacheInput('align', val); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LayoutAlignDirective.prototype, "alignXs", {
+        set: function (val) { this._cacheInput('alignXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LayoutAlignDirective.prototype, "alignSm", {
+        set: function (val) { this._cacheInput('alignSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutAlignDirective.prototype, "alignMd", {
+        set: function (val) { this._cacheInput('alignMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutAlignDirective.prototype, "alignLg", {
+        set: function (val) { this._cacheInput('alignLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutAlignDirective.prototype, "alignXl", {
+        set: function (val) { this._cacheInput('alignXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutAlignDirective.prototype, "alignGtXs", {
+        set: function (val) { this._cacheInput('alignGtXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutAlignDirective.prototype, "alignGtSm", {
+        set: function (val) { this._cacheInput('alignGtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutAlignDirective.prototype, "alignGtMd", {
+        set: function (val) { this._cacheInput('alignGtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutAlignDirective.prototype, "alignGtLg", {
+        set: function (val) { this._cacheInput('alignGtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutAlignDirective.prototype, "alignLtSm", {
+        set: function (val) { this._cacheInput('alignLtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutAlignDirective.prototype, "alignLtMd", {
+        set: function (val) { this._cacheInput('alignLtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutAlignDirective.prototype, "alignLtLg", {
+        set: function (val) { this._cacheInput('alignLtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutAlignDirective.prototype, "alignLtXl", {
+        set: function (val) { this._cacheInput('alignLtXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    LayoutAlignDirective.prototype.ngOnChanges = function (changes) {
+        if (changes['align'] != null || this._mqActivation) {
+            this._updateWithValue();
+        }
+    };
+    LayoutAlignDirective.prototype.ngOnInit = function () {
+        var _this = this;
+        _super.prototype.ngOnInit.call(this);
+        this._listenForMediaQueryChanges('align', 'start stretch', function (changes) {
+            _this._updateWithValue(changes.value);
+        });
+        this._updateWithValue();
+    };
+    LayoutAlignDirective.prototype.ngOnDestroy = function () {
+        _super.prototype.ngOnDestroy.call(this);
+        if (this._layoutWatcher) {
+            this._layoutWatcher.unsubscribe();
+        }
+    };
+    LayoutAlignDirective.prototype._updateWithValue = function (value) {
+        value = value || this._queryInput('align') || 'start stretch';
+        if (this._mqActivation) {
+            value = this._mqActivation.activatedInput;
+        }
+        this._applyStyleToElement(this._buildCSS(value));
+        this._allowStretching(value, !this._layout ? 'row' : this._layout);
+    };
+    LayoutAlignDirective.prototype._onLayoutChange = function (direction) {
+        var _this = this;
+        this._layout = (direction || '').toLowerCase();
+        if (!LAYOUT_VALUES.find(function (x) { return x === _this._layout; })) {
+            this._layout = 'row';
+        }
+        var value = this._queryInput('align') || 'start stretch';
+        if (this._mqActivation) {
+            value = this._mqActivation.activatedInput;
+        }
+        this._allowStretching(value, this._layout || 'row');
+    };
+    LayoutAlignDirective.prototype._buildCSS = function (align) {
+        var css = {}, _a = align.split(' '), main_axis = _a[0], cross_axis = _a[1];
+        switch (main_axis) {
+            case 'center':
+                css['justify-content'] = 'center';
+                break;
+            case 'space-around':
+                css['justify-content'] = 'space-around';
+                break;
+            case 'space-between':
+                css['justify-content'] = 'space-between';
+                break;
+            case 'end':
+            case 'flex-end':
+                css['justify-content'] = 'flex-end';
+                break;
+            case 'start':
+            case 'flex-start':
+            default:
+                css['justify-content'] = 'flex-start';
+                break;
+        }
+        switch (cross_axis) {
+            case 'start':
+            case 'flex-start':
+                css['align-items'] = css['align-content'] = 'flex-start';
+                break;
+            case 'baseline':
+                css['align-items'] = 'baseline';
+                break;
+            case 'center':
+                css['align-items'] = css['align-content'] = 'center';
+                break;
+            case 'end':
+            case 'flex-end':
+                css['align-items'] = css['align-content'] = 'flex-end';
+                break;
+            case 'stretch':
+            default:
+                css['align-items'] = css['align-content'] = 'stretch';
+                break;
+        }
+        return extendObject(css, {
+            'display': 'flex',
+            'flex-direction': this._layout || 'row',
+            'box-sizing': 'border-box'
+        });
+    };
+    LayoutAlignDirective.prototype._allowStretching = function (align, layout) {
+        var _a = align.split(' '), cross_axis = _a[1];
+        if (cross_axis == 'stretch') {
+            this._applyStyleToElement({
+                'box-sizing': 'border-box',
+                'max-width': !isFlowHorizontal(layout) ? '100%' : null,
+                'max-height': isFlowHorizontal(layout) ? '100%' : null
+            });
+        }
+    };
+    return LayoutAlignDirective;
+}(BaseFxDirective));
+LayoutAlignDirective.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["l" /* Directive */], args: [{ selector: "\n  [fxLayoutAlign],\n  [fxLayoutAlign.xs], [fxLayoutAlign.sm], [fxLayoutAlign.md], [fxLayoutAlign.lg],[fxLayoutAlign.xl],\n  [fxLayoutAlign.lt-sm], [fxLayoutAlign.lt-md], [fxLayoutAlign.lt-lg], [fxLayoutAlign.lt-xl],\n  [fxLayoutAlign.gt-xs], [fxLayoutAlign.gt-sm], [fxLayoutAlign.gt-md], [fxLayoutAlign.gt-lg]\n" },] },
+];
+LayoutAlignDirective.ctorParameters = function () { return [
+    { type: MediaMonitor, },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["o" /* ElementRef */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Renderer2 */], },
+    { type: LayoutDirective, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["W" /* Self */] },] },
+]; };
+LayoutAlignDirective.propDecorators = {
+    'align': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutAlign',] },],
+    'alignXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutAlign.xs',] },],
+    'alignSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutAlign.sm',] },],
+    'alignMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutAlign.md',] },],
+    'alignLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutAlign.lg',] },],
+    'alignXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutAlign.xl',] },],
+    'alignGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutAlign.gt-xs',] },],
+    'alignGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutAlign.gt-sm',] },],
+    'alignGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutAlign.gt-md',] },],
+    'alignGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutAlign.gt-lg',] },],
+    'alignLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutAlign.lt-sm',] },],
+    'alignLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutAlign.lt-md',] },],
+    'alignLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutAlign.lt-lg',] },],
+    'alignLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutAlign.lt-xl',] },],
+};
+var LayoutGapDirective = (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __extends */](LayoutGapDirective, _super);
+    function LayoutGapDirective(monitor, elRef, renderer, container, _zone) {
+        var _this = _super.call(this, monitor, elRef, renderer) || this;
+        _this._zone = _zone;
+        _this._layout = 'row';
+        if (container) {
+            _this._layoutWatcher = container.layout$.subscribe(_this._onLayoutChange.bind(_this));
+        }
+        return _this;
+    }
+    Object.defineProperty(LayoutGapDirective.prototype, "gap", {
+        set: function (val) { this._cacheInput('gap', val); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LayoutGapDirective.prototype, "gapXs", {
+        set: function (val) { this._cacheInput('gapXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LayoutGapDirective.prototype, "gapSm", {
+        set: function (val) { this._cacheInput('gapSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutGapDirective.prototype, "gapMd", {
+        set: function (val) { this._cacheInput('gapMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutGapDirective.prototype, "gapLg", {
+        set: function (val) { this._cacheInput('gapLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutGapDirective.prototype, "gapXl", {
+        set: function (val) { this._cacheInput('gapXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutGapDirective.prototype, "gapGtXs", {
+        set: function (val) { this._cacheInput('gapGtXs', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutGapDirective.prototype, "gapGtSm", {
+        set: function (val) { this._cacheInput('gapGtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutGapDirective.prototype, "gapGtMd", {
+        set: function (val) { this._cacheInput('gapGtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutGapDirective.prototype, "gapGtLg", {
+        set: function (val) { this._cacheInput('gapGtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutGapDirective.prototype, "gapLtSm", {
+        set: function (val) { this._cacheInput('gapLtSm', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutGapDirective.prototype, "gapLtMd", {
+        set: function (val) { this._cacheInput('gapLtMd', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutGapDirective.prototype, "gapLtLg", {
+        set: function (val) { this._cacheInput('gapLtLg', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(LayoutGapDirective.prototype, "gapLtXl", {
+        set: function (val) { this._cacheInput('gapLtXl', val); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    LayoutGapDirective.prototype.ngOnChanges = function (changes) {
+        if (changes['gap'] != null || this._mqActivation) {
+            this._updateWithValue();
+        }
+    };
+    LayoutGapDirective.prototype.ngAfterContentInit = function () {
+        var _this = this;
+        this._watchContentChanges();
+        this._listenForMediaQueryChanges('gap', '0', function (changes) {
+            _this._updateWithValue(changes.value);
+        });
+        this._updateWithValue();
+    };
+    LayoutGapDirective.prototype.ngOnDestroy = function () {
+        _super.prototype.ngOnDestroy.call(this);
+        if (this._layoutWatcher) {
+            this._layoutWatcher.unsubscribe();
+        }
+        if (this._observer) {
+            this._observer.disconnect();
+        }
+    };
+    LayoutGapDirective.prototype._watchContentChanges = function () {
+        var _this = this;
+        this._zone.runOutsideAngular(function () {
+            if (typeof MutationObserver !== 'undefined') {
+                _this._observer = new MutationObserver(function (mutations) {
+                    var validatedChanges = function (it) {
+                        return (it.addedNodes && it.addedNodes.length > 0) ||
+                            (it.removedNodes && it.removedNodes.length > 0);
+                    };
+                    if (mutations.some(validatedChanges)) {
+                        _this._updateWithValue();
+                    }
+                });
+                _this._observer.observe(_this._elementRef.nativeElement, { childList: true });
+            }
+        });
+    };
+    LayoutGapDirective.prototype._onLayoutChange = function (direction) {
+        var _this = this;
+        this._layout = (direction || '').toLowerCase();
+        if (!LAYOUT_VALUES.find(function (x) { return x === _this._layout; })) {
+            this._layout = 'row';
+        }
+        this._updateWithValue();
+    };
+    LayoutGapDirective.prototype._updateWithValue = function (value) {
+        var _this = this;
+        value = value || this._queryInput('gap') || '0';
+        if (this._mqActivation) {
+            value = this._mqActivation.activatedInput;
+        }
+        var items = this.childrenNodes
+            .filter(function (el) { return el.nodeType === 1 && _this._getDisplayStyle(el) != 'none'; });
+        var numItems = items.length;
+        if (numItems > 1) {
+            var lastItem = items[numItems - 1];
+            items = items.filter(function (_, j) { return j < numItems - 1; });
+            this._applyStyleToElements(this._buildCSS(value), items);
+            this._applyStyleToElements(this._buildCSS(), [lastItem]);
+        }
+    };
+    LayoutGapDirective.prototype._buildCSS = function (value) {
+        if (value === void 0) { value = null; }
+        var key, margins = {
+            'margin-left': null,
+            'margin-right': null,
+            'margin-top': null,
+            'margin-bottom': null
+        };
+        switch (this._layout) {
+            case 'column':
+            case 'column-reverse':
+                key = 'margin-bottom';
+                break;
+            case 'row':
+            case 'row-reverse':
+            default:
+                key = 'margin-right';
+                break;
+        }
+        margins[key] = value;
+        return margins;
+    };
+    return LayoutGapDirective;
+}(BaseFxDirective));
+LayoutGapDirective.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["l" /* Directive */], args: [{
+                selector: "\n  [fxLayoutGap],\n  [fxLayoutGap.xs], [fxLayoutGap.sm], [fxLayoutGap.md], [fxLayoutGap.lg], [fxLayoutGap.xl],\n  [fxLayoutGap.lt-sm], [fxLayoutGap.lt-md], [fxLayoutGap.lt-lg], [fxLayoutGap.lt-xl],\n  [fxLayoutGap.gt-xs], [fxLayoutGap.gt-sm], [fxLayoutGap.gt-md], [fxLayoutGap.gt-lg]\n"
+            },] },
+];
+LayoutGapDirective.ctorParameters = function () { return [
+    { type: MediaMonitor, },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["o" /* ElementRef */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Renderer2 */], },
+    { type: LayoutDirective, decorators: [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["W" /* Self */] },] },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["Z" /* NgZone */], },
+]; };
+LayoutGapDirective.propDecorators = {
+    'gap': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutGap',] },],
+    'gapXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutGap.xs',] },],
+    'gapSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutGap.sm',] },],
+    'gapMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutGap.md',] },],
+    'gapLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutGap.lg',] },],
+    'gapXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutGap.xl',] },],
+    'gapGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutGap.gt-xs',] },],
+    'gapGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutGap.gt-sm',] },],
+    'gapGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutGap.gt-md',] },],
+    'gapGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutGap.gt-lg',] },],
+    'gapLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutGap.lt-sm',] },],
+    'gapLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutGap.lt-md',] },],
+    'gapLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutGap.lt-lg',] },],
+    'gapLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['fxLayoutGap.lt-xl',] },],
+};
+var BaseFxDirectiveAdapter = (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __extends */](BaseFxDirectiveAdapter, _super);
+    function BaseFxDirectiveAdapter(_baseKey, _mediaMonitor, _elementRef, _renderer) {
+        var _this = _super.call(this, _mediaMonitor, _elementRef, _renderer) || this;
+        _this._baseKey = _baseKey;
+        _this._mediaMonitor = _mediaMonitor;
+        _this._elementRef = _elementRef;
+        _this._renderer = _renderer;
+        return _this;
+    }
+    Object.defineProperty(BaseFxDirectiveAdapter.prototype, "activeKey", {
+        get: function () {
+            var mqa = this._mqActivation;
+            var key = mqa ? mqa.activatedInputKey : this._baseKey;
+            return (key === 'class') ? 'klazz' : key;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BaseFxDirectiveAdapter.prototype, "inputMap", {
+        get: function () {
+            return this._inputMap;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BaseFxDirectiveAdapter.prototype, "mqActivation", {
+        get: function () {
+            return this._mqActivation;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    BaseFxDirectiveAdapter.prototype.queryInput = function (key) {
+        return key ? this._queryInput(key) : undefined;
+    };
+    BaseFxDirectiveAdapter.prototype.cacheInput = function (key, source, cacheRaw) {
+        if (cacheRaw === void 0) { cacheRaw = false; }
+        if (cacheRaw) {
+            this._cacheInputRaw(key, source);
+        }
+        else if (Array.isArray(source)) {
+            this._cacheInputArray(key, source);
+        }
+        else if (typeof source === 'object') {
+            this._cacheInputObject(key, source);
+        }
+        else if (typeof source === 'string') {
+            this._cacheInputString(key, source);
+        }
+        else {
+            throw new Error('Invalid class value provided. Did you want to cache the raw value?');
+        }
+    };
+    BaseFxDirectiveAdapter.prototype.listenForMediaQueryChanges = function (key, defaultValue, onMediaQueryChange) {
+        return this._listenForMediaQueryChanges(key, defaultValue, onMediaQueryChange);
+    };
+    BaseFxDirectiveAdapter.prototype._cacheInputRaw = function (key, source) {
+        this._inputMap[key] = source;
+    };
+    BaseFxDirectiveAdapter.prototype._cacheInputArray = function (key, source) {
+        if (key === void 0) { key = ''; }
+        this._inputMap[key] = source.join(' ');
+    };
+    BaseFxDirectiveAdapter.prototype._cacheInputObject = function (key, source) {
+        if (key === void 0) { key = ''; }
+        var classes = [];
+        for (var prop in source) {
+            if (!!source[prop]) {
+                classes.push(prop);
+            }
+        }
+        this._inputMap[key] = classes.join(' ');
+    };
+    BaseFxDirectiveAdapter.prototype._cacheInputString = function (key, source) {
+        if (key === void 0) { key = ''; }
+        this._inputMap[key] = source;
+    };
+    return BaseFxDirectiveAdapter;
+}(BaseFxDirective));
+var ClassDirective = (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __extends */](ClassDirective, _super);
+    function ClassDirective(monitor, _ngEl, _renderer, _oldRenderer, _iterableDiffers, _keyValueDiffers, _ngClassInstance) {
+        var _this = _super.call(this, monitor, _ngEl, _renderer) || this;
+        _this.monitor = monitor;
+        _this._ngClassInstance = _ngClassInstance;
+        _this._classAdapter = new BaseFxDirectiveAdapter('class', monitor, _ngEl, _renderer);
+        _this._ngClassAdapter = new BaseFxDirectiveAdapter('ngClass', monitor, _ngEl, _renderer);
+        if (!_this._ngClassInstance) {
+            _this._ngClassInstance = new __WEBPACK_IMPORTED_MODULE_6__angular_common__["l" /* NgClass */](_iterableDiffers, _keyValueDiffers, _ngEl, _oldRenderer);
+        }
+        return _this;
+    }
+    Object.defineProperty(ClassDirective.prototype, "ngClassBase", {
+        set: function (val) {
+            this._ngClassAdapter.cacheInput('ngClass', val, true);
+            this._ngClassInstance.ngClass = val;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "ngClassXs", {
+        set: function (val) { this._ngClassAdapter.cacheInput('ngClassXs', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "ngClassSm", {
+        set: function (val) { this._ngClassAdapter.cacheInput('ngClassSm', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "ngClassMd", {
+        set: function (val) { this._ngClassAdapter.cacheInput('ngClassMd', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "ngClassLg", {
+        set: function (val) { this._ngClassAdapter.cacheInput('ngClassLg', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "ngClassXl", {
+        set: function (val) { this._ngClassAdapter.cacheInput('ngClassXl', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "ngClassLtSm", {
+        set: function (val) { this._ngClassAdapter.cacheInput('ngClassLtSm', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "ngClassLtMd", {
+        set: function (val) { this._ngClassAdapter.cacheInput('ngClassLtMd', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "ngClassLtLg", {
+        set: function (val) { this._ngClassAdapter.cacheInput('ngClassLtLg', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "ngClassLtXl", {
+        set: function (val) { this._ngClassAdapter.cacheInput('ngClassLtXl', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "ngClassGtXs", {
+        set: function (val) { this._ngClassAdapter.cacheInput('ngClassGtXs', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "ngClassGtSm", {
+        set: function (val) { this._ngClassAdapter.cacheInput('ngClassGtSm', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "ngClassGtMd", {
+        set: function (val) { this._ngClassAdapter.cacheInput('ngClassGtMd', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "ngClassGtLg", {
+        set: function (val) { this._ngClassAdapter.cacheInput('ngClassGtLg', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "classBase", {
+        set: function (val) {
+            this._classAdapter.cacheInput('_rawClass', val, true);
+            this._ngClassInstance.klass = val;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "classXs", {
+        set: function (val) { this._classAdapter.cacheInput('classXs', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "classSm", {
+        set: function (val) { this._classAdapter.cacheInput('classSm', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "classMd", {
+        set: function (val) { this._classAdapter.cacheInput('classMd', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "classLg", {
+        set: function (val) { this._classAdapter.cacheInput('classLg', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "classXl", {
+        set: function (val) { this._classAdapter.cacheInput('classXl', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "classLtSm", {
+        set: function (val) { this._classAdapter.cacheInput('classLtSm', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "classLtMd", {
+        set: function (val) { this._classAdapter.cacheInput('classLtMd', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "classLtLg", {
+        set: function (val) { this._classAdapter.cacheInput('classLtLg', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "classLtXl", {
+        set: function (val) { this._classAdapter.cacheInput('classLtXl', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "classGtXs", {
+        set: function (val) { this._classAdapter.cacheInput('classGtXs', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "classGtSm", {
+        set: function (val) { this._classAdapter.cacheInput('classGtSm', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "classGtMd", {
+        set: function (val) { this._classAdapter.cacheInput('classGtMd', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "classGtLg", {
+        set: function (val) { this._classAdapter.cacheInput('classGtLg', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ClassDirective.prototype, "initialClasses", {
+        get: function () {
+            return this._classAdapter.queryInput('_rawClass') || "";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ClassDirective.prototype.ngOnChanges = function (changes) {
+        if (this.hasInitialized) {
+            if (this._classAdapter.activeKey in changes) {
+                this._updateKlass();
+            }
+            if (this._ngClassAdapter.activeKey in changes) {
+                this._updateNgClass();
+            }
+        }
+    };
+    ClassDirective.prototype.ngDoCheck = function () {
+        if (!this._classAdapter.hasMediaQueryListener) {
+            this._configureMQListener();
+        }
+        this._ngClassInstance.ngDoCheck();
+    };
+    ClassDirective.prototype.ngOnDestroy = function () {
+        this._classAdapter.ngOnDestroy();
+        this._ngClassAdapter.ngOnDestroy();
+        this._ngClassInstance = null;
+    };
+    ClassDirective.prototype._configureMQListener = function () {
+        var _this = this;
+        this._classAdapter.listenForMediaQueryChanges('class', '', function (changes) {
+            _this._updateKlass(changes.value);
+        });
+        this._ngClassAdapter.listenForMediaQueryChanges('ngClass', '', function (changes) {
+            _this._updateNgClass(changes.value);
+            _this._ngClassInstance.ngDoCheck();
+        });
+    };
+    ClassDirective.prototype._updateKlass = function (value) {
+        var klass = value || this._classAdapter.queryInput('class') || '';
+        if (this._classAdapter.mqActivation) {
+            klass = this._classAdapter.mqActivation.activatedInput;
+        }
+        this._ngClassInstance.klass = klass || this.initialClasses;
+    };
+    ClassDirective.prototype._updateNgClass = function (value) {
+        if (this._ngClassAdapter.mqActivation) {
+            value = this._ngClassAdapter.mqActivation.activatedInput;
+        }
+        this._ngClassInstance.ngClass = value || '';
+    };
+    return ClassDirective;
+}(BaseFxDirective));
+ClassDirective.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["l" /* Directive */], args: [{
+                selector: "\n    [class], [class.xs], [class.sm], [class.md], [class.lg], [class.xl],\n    [class.lt-sm], [class.lt-md], [class.lt-lg], [class.lt-xl],\n    [class.gt-xs], [class.gt-sm], [class.gt-md], [class.gt-lg],\n\n    [ngClass], [ngClass.xs], [ngClass.sm], [ngClass.md], [ngClass.lg], [ngClass.xl],\n    [ngClass.lt-sm], [ngClass.lt-md], [ngClass.lt-lg], [ngClass.lt-xl],\n    [ngClass.gt-xs], [ngClass.gt-sm], [ngClass.gt-md], [ngClass.gt-lg]\n  "
+            },] },
+];
+ClassDirective.ctorParameters = function () { return [
+    { type: MediaMonitor, },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["o" /* ElementRef */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Renderer2 */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["P" /* Renderer */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["N" /* IterableDiffers */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["O" /* KeyValueDiffers */], },
+    { type: __WEBPACK_IMPORTED_MODULE_6__angular_common__["l" /* NgClass */], decorators: [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["W" /* Self */] },] },
+]; };
+ClassDirective.propDecorators = {
+    'ngClassBase': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngClass',] },],
+    'ngClassXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngClass.xs',] },],
+    'ngClassSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngClass.sm',] },],
+    'ngClassMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngClass.md',] },],
+    'ngClassLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngClass.lg',] },],
+    'ngClassXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngClass.xl',] },],
+    'ngClassLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngClass.lt-sm',] },],
+    'ngClassLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngClass.lt-md',] },],
+    'ngClassLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngClass.lt-lg',] },],
+    'ngClassLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngClass.lt-xl',] },],
+    'ngClassGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngClass.gt-xs',] },],
+    'ngClassGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngClass.gt-sm',] },],
+    'ngClassGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngClass.gt-md',] },],
+    'ngClassGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngClass.gt-lg',] },],
+    'classBase': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['class',] },],
+    'classXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['class.xs',] },],
+    'classSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['class.sm',] },],
+    'classMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['class.md',] },],
+    'classLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['class.lg',] },],
+    'classXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['class.xl',] },],
+    'classLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['class.lt-sm',] },],
+    'classLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['class.lt-md',] },],
+    'classLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['class.lt-lg',] },],
+    'classLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['class.lt-xl',] },],
+    'classGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['class.gt-xs',] },],
+    'classGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['class.gt-sm',] },],
+    'classGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['class.gt-md',] },],
+    'classGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['class.gt-lg',] },],
+};
+var NgStyleKeyValue = (function () {
+    function NgStyleKeyValue(key, value, noQuotes) {
+        if (noQuotes === void 0) { noQuotes = true; }
+        this.key = key;
+        this.value = value;
+        this.key = noQuotes ? key.replace(/['"]/g, '').trim() : key.trim();
+        this.value = noQuotes ? value.replace(/['"]/g, '').trim() : value.trim();
+        this.value = this.value.replace(/;/, '');
+    }
+    return NgStyleKeyValue;
+}());
+var ngStyleUtils = {
+    getType: getType,
+    buildRawList: buildRawList,
+    buildMapFromList: buildMapFromList,
+    buildMapFromSet: buildMapFromSet
+};
+function getType(target) {
+    var what = typeof target;
+    if (what === 'object') {
+        return (target.constructor === Array) ? 'array' :
+            (target.constructor === Set) ? 'set' : 'object';
+    }
+    return what;
+}
+function buildRawList(source, delimiter) {
+    if (delimiter === void 0) { delimiter = ';'; }
+    return String(source)
+        .trim()
+        .split(delimiter)
+        .map(function (val) { return val.trim(); })
+        .filter(function (val) { return val !== ''; });
+}
+function buildMapFromList(styles, sanitize) {
+    var sanitizeValue = function (it) {
+        if (sanitize) {
+            it.value = sanitize(it.value);
+        }
+        return it;
+    };
+    return styles
+        .map(stringToKeyValue)
+        .filter(function (entry) { return !!entry; })
+        .map(sanitizeValue)
+        .reduce(keyValuesToMap, {});
+}
+function buildMapFromSet(source, sanitize) {
+    var list = new Array();
+    if (getType(source) == 'set') {
+        source.forEach(function (entry) { return list.push(entry); });
+    }
+    else {
+        Object.keys(source).forEach(function (key) {
+            list.push(key + ":" + source[key]);
+        });
+    }
+    return buildMapFromList(list, sanitize);
+}
+function stringToKeyValue(it) {
+    var _a = it.split(':'), key = _a[0], val = _a[1];
+    return val ? new NgStyleKeyValue(key, val) : null;
+}
+function keyValuesToMap(map$$1, entry) {
+    if (!!entry.key) {
+        map$$1[entry.key] = entry.value;
+    }
+    return map$$1;
+}
+var StyleDirective = (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __extends */](StyleDirective, _super);
+    function StyleDirective(monitor, _sanitizer, _ngEl, _renderer, _differs, _oldRenderer, _ngStyleInstance) {
+        var _this = _super.call(this, monitor, _ngEl, _renderer) || this;
+        _this.monitor = monitor;
+        _this._sanitizer = _sanitizer;
+        _this._ngStyleInstance = _ngStyleInstance;
+        _this._buildAdapter(_this.monitor, _ngEl, _renderer);
+        _this._base.cacheInput('style', _ngEl.nativeElement.getAttribute('style'), true);
+        if (!_this._ngStyleInstance) {
+            _this._ngStyleInstance = new __WEBPACK_IMPORTED_MODULE_6__angular_common__["m" /* NgStyle */](_differs, _ngEl, _oldRenderer);
+        }
+        return _this;
+    }
+    Object.defineProperty(StyleDirective.prototype, "styleBase", {
+        set: function (val) {
+            this._base.cacheInput('style', val, true);
+            this._ngStyleInstance.ngStyle = this._base.inputMap['style'];
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(StyleDirective.prototype, "ngStyleXs", {
+        set: function (val) { this._base.cacheInput('styleXs', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(StyleDirective.prototype, "ngStyleSm", {
+        set: function (val) { this._base.cacheInput('styleSm', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "ngStyleMd", {
+        set: function (val) { this._base.cacheInput('styleMd', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "ngStyleLg", {
+        set: function (val) { this._base.cacheInput('styleLg', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "ngStyleXl", {
+        set: function (val) { this._base.cacheInput('styleXl', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "ngStyleLtSm", {
+        set: function (val) { this._base.cacheInput('styleLtSm', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "ngStyleLtMd", {
+        set: function (val) { this._base.cacheInput('styleLtMd', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "ngStyleLtLg", {
+        set: function (val) { this._base.cacheInput('styleLtLg', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "ngStyleLtXl", {
+        set: function (val) { this._base.cacheInput('styleLtXl', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "ngStyleGtXs", {
+        set: function (val) { this._base.cacheInput('styleGtXs', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "ngStyleGtSm", {
+        set: function (val) { this._base.cacheInput('styleGtSm', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "ngStyleGtMd", {
+        set: function (val) { this._base.cacheInput('styleGtMd', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "ngStyleGtLg", {
+        set: function (val) { this._base.cacheInput('styleGtLg', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "styleXs", {
+        set: function (val) { this._base.cacheInput('styleXs', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(StyleDirective.prototype, "styleSm", {
+        set: function (val) { this._base.cacheInput('styleSm', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "styleMd", {
+        set: function (val) { this._base.cacheInput('styleMd', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "styleLg", {
+        set: function (val) { this._base.cacheInput('styleLg', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "styleXl", {
+        set: function (val) { this._base.cacheInput('styleXl', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "styleLtSm", {
+        set: function (val) { this._base.cacheInput('styleLtSm', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "styleLtMd", {
+        set: function (val) { this._base.cacheInput('styleLtMd', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "styleLtLg", {
+        set: function (val) { this._base.cacheInput('styleLtLg', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "styleLtXl", {
+        set: function (val) { this._base.cacheInput('styleLtXl', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "styleGtXs", {
+        set: function (val) { this._base.cacheInput('styleGtXs', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "styleGtSm", {
+        set: function (val) { this._base.cacheInput('styleGtSm', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "styleGtMd", {
+        set: function (val) { this._base.cacheInput('styleGtMd', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    Object.defineProperty(StyleDirective.prototype, "styleGtLg", {
+        set: function (val) { this._base.cacheInput('styleGtLg', val, true); },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    StyleDirective.prototype.ngOnChanges = function (changes) {
+        if (this._base.activeKey in changes) {
+            this._updateStyle();
+        }
+    };
+    StyleDirective.prototype.ngDoCheck = function () {
+        if (!this._base.hasMediaQueryListener) {
+            this._configureMQListener();
+        }
+        this._ngStyleInstance.ngDoCheck();
+    };
+    StyleDirective.prototype.ngOnDestroy = function () {
+        this._base.ngOnDestroy();
+        this._ngStyleInstance = null;
+    };
+    StyleDirective.prototype._configureMQListener = function () {
+        var _this = this;
+        this._base.listenForMediaQueryChanges('style', '', function (changes) {
+            _this._updateStyle(changes.value);
+            _this._ngStyleInstance.ngDoCheck();
+        });
+    };
+    StyleDirective.prototype._updateStyle = function (value) {
+        var style = value || this._base.queryInput('style') || '';
+        if (this._base.mqActivation) {
+            style = this._base.mqActivation.activatedInput;
+        }
+        this._ngStyleInstance.ngStyle = style;
+    };
+    StyleDirective.prototype._buildAdapter = function (monitor, _ngEl, _renderer) {
+        this._base = new BaseFxDirectiveAdapter('style', monitor, _ngEl, _renderer);
+        this._buildCacheInterceptor();
+    };
+    StyleDirective.prototype._buildCacheInterceptor = function () {
+        var _this = this;
+        var cacheInput = this._base.cacheInput.bind(this._base);
+        this._base.cacheInput = function (key, source, cacheRaw, merge) {
+            if (cacheRaw === void 0) { cacheRaw = false; }
+            if (merge === void 0) { merge = true; }
+            var styles = _this._buildStyleMap(source);
+            if (merge) {
+                styles = extendObject({}, _this._base.inputMap['style'], styles);
+            }
+            cacheInput(key, styles, cacheRaw);
+        };
+    };
+    StyleDirective.prototype._buildStyleMap = function (styles) {
+        var _this = this;
+        var sanitizer = function (val) {
+            return _this._sanitizer.sanitize(__WEBPACK_IMPORTED_MODULE_1__angular_core__["_5" /* SecurityContext */].STYLE, val);
+        };
+        if (styles) {
+            switch (ngStyleUtils.getType(styles)) {
+                case 'string': return ngStyleUtils.buildMapFromList(ngStyleUtils.buildRawList(styles), sanitizer);
+                case 'array': return ngStyleUtils.buildMapFromList((styles), sanitizer);
+                case 'set': return ngStyleUtils.buildMapFromSet(styles, sanitizer);
+                default: return ngStyleUtils.buildMapFromSet(styles, sanitizer);
+            }
+        }
+        return styles;
+    };
+    return StyleDirective;
+}(BaseFxDirective));
+StyleDirective.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["l" /* Directive */], args: [{
+                selector: "\n    [style.xs], [style.sm], [style.md], [style.lg], [style.xl],\n    [style.lt-sm], [style.lt-md], [style.lt-lg], [style.lt-xl],\n    [style.gt-xs], [style.gt-sm], [style.gt-md], [style.gt-lg],\n    [ngStyle],\n    [ngStyle.xs], [ngStyle.sm], [ngStyle.lg], [ngStyle.xl],\n    [ngStyle.lt-sm], [ngStyle.lt-md], [ngStyle.lt-lg], [ngStyle.lt-xl],\n    [ngStyle.gt-xs], [ngStyle.gt-sm], [ngStyle.gt-md], [ngStyle.gt-lg]\n  "
+            },] },
+];
+StyleDirective.ctorParameters = function () { return [
+    { type: MediaMonitor, },
+    { type: __WEBPACK_IMPORTED_MODULE_2__angular_platform_browser__["e" /* DomSanitizer */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["o" /* ElementRef */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Renderer2 */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["O" /* KeyValueDiffers */], },
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["P" /* Renderer */], },
+    { type: __WEBPACK_IMPORTED_MODULE_6__angular_common__["m" /* NgStyle */], decorators: [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["C" /* Optional */] }, { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["W" /* Self */] },] },
+]; };
+StyleDirective.propDecorators = {
+    'styleBase': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngStyle',] },],
+    'ngStyleXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngStyle.xs',] },],
+    'ngStyleSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngStyle.sm',] },],
+    'ngStyleMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngStyle.md',] },],
+    'ngStyleLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngStyle.lg',] },],
+    'ngStyleXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngStyle.xl',] },],
+    'ngStyleLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngStyle.lt-sm',] },],
+    'ngStyleLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngStyle.lt-md',] },],
+    'ngStyleLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngStyle.lt-lg',] },],
+    'ngStyleLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngStyle.lt-xl',] },],
+    'ngStyleGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngStyle.gt-xs',] },],
+    'ngStyleGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngStyle.gt-sm',] },],
+    'ngStyleGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngStyle.gt-md',] },],
+    'ngStyleGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['ngStyle.gt-lg',] },],
+    'styleXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['style.xs',] },],
+    'styleSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['style.sm',] },],
+    'styleMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['style.md',] },],
+    'styleLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['style.lg',] },],
+    'styleXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['style.xl',] },],
+    'styleLtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['style.lt-sm',] },],
+    'styleLtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['style.lt-md',] },],
+    'styleLtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['style.lt-lg',] },],
+    'styleLtXl': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['style.lt-xl',] },],
+    'styleGtXs': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['style.gt-xs',] },],
+    'styleGtSm': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['style.gt-sm',] },],
+    'styleGtMd': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['style.gt-md',] },],
+    'styleGtLg': [{ type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["p" /* Input */], args: ['style.gt-lg',] },],
+};
 var ALL_DIRECTIVES = [
     LayoutDirective,
     LayoutWrapDirective,
@@ -24680,25 +14052,11 @@ var ALL_DIRECTIVES = [
     FlexAlignDirective,
     ShowHideDirective,
     ClassDirective,
-    StyleDirective,
-    ImgSrcDirective
+    StyleDirective
 ];
-/**
- *
- */
 var FlexLayoutModule = (function () {
     function FlexLayoutModule() {
     }
-    /**
-     * External uses can easily add custom breakpoints AND include internal orientations
-     * breakpoints; which are not available by default.
-     *
-     * !! Selector aliases are not auto-configured. Developers must subclass
-     * the API directives to support extra selectors for the orientations breakpoints !!
-     * @param {?} breakpoints
-     * @param {?=} options
-     * @return {?}
-     */
     FlexLayoutModule.provideBreakPoints = function (breakpoints, options) {
         return {
             ngModule: FlexLayoutModule,
@@ -24707,29 +14065,21 @@ var FlexLayoutModule = (function () {
             ]
         };
     };
-    FlexLayoutModule.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["b" /* NgModule */], args: [{
-                    imports: [MediaQueriesModule],
-                    exports: [MediaQueriesModule].concat(ALL_DIRECTIVES),
-                    declarations: ALL_DIRECTIVES.slice(),
-                    providers: [
-                        MEDIA_MONITOR_PROVIDER,
-                        DEFAULT_BREAKPOINTS_PROVIDER,
-                        OBSERVABLE_MEDIA_PROVIDER
-                    ]
-                },] },
-    ];
-    /**
-     * @nocollapse
-     */
-    FlexLayoutModule.ctorParameters = function () { return []; };
     return FlexLayoutModule;
 }());
-
-/**
- * Generated bundle index. Do not edit.
- */
-
+FlexLayoutModule.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_1__angular_core__["b" /* NgModule */], args: [{
+                imports: [MediaQueriesModule],
+                exports: [MediaQueriesModule].concat(ALL_DIRECTIVES),
+                declarations: ALL_DIRECTIVES.slice(),
+                providers: [
+                    MEDIA_MONITOR_PROVIDER,
+                    DEFAULT_BREAKPOINTS_PROVIDER,
+                    OBSERVABLE_MEDIA_PROVIDER
+                ]
+            },] },
+];
+FlexLayoutModule.ctorParameters = function () { return []; };
 
 //# sourceMappingURL=flex-layout.es5.js.map
 

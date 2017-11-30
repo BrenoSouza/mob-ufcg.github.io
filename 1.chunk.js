@@ -3,7 +3,7 @@ webpackJsonp([1],{
 /***/ "../../../../../src/app/cars/cars.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<app-vehicle-list></app-vehicle-list>\r\n"
+module.exports = "<app-vehicle-list></app-vehicle-list>\n"
 
 /***/ }),
 
@@ -180,7 +180,7 @@ var _a;
 /***/ "../../../../../src/app/vehicle-form-dialog/vehicle-form-dialog.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<app-vehicle-form></app-vehicle-form>"
+module.exports = "<app-vehicle-form (onClose)=\"closeDialog()\"></app-vehicle-form>"
 
 /***/ }),
 
@@ -294,7 +294,7 @@ VehicleFormDialogModule = __decorate([
 /***/ "../../../../../src/app/vehicle-form/vehicle-form.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--VEÍCULO\r\nANO\r\nPLACA\r\nMARCA-->\r\n<!--EST. DE-->\r\n\r\n<!--CONSERVAÇÃO-->\r\n\r\n<!--COMBÚSTIVEL\tCOR-->\r\n<!--CAPAC. DE-->\r\n\r\n<!--PASSAGEIROS-->\r\n\r\n<div fxLayout=\"column\">\r\n\r\n  <div class=\"form-header\" fxFlex=\"100\" fxLayout=\"column\" fxLayoutAlign=\" center\">\r\n    <h2>Registro de veículos</h2>\r\n  </div>\r\n\r\n  <form>\r\n    <div fxLayout=\"row\">\r\n      <mat-form-field fxFlex=\"25\">\r\n        <input matInput placeholder=\"Veículo\" name=\"vehicle\" [(ngModel)]=\"model.vehicle\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex=\"25\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Marca\" name=\"brand\" [(ngModel)]=\"model.brand\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Placa\" name=\"plate\" [(ngModel)]=\"model.plate\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex fxFlexOffset=\"5\">\r\n        <input type=\"number\" matInput placeholder=\"Ano\" name=\"year\" [(ngModel)]=\"model.year\"/>\r\n      </mat-form-field>\r\n    </div>\r\n\r\n    <div fxLayout=\"row\">\r\n      <mat-form-field fxFlex=\"25\">\r\n        <input matInput placeholder=\"Estado de conservação\" name=\"conservationState\" [(ngModel)]=\"model.conservationState\"/>\r\n      </mat-form-field>\r\n\r\n\r\n      <mat-form-field fxFlex=\"25\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Combustível\" name=\"fuel\" [(ngModel)]=\"model.fuel\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Cor\" name=\"color\" [(ngModel)]=\"model.color\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex fxFlexOffset=\"5\">\r\n        <input type=\"number\" matInput placeholder=\"Número de passageiros\" name=\"capacity\" [(ngModel)]=\"model.capacity\"/>\r\n      </mat-form-field>\r\n    </div>\r\n\r\n    <div fxLayoutAlign=\"end\">\r\n      <button mat-button class=\"mat-raised-button\" (click)=\"createNewVehicle()\"> Salvar </button>\r\n      <button mat-button class=\"mat-raised-button\"> Cancelar </button>\r\n    </div>\r\n\r\n  </form>\r\n\r\n</div>\r\n"
+module.exports = "<!--VEÍCULO\nANO\nPLACA\nMARCA-->\n<!--EST. DE-->\n\n<!--CONSERVAÇÃO-->\n\n<!--COMBÚSTIVEL\tCOR-->\n<!--CAPAC. DE-->\n\n<!--PASSAGEIROS-->\n\n<div fxLayout=\"column\">\n\n  <div class=\"form-header\" fxFlex=\"100\" fxLayout=\"column\" fxLayoutAlign=\" center\">\n    <h2>Registro de veículos</h2>\n  </div>\n\n  <form>\n    <div fxLayout=\"row\">\n      <mat-form-field fxFlex=\"25\">\n        <input matInput placeholder=\"Veículo\" name=\"vehicle\" [(ngModel)]=\"model.vehicle\"/>\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"25\" fxFlexOffset=\"5\">\n        <input matInput placeholder=\"Marca\" name=\"brand\" [(ngModel)]=\"model.brand\"/>\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\n        <input matInput placeholder=\"Placa\" name=\"plate\" [(ngModel)]=\"model.plate\"/>\n      </mat-form-field>\n\n      <mat-form-field fxFlex fxFlexOffset=\"5\">\n        <input type=\"number\" matInput placeholder=\"Ano\" name=\"year\" [(ngModel)]=\"model.year\"/>\n      </mat-form-field>\n    </div>\n\n    <div fxLayout=\"row\">\n      <mat-form-field fxFlex=\"25\">\n        <input matInput placeholder=\"Estado de conservação\" name=\"conservationState\" [(ngModel)]=\"model.conservationState\"/>\n      </mat-form-field>\n\n\n      <mat-form-field fxFlex=\"25\" fxFlexOffset=\"5\">\n        <input matInput placeholder=\"Combustível\" name=\"fuel\" [(ngModel)]=\"model.fuel\"/>\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\n        <input matInput placeholder=\"Cor\" name=\"color\" [(ngModel)]=\"model.color\"/>\n      </mat-form-field>\n\n      <mat-form-field fxFlex fxFlexOffset=\"5\">\n        <input type=\"number\" matInput placeholder=\"Número de passageiros\" name=\"capacity\" [(ngModel)]=\"model.capacity\"/>\n      </mat-form-field>\n    </div>\n\n    <div fxLayoutAlign=\"end\">\n      <button mat-button class=\"mat-raised-button\" color=\"primary\" (click)=\"createNewVehicle()\"> Salvar </button>\n      <button mat-button class=\"mat-raised-button\" (click)=\"closeDialog()\"> Cancelar </button>\n    </div>\n\n  </form>\n\n</div>\n"
 
 /***/ }),
 
@@ -340,6 +340,7 @@ var VehicleFormComponent = (function () {
         this.model = {};
         this.selectedVehicleStatus = 'BOM';
         this.vehicleStatus = ['BOM', 'REGULAR', 'RUIM'];
+        this.onClose = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* EventEmitter */]();
     }
     VehicleFormComponent.prototype.ngOnInit = function () {
     };
@@ -347,12 +348,21 @@ var VehicleFormComponent = (function () {
         this.selectedVehicleStatus = status;
     };
     VehicleFormComponent.prototype.createNewVehicle = function () {
+        var _this = this;
         this.vehicleService.create(this.model).subscribe(function (data) {
+            _this.onClose.emit();
             console.log(data);
         });
     };
+    VehicleFormComponent.prototype.closeDialog = function () {
+        this.onClose.emit();
+    };
     return VehicleFormComponent;
 }());
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* Output */])(),
+    __metadata("design:type", Object)
+], VehicleFormComponent.prototype, "onClose", void 0);
 VehicleFormComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
         selector: 'app-vehicle-form',
@@ -424,7 +434,7 @@ VehicleFormModule = __decorate([
 /***/ "../../../../../src/app/vehicle-list/vehicle-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n    <div *ngIf=\"vehicles\" fxLayoutAlign=\"space-between\">\r\n        <div *ngFor=\"let col of vehicles.header\" fxFlex fxLayoutAlign=\"center\">\r\n            <h4>{{ col }}</h4>\r\n        </div>\r\n    </div>\r\n    \r\n    <div *ngIf=\"vehicles\">\r\n        <mat-card *ngFor=\"let vehicle of vehicles.itemsContent\" >\r\n            <mat-card-content class=\"card-container\" fxLayout=\"column\" (click)=\"goToFull(vehicle)\">\r\n                <div fxLayoutAlign=\"space-between\">\r\n                    <div fxFlex fxLayoutAlign=\"center space-between\">\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <mat-icon>drive_eta</mat-icon>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ vehicle.vehicle }}</p>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ vehicle.plate }}</p>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ vehicle.brand }}</p>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ vehicle.capacity }}</p>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ vehicle.year }}</p>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </mat-card-content>\r\n        </mat-card>\r\n    </div>\r\n    <button class=\"mat-button\" mat-fab color=\"primary\" (click)=\"addNewVehicle()\"><mat-icon>add</mat-icon></button>    \r\n</div>"
+module.exports = "<div>\n    <div *ngIf=\"vehicles\" fxLayoutAlign=\"space-between\">\n        <div *ngFor=\"let col of vehicles.header\" fxFlex fxLayoutAlign=\"center\">\n            <h4>{{ col }}</h4>\n        </div>\n    </div>\n    \n    <div *ngIf=\"vehicles\">\n        <mat-card *ngFor=\"let vehicle of vehicles.itemsContent\" >\n            <mat-card-content class=\"card-container\" fxLayout=\"column\" (click)=\"goToFull(vehicle)\">\n                <div fxLayoutAlign=\"space-between\">\n                    <div fxFlex fxLayoutAlign=\"center space-between\">\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <mat-icon>drive_eta</mat-icon>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ vehicle.vehicle }}</p>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ vehicle.plate }}</p>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ vehicle.brand }}</p>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ vehicle.capacity }}</p>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ vehicle.year }}</p>\n                        </div>\n                    </div>\n                </div>\n            </mat-card-content>\n        </mat-card>\n    </div>\n    <button class=\"mat-button\" mat-fab color=\"primary\" (click)=\"addNewVehicle()\"><mat-icon>add</mat-icon></button>    \n</div>"
 
 /***/ }),
 

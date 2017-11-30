@@ -1,13 +1,13 @@
 webpackJsonp([3],{
 
-/***/ "../../../../../src/app/initial/initial.component.html":
+/***/ "../../../../../src/app/search-form/search-form.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxFlex=\"100\" fxLayoutAlign=\"center\">\r\n  <div fxFlex fxLayout=\"column\" fxLayoutAlign=\"space-around center\">\r\n    <app-login></app-login>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<form fxLayout=\"column\">\n  <mat-card fxLayout=\"column\" style=\"margin-top: 50px\">\n    <div fxLayout=\"row\">\n      <mat-form-field fxFlex=\"30\">\n        <input matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\">\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\n        <input matInput placeholder=\"Destino\" name=\"destination\" [(ngModel)]=\"model.destination\">\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\n        <input matInput [matDatepicker]=\"data_ida\" placeholder=\"Data Ida\" name=\"date_1\" [(ngModel)]=\"model.travelDate\">\n        <mat-datepicker-toggle matSuffix [for]=\"data_ida\"></mat-datepicker-toggle>\n        <mat-datepicker #data_ida></mat-datepicker>\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\n        <input matInput [matDatepicker]=\"data_volta\" placeholder=\"Data Volta\" name=\"date_2\"\n               [(ngModel)]=\"model.returnDate\">\n        <mat-datepicker-toggle matSuffix [for]=\"data_volta\"></mat-datepicker-toggle>\n        <mat-datepicker #data_volta></mat-datepicker>\n      </mat-form-field>\n    </div>\n\n    <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n      <button mat-raised-button class=\"md-raised\" (click)=\"search()\"> BUSCAR </button>\n    </div>\n\n  </mat-card>\n</form>\n"
 
 /***/ }),
 
-/***/ "../../../../../src/app/initial/initial.component.scss":
+/***/ "../../../../../src/app/search-form/search-form.component.scss":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
@@ -25,13 +25,13 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ "../../../../../src/app/initial/initial.component.ts":
+/***/ "../../../../../src/app/search-form/search-form.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return InitialComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_search_service__ = __webpack_require__("../../../../../src/app/services/search.service.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchFormComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -43,46 +43,53 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var InitialComponent = (function () {
-    function InitialComponent(router) {
-        this.router = router;
+var SearchFormComponent = (function () {
+    function SearchFormComponent(searchService) {
+        this.searchService = searchService;
+        this.model = {};
+        this.searchResult = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* EventEmitter */]();
     }
-    InitialComponent.prototype.newSolicitation = function () {
-        this.router.navigate(['form']);
+    SearchFormComponent.prototype.ngOnInit = function () {
     };
-    InitialComponent.prototype.showSolicitations = function () {
-        this.router.navigate(['solicitations']);
+    SearchFormComponent.prototype.search = function () {
+        var _this = this;
+        this.searchService.searchSolicitation(this.model).subscribe(function (data) {
+            _this.searchResult.emit(data.dataList);
+        }, function (error) {
+            console.error(error);
+        });
     };
-    InitialComponent.prototype.ngOnInit = function () {
-    };
-    return InitialComponent;
+    return SearchFormComponent;
 }());
-InitialComponent = __decorate([
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* Output */])(),
+    __metadata("design:type", Object)
+], SearchFormComponent.prototype, "searchResult", void 0);
+SearchFormComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
-        selector: 'app-initial',
-        template: __webpack_require__("../../../../../src/app/initial/initial.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/initial/initial.component.scss")]
+        selector: 'app-search-form',
+        template: __webpack_require__("../../../../../src/app/search-form/search-form.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/search-form/search-form.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _a || Object])
-], InitialComponent);
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__services_search_service__["a" /* SearchService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_search_service__["a" /* SearchService */]) === "function" && _a || Object])
+], SearchFormComponent);
 
 var _a;
-//# sourceMappingURL=initial.component.js.map
+//# sourceMappingURL=search-form.component.js.map
 
 /***/ }),
 
-/***/ "../../../../../src/app/initial/initial.module.ts":
+/***/ "../../../../../src/app/search-form/search-form.module.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("../../../common/@angular/common.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__initial_component__ = __webpack_require__("../../../../../src/app/initial/initial.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__search_form_component__ = __webpack_require__("../../../../../src/app/search-form/search-form.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_shared_module__ = __webpack_require__("../../../../../src/app/shared/shared.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__login_login_module__ = __webpack_require__("../../../../../src/app/login/login.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__initial_routing__ = __webpack_require__("../../../../../src/app/initial/initial.routing.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InitialModule", function() { return InitialModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__services_search_service__ = __webpack_require__("../../../../../src/app/services/search.service.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchFormModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -95,52 +102,83 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-var InitialModule = (function () {
-    function InitialModule() {
+var SearchFormModule = (function () {
+    function SearchFormModule() {
     }
-    return InitialModule;
+    return SearchFormModule;
 }());
-InitialModule = __decorate([
+SearchFormModule = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["b" /* NgModule */])({
         imports: [
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["a" /* CommonModule */],
             __WEBPACK_IMPORTED_MODULE_3__shared_shared_module__["a" /* SharedModule */],
-            __WEBPACK_IMPORTED_MODULE_4__login_login_module__["a" /* LoginModule */],
-            __WEBPACK_IMPORTED_MODULE_5__initial_routing__["a" /* initialRouting */]
+            __WEBPACK_IMPORTED_MODULE_4__angular_forms__["a" /* FormsModule */]
         ],
-        declarations: [__WEBPACK_IMPORTED_MODULE_2__initial_component__["a" /* InitialComponent */]]
+        declarations: [__WEBPACK_IMPORTED_MODULE_2__search_form_component__["a" /* SearchFormComponent */]],
+        exports: [__WEBPACK_IMPORTED_MODULE_2__search_form_component__["a" /* SearchFormComponent */]],
+        providers: [
+            __WEBPACK_IMPORTED_MODULE_5__services_search_service__["a" /* SearchService */]
+        ]
     })
-], InitialModule);
+], SearchFormModule);
 
-//# sourceMappingURL=initial.module.js.map
+//# sourceMappingURL=search-form.module.js.map
 
 /***/ }),
 
-/***/ "../../../../../src/app/initial/initial.routing.ts":
+/***/ "../../../../../src/app/services/search.service.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__initial_component__ = __webpack_require__("../../../../../src/app/initial/initial.component.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return initialRouting; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__crud_service__ = __webpack_require__("../../../../../src/app/services/crud.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_throw__ = __webpack_require__("../../../../rxjs/add/observable/throw.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_throw__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchService; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 
 
-var initialRoutes = [
-    { path: '', component: __WEBPACK_IMPORTED_MODULE_1__initial_component__["a" /* InitialComponent */] }
-];
-var initialRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* RouterModule */].forChild(initialRoutes);
-//# sourceMappingURL=initial.routing.js.map
+
+
+var SearchService = (function () {
+    function SearchService(http, crudService) {
+        this.http = http;
+        this.crudService = crudService;
+    }
+    SearchService.prototype.searchSolicitation = function (model) {
+        return this.crudService.getWithParameter('https://mobilidade-ufcg.herokuapp.com/form/search', model).map(function (response) {
+            return response;
+        });
+    };
+    return SearchService;
+}());
+SearchService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__crud_service__["a" /* CrudService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__crud_service__["a" /* CrudService */]) === "function" && _b || Object])
+], SearchService);
+
+var _a, _b;
+//# sourceMappingURL=search.service.js.map
 
 /***/ }),
 
-/***/ "../../../../../src/app/login/login.component.html":
+/***/ "../../../../../src/app/solicitations-list/solicitations-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"login-component-container\" fxLayoutAlign=\"center center\">\r\n  <div>\r\n    <mat-toolbar color=\"primary\" class=\"login-toolbar\">\r\n      <div md-dialog-title fxFlex>\r\n        <div>\r\n          <div fxFlex fxLayoutAlign=\"center center\">Entrar</div>\r\n        </div>\r\n      </div>\r\n    </mat-toolbar>\r\n    <mat-card>\r\n      <div fxLayout=\"column\" fxLayoutAlign=\"space-around\" fxLayoutGap=\"5vh\" class=\"login-content\">\r\n        <form #element=\"ngForm\">\r\n          <div md-dialog-content class=\"input-container\">\r\n            <mat-form-field fxFlex>\r\n              <input matInput placeholder=\"Email\" name=\"email\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div md-dialog-content class=\"input-container\">\r\n            <mat-form-field fxFlex>\r\n              <input matInput placeholder=\"Senha\" name=\"password\" type=\"password\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div md-dialog-actions fxLayoutGap=\"10px\" fxLayoutAlign=\"space-around center\">\r\n            <button mat-raised-button color=\"primary\" type=\"submit\" (click)=\"login()\">        \r\n              ENTRAR\r\n            </button>\r\n          </div>\r\n          <div class=\"sign-up-container\">\r\n            <span>Esqueceu a senha?</span>\r\n            <a href=\"#\">Recupere.</a>\r\n          </div>\r\n        </form>\r\n      </div>\r\n    </mat-card>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div fxLayout=\"column\">\n    <app-search-form (searchResult)=\"searchResult($event)\"></app-search-form>\n    <div *ngIf=\"solicitations\" fxLayoutAlign=\"space-between\">\n        <div *ngFor=\"let col of solicitations.header\" fxFlex fxLayoutAlign=\"center\">\n            <h4>{{ col }}</h4>\n        </div>\n    </div>\n    \n    <div *ngIf=\"!isLoadingSolicitations; else Loading\">            \n        <mat-card *ngFor=\"let solicitation of solicitations.itemsContent\">\n            <mat-card-content class=\"card-container\" fxLayout=\"column\" (click)=\"goToFull(solicitation)\">\n                <div fxLayoutAlign=\"space-between\" fxLayoutGap=\"30px\">\n                    <div fxFlex fxLayoutAlign=\"center space-between\">\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.requesterSector }}</p>\n                        </div>\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.phone }}</p>\n                        </div>\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.requestDate }}</p>\n                        </div>\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.destination }}</p>\n                        </div>\n                    </div>\n                </div>\n            </mat-card-content>\n        </mat-card>\n    </div>\n    <ng-template #Loading>\n        <mat-spinner fxFlex color=\"primary\"></mat-spinner>\n    </ng-template>\n    <app-pdf-reader></app-pdf-reader>\n</div>\n"
 
 /***/ }),
 
-/***/ "../../../../../src/app/login/login.component.scss":
+/***/ "../../../../../src/app/solicitations-list/solicitations-list.component.scss":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
@@ -148,7 +186,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".login-component-container {\n  height: 100vh; }\n  .login-component-container .login-content {\n    height: 100%;\n    padding: 24px; }\n  .login-component-container .login-btn {\n    box-shadow: none;\n    font-size: 1.0rem;\n    font-weight: 600;\n    padding: 0.5rem; }\n  .login-component-container a {\n    color: grey;\n    font-size: 1rem;\n    font-weight: 700;\n    text-decoration: none; }\n  .login-component-container .mat-dialog-title {\n    margin: 0; }\n  .login-component-container .login-invalid {\n    color: #B71C1C; }\n    .login-component-container .login-invalid p {\n      margin-left: 5px; }\n  .login-component-container .sign-up-container {\n    display: block !important;\n    text-align: center;\n    margin-top: 1em; }\n  @media screen and (max-width: 400px) {\n    .login-component-container .keep-connected-container {\n      margin-right: 0 !important; } }\n", ""]);
+exports.push([module.i, ".mat-card {\n  padding: 0; }\n  .mat-card:hover {\n    cursor: pointer;\n    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.12), 0 10px 10px rgba(0, 0, 0, 0.24);\n    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }\n  .mat-card .img-container {\n    height: 50px;\n    padding: 7px 0; }\n    .mat-card .img-container img {\n      border-radius: 50%;\n      height: 50px;\n      width: 50px; }\n  .mat-card .is-link {\n    cursor: pointer; }\n  .mat-card p {\n    margin: 0;\n    padding: 24px 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap; }\n\n.card-container {\n  margin: 10px 10px 15px 10px !important; }\n\nmat-spinner {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  margin-top: -50px;\n  margin-left: -50px; }\n", ""]);
 
 // exports
 
@@ -158,13 +196,14 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ "../../../../../src/app/login/login.component.ts":
+/***/ "../../../../../src/app/solicitations-list/solicitations-list.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_form_service__ = __webpack_require__("../../../../../src/app/services/form.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SolicitationsListComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -176,43 +215,70 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var LoginComponent = (function () {
-    function LoginComponent(router) {
-        this.router = router;
-        this.model = {};
-    }
-    LoginComponent.prototype.ngOnInit = function () {
-    };
-    LoginComponent.prototype.login = function () {
-        this.router.navigate(['home']);
-    };
-    return LoginComponent;
-}());
-LoginComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
-        selector: 'app-login',
-        template: __webpack_require__("../../../../../src/app/login/login.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/login/login.component.scss")]
-    }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _a || Object])
-], LoginComponent);
 
-var _a;
-//# sourceMappingURL=login.component.js.map
+var SolicitationsListComponent = (function () {
+    function SolicitationsListComponent(formService, router) {
+        this.formService = formService;
+        this.router = router;
+        this.isLoadingSolicitations = true;
+    }
+    SolicitationsListComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.solicitations = {
+            header: ['Requisitante', 'Telefone', 'Data', 'Destino'],
+            itemsContent: []
+        };
+        this.formService.solicitationObs.subscribe(function (data) {
+            for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
+                var solicitationData = data_1[_i];
+                _this.solicitations.itemsContent.push(solicitationData);
+            }
+            _this.isLoadingSolicitations = false;
+        });
+    };
+    SolicitationsListComponent.prototype.goToFull = function (solicitation) {
+        this.router.navigate(['/solicitation', { id: solicitation.id }]);
+    };
+    SolicitationsListComponent.prototype.uploadSolicitation = function (fileInput) {
+    };
+    SolicitationsListComponent.prototype.searchResult = function (value) {
+        console.log(value);
+        this.solicitations.itemsContent = [];
+        for (var _i = 0, _a = value.dataList; _i < _a.length; _i++) {
+            var solicitationData = _a[_i];
+            this.solicitations.itemsContent.push(solicitationData);
+        }
+    };
+    return SolicitationsListComponent;
+}());
+SolicitationsListComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
+        selector: 'app-solicitations-list',
+        template: __webpack_require__("../../../../../src/app/solicitations-list/solicitations-list.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/solicitations-list/solicitations-list.component.scss")]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__services_form_service__["a" /* FormService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_form_service__["a" /* FormService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === "function" && _b || Object])
+], SolicitationsListComponent);
+
+var _a, _b;
+//# sourceMappingURL=solicitations-list.component.js.map
 
 /***/ }),
 
-/***/ "../../../../../src/app/login/login.module.ts":
+/***/ "../../../../../src/app/solicitations-list/solicitations-list.module.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("../../../common/@angular/common.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_shared_module__ = __webpack_require__("../../../../../src/app/shared/shared.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_material_toolbar__ = __webpack_require__("../../../material/esm5/toolbar.es5.js");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__solicitations_list_component__ = __webpack_require__("../../../../../src/app/solicitations-list/solicitations-list.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__solicitations_list_rounting__ = __webpack_require__("../../../../../src/app/solicitations-list/solicitations-list.rounting.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_shared_module__ = __webpack_require__("../../../../../src/app/shared/shared.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__services_form_service__ = __webpack_require__("../../../../../src/app/services/form.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pdf_reader_pdf_reader_module__ = __webpack_require__("../../../../../src/app/pdf-reader/pdf-reader.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__search_form_search_form_module__ = __webpack_require__("../../../../../src/app/search-form/search-form.module.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SolicitationsListModule", function() { return SolicitationsListModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -225,27 +291,49 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-var LoginModule = (function () {
-    function LoginModule() {
+
+
+var SolicitationsListModule = (function () {
+    function SolicitationsListModule() {
     }
-    return LoginModule;
+    return SolicitationsListModule;
 }());
-LoginModule = __decorate([
+SolicitationsListModule = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["b" /* NgModule */])({
         imports: [
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["a" /* CommonModule */],
-            __WEBPACK_IMPORTED_MODULE_3__shared_shared_module__["a" /* SharedModule */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_forms__["a" /* FormsModule */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_material_toolbar__["a" /* MatToolbarModule */]
+            __WEBPACK_IMPORTED_MODULE_3__solicitations_list_rounting__["a" /* solicitationsRouting */],
+            __WEBPACK_IMPORTED_MODULE_4__shared_shared_module__["a" /* SharedModule */],
+            __WEBPACK_IMPORTED_MODULE_6__pdf_reader_pdf_reader_module__["a" /* PdfReaderModule */],
+            __WEBPACK_IMPORTED_MODULE_7__search_form_search_form_module__["a" /* SearchFormModule */]
         ],
-        declarations: [__WEBPACK_IMPORTED_MODULE_2__login_component__["a" /* LoginComponent */]],
-        exports: [
-            __WEBPACK_IMPORTED_MODULE_2__login_component__["a" /* LoginComponent */]
+        declarations: [__WEBPACK_IMPORTED_MODULE_2__solicitations_list_component__["a" /* SolicitationsListComponent */]],
+        providers: [
+            __WEBPACK_IMPORTED_MODULE_5__services_form_service__["a" /* FormService */]
         ]
     })
-], LoginModule);
+], SolicitationsListModule);
 
-//# sourceMappingURL=login.module.js.map
+//# sourceMappingURL=solicitations-list.module.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/solicitations-list/solicitations-list.rounting.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__solicitations_list_component__ = __webpack_require__("../../../../../src/app/solicitations-list/solicitations-list.component.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return solicitationsRouting; });
+
+
+var solicitationsRoutes = [
+    {
+        path: '', component: __WEBPACK_IMPORTED_MODULE_1__solicitations_list_component__["a" /* SolicitationsListComponent */]
+    }
+];
+var solicitationsRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* RouterModule */].forChild(solicitationsRoutes);
+//# sourceMappingURL=solicitations-list.rounting.js.map
 
 /***/ })
 

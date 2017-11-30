@@ -21,12 +21,12 @@ var map = {
 	],
 	"app/home/home.module": [
 		"../../../../../src/app/home/home.module.ts",
-		4,
+		5,
 		0
 	],
 	"app/initial/initial.module": [
 		"../../../../../src/app/initial/initial.module.ts",
-		3,
+		4,
 		0
 	],
 	"app/solicitation/solicitation.module": [
@@ -36,7 +36,7 @@ var map = {
 	],
 	"app/solicitations-list/solicitations-list.module": [
 		"../../../../../src/app/solicitations-list/solicitations-list.module.ts",
-		5,
+		3,
 		0
 	]
 };
@@ -99,7 +99,7 @@ AppRoutingModule = __decorate([
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"main-app\">\r\n    <router-outlet></router-outlet>\r\n</div>\r\n"
+module.exports = "<div class=\"main-app\">\n    <router-outlet></router-outlet>\n</div>\n"
 
 /***/ }),
 

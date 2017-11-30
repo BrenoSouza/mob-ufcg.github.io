@@ -3,7 +3,7 @@ webpackJsonp([2],{
 /***/ "../../../../../src/app/drivers-form-dialog/drivers-form-dialog.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<app-drivers-form></app-drivers-form>"
+module.exports = "<app-drivers-form (onClose)=\"closeDialog()\"></app-drivers-form>"
 
 /***/ }),
 
@@ -30,6 +30,7 @@ module.exports = module.exports.toString();
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DriversFormDialogComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -41,10 +42,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
 var DriversFormDialogComponent = (function () {
-    function DriversFormDialogComponent() {
+    function DriversFormDialogComponent(dialogRef) {
+        this.dialogRef = dialogRef;
     }
     DriversFormDialogComponent.prototype.ngOnInit = function () {
+    };
+    DriversFormDialogComponent.prototype.closeDialog = function () {
+        this.dialogRef.close();
     };
     return DriversFormDialogComponent;
 }());
@@ -54,9 +60,10 @@ DriversFormDialogComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/drivers-form-dialog/drivers-form-dialog.component.html"),
         styles: [__webpack_require__("../../../../../src/app/drivers-form-dialog/drivers-form-dialog.component.scss")]
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["i" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["i" /* MatDialogRef */]) === "function" && _a || Object])
 ], DriversFormDialogComponent);
 
+var _a;
 //# sourceMappingURL=drivers-form-dialog.component.js.map
 
 /***/ }),
@@ -113,7 +120,7 @@ DriversFormDialogModule = __decorate([
 /***/ "../../../../../src/app/drivers-form/drivers-form.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\">\n  \n  <div class=\"form-header\" fxFlex=\"100\" fxLayout=\"column\" fxLayoutAlign=\" center\">\n    <h2>Registro de Motorista</h2>\n  </div>\n  \n  <form>\n    <div fxLayout=\"column\">\n      <mat-form-field fxFlex=\"100\">\n        <input fxFlex matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\"/>\n      </mat-form-field>\n      <mat-form-field fxFlex>\n        <input matInput placeholder=\"Endereço\" name=\"address\" [(ngModel)]=\"model.adderss\"/>\n      </mat-form-field>\n      \n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\n        <mat-form-field fxFlex>\n          <input type=\"text\" matInput placeholder=\"Telefone\" name=\"phone\" [(ngModel)]=\"model.phone\"/>\n        </mat-form-field>\n        <mat-form-field fxFlex>\n          <input type=\"number\" matInput placeholder=\"Registro\" name=\"registration\" [(ngModel)]=\"model.registration\"/>\n        </mat-form-field>\n      </div>\n\n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\n        <mat-form-field fxFlex>\n          <input matInput placeholder=\"Cpf\" name=\"cpf\" [(ngModel)]=\"model.cpf\"/>\n        </mat-form-field>\n\n        <mat-form-field fxFlex>\n          <input matInput placeholder=\"Cnh\" name=\"cnh\" [(ngModel)]=\"model.cnh\"/>\n        </mat-form-field>\n      </div>\n      \n    </div>\n    <div fxLayoutAlign=\"end\">\n      <button mat-button class=\"mat-raised-button\" (click)=\"addNewDriver()\"> Salvar </button>\n      <button mat-button class=\"mat-raised-button\"> Cancelar </button>\n    </div>\n    \n  </form>\n  \n</div>\n"
+module.exports = "<div fxLayout=\"column\">\n  \n  <div class=\"form-header\" fxFlex=\"100\" fxLayout=\"column\" fxLayoutAlign=\" center\">\n    <h2>Registro de Motorista</h2>\n  </div>\n  \n  <form>\n    <div fxLayout=\"column\">\n      <mat-form-field fxFlex=\"100\">\n        <input fxFlex matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\"/>\n      </mat-form-field>\n      <mat-form-field fxFlex>\n        <input matInput placeholder=\"Endereço\" name=\"address\" [(ngModel)]=\"model.adderss\"/>\n      </mat-form-field>\n      \n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\n        <mat-form-field fxFlex>\n          <input type=\"text\" matInput placeholder=\"Telefone\" name=\"phone\" [(ngModel)]=\"model.phone\"/>\n        </mat-form-field>\n        <mat-form-field fxFlex>\n          <input type=\"number\" matInput placeholder=\"Registro\" name=\"registration\" [(ngModel)]=\"model.registration\"/>\n        </mat-form-field>\n      </div>\n\n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\n        <mat-form-field fxFlex>\n          <input matInput placeholder=\"Cpf\" name=\"cpf\" [(ngModel)]=\"model.cpf\"/>\n        </mat-form-field>\n\n        <mat-form-field fxFlex>\n          <input matInput placeholder=\"Cnh\" name=\"cnh\" [(ngModel)]=\"model.cnh\"/>\n        </mat-form-field>\n      </div>\n      \n    </div>\n    <div fxLayoutAlign=\"end\">\n      <button mat-button class=\"mat-raised-button\" color=\"primary\" (click)=\"addNewDriver()\"> Salvar </button>\n      <button mat-button class=\"mat-raised-button\" (click)=\"closeDialog()\"> Cancelar </button>\n    </div>\n    \n  </form>\n  \n</div>\n"
 
 /***/ }),
 
@@ -157,16 +164,26 @@ var DriversFormComponent = (function () {
     function DriversFormComponent(driverService) {
         this.driverService = driverService;
         this.model = {};
+        this.onClose = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* EventEmitter */]();
     }
     DriversFormComponent.prototype.ngOnInit = function () {
     };
     DriversFormComponent.prototype.addNewDriver = function () {
+        var _this = this;
         this.driverService.create(this.model).subscribe(function (data) {
             console.log(data);
+            _this.onClose.emit();
         });
+    };
+    DriversFormComponent.prototype.closeDialog = function () {
+        this.onClose.emit();
     };
     return DriversFormComponent;
 }());
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* Output */])(),
+    __metadata("design:type", Object)
+], DriversFormComponent.prototype, "onClose", void 0);
 DriversFormComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
         selector: 'app-drivers-form',
@@ -235,7 +252,7 @@ DriversFormModule = __decorate([
 /***/ "../../../../../src/app/drivers-list/drivers-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n    <div *ngIf=\"drivers\" fxLayoutAlign=\"space-between\">\r\n        <div *ngFor=\"let col of drivers.header\" fxFlex fxLayoutAlign=\"center\">\r\n            <h4>{{ col }}</h4>\r\n        </div>\r\n    </div>\r\n    \r\n    <div *ngIf=\"drivers\">\r\n        <mat-card *ngFor=\"let driver of drivers.itemsContent\">\r\n            <mat-card-content class=\"card-container\" fxLayout=\"column\">\r\n                <div fxLayoutAlign=\"space-between\" fxLayoutGap=\"30px\">\r\n                    <div fxFlex fxLayoutAlign=\"center space-between\">\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <mat-icon>person</mat-icon>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ driver.name }}</p>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ driver.cpf }}</p>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ driver.cnh }}</p>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ driver.registration }}</p>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </mat-card-content>\r\n        </mat-card>\r\n        <button class=\"mat-button\" mat-fab color=\"primary\" (click)=\"addNewDriver()\"><mat-icon>add</mat-icon></button>    \r\n    </div>\r\n</div>"
+module.exports = "<div>\n    <div *ngIf=\"drivers\" fxLayoutAlign=\"space-between\">\n        <div *ngFor=\"let col of drivers.header\" fxFlex fxLayoutAlign=\"center\">\n            <h4>{{ col }}</h4>\n        </div>\n    </div>\n    \n    <div *ngIf=\"drivers\">\n        <mat-card *ngFor=\"let driver of drivers.itemsContent\">\n            <mat-card-content class=\"card-container\" fxLayout=\"column\">\n                <div fxLayoutAlign=\"space-between\" fxLayoutGap=\"30px\">\n                    <div fxFlex fxLayoutAlign=\"center space-between\">\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <mat-icon>person</mat-icon>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ driver.name }}</p>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ driver.cpf }}</p>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ driver.cnh }}</p>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ driver.registration }}</p>\n                        </div>\n                    </div>\n                </div>\n            </mat-card-content>\n        </mat-card>\n        <button class=\"mat-button\" mat-fab color=\"primary\" (click)=\"addNewDriver()\"><mat-icon>add</mat-icon></button>    \n    </div>\n</div>"
 
 /***/ }),
 
@@ -247,7 +264,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".mat-card {\n  padding: 10px 0px 0px 0px; }\n  .mat-card:hover {\n    cursor: pointer;\n    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.12), 0 10px 10px rgba(0, 0, 0, 0.24);\n    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }\n\n.mat-button {\n  position: fixed;\n  bottom: 50px;\n  right: 50px; }\n\n.md-content {\n  display: block;\n  max-height: calc(100% - 64px);\n  margin-top: 64px;\n  overflow: auto;\n  overflow-x: hidden;\n  width: 100%; }\n\n.card-container {\n  margin: 15px !important; }\n", ""]);
+exports.push([module.i, ".mat-card {\n  padding: 5px 0px 5px 0px; }\n  .mat-card:hover {\n    cursor: pointer;\n    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.12), 0 10px 10px rgba(0, 0, 0, 0.24);\n    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }\n\n.mat-button {\n  position: fixed;\n  bottom: 50px;\n  right: 50px; }\n\n.md-content {\n  display: block;\n  max-height: calc(100% - 64px);\n  margin-top: 64px;\n  overflow: auto;\n  overflow-x: hidden;\n  width: 100%; }\n\n.card-container {\n  margin: 5px !important; }\n", ""]);
 
 // exports
 
