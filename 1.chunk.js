@@ -237,7 +237,7 @@ VehicleFormDialogComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/vehicle-form-dialog/vehicle-form-dialog.component.html"),
         styles: [__webpack_require__("../../../../../src/app/vehicle-form-dialog/vehicle-form-dialog.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["i" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["i" /* MatDialogRef */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["k" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["k" /* MatDialogRef */]) === "function" && _a || Object])
 ], VehicleFormDialogComponent);
 
 var _a;

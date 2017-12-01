@@ -31,6 +31,7 @@ module.exports = module.exports.toString();
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_search_service__ = __webpack_require__("../../../../../src/app/services/search.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_solicitation_model__ = __webpack_require__("../../../../../src/app/models/solicitation.model.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchFormComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -43,10 +44,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var SearchFormComponent = (function () {
     function SearchFormComponent(searchService) {
         this.searchService = searchService;
-        this.model = {};
+        this.model = new __WEBPACK_IMPORTED_MODULE_2__models_solicitation_model__["a" /* Solicitation */];
         this.searchResult = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* EventEmitter */]();
     }
     SearchFormComponent.prototype.ngOnInit = function () {
@@ -155,6 +157,18 @@ var SearchService = (function () {
         this.crudService = crudService;
     }
     SearchService.prototype.searchSolicitation = function (model) {
+        if (model.travelDate) {
+            model.travelDate = new Date(model.travelDate).toISOString();
+        }
+        else {
+            model.travelDate = '';
+        }
+        if (model.returnDate) {
+            model.returnDate = new Date(model.returnDate).toISOString();
+        }
+        else {
+            model.returnDate = '';
+        }
         return this.crudService.getWithParameter('https://mobilidade-ufcg.herokuapp.com/form/search', model).map(function (response) {
             return response;
         });
@@ -174,7 +188,7 @@ var _a, _b;
 /***/ "../../../../../src/app/solicitations-list/solicitations-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\">\n    <app-search-form (searchResult)=\"searchResult($event)\"></app-search-form>\n    <div *ngIf=\"solicitations\" fxLayoutAlign=\"space-between\">\n        <div *ngFor=\"let col of solicitations.header\" fxFlex fxLayoutAlign=\"center\">\n            <h4>{{ col }}</h4>\n        </div>\n    </div>\n    \n    <div *ngIf=\"!isLoadingSolicitations; else Loading\">            \n        <mat-card *ngFor=\"let solicitation of solicitations.itemsContent\">\n            <mat-card-content class=\"card-container\" fxLayout=\"column\" (click)=\"goToFull(solicitation)\">\n                <div fxLayoutAlign=\"space-between\" fxLayoutGap=\"30px\">\n                    <div fxFlex fxLayoutAlign=\"center space-between\">\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.requesterSector }}</p>\n                        </div>\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.phone }}</p>\n                        </div>\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.requestDate }}</p>\n                        </div>\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.destination }}</p>\n                        </div>\n                    </div>\n                </div>\n            </mat-card-content>\n        </mat-card>\n    </div>\n    <ng-template #Loading>\n        <mat-spinner fxFlex color=\"primary\"></mat-spinner>\n    </ng-template>\n    <app-pdf-reader></app-pdf-reader>\n</div>\n"
+module.exports = "<div fxLayout=\"column\">\n    <app-search-form (searchResult)=\"searchResult($event)\"></app-search-form>\n    <div *ngIf=\"solicitations\" fxLayoutAlign=\"space-between\">\n        <div *ngFor=\"let col of solicitations.header\" fxFlex fxLayoutAlign=\"center\">\n            <h4>{{ col }}</h4>\n        </div>\n    </div>\n    \n    <div *ngIf=\"!isLoadingSolicitations; else Loading\">            \n        <mat-card *ngFor=\"let solicitation of solicitations.itemsContent\">\n            <mat-card-content class=\"card-container\" fxLayout=\"column\" (click)=\"goToFull(solicitation)\">\n                <div fxLayoutAlign=\"space-between\" fxLayoutGap=\"30px\">\n                    <div fxFlex fxLayoutAlign=\"center space-between\">\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.requesterSector }}</p>\n                        </div>\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.phone }}</p>\n                        </div>\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.requestDate }}</p>\n                        </div>\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.destination }}</p>\n                        </div>\n                    </div>\n                </div>\n            </mat-card-content>\n        </mat-card>\n    </div>\n    <ng-template #Loading>\n        <mat-spinner fxFlex color=\"primary\"></mat-spinner>\n    </ng-template>\n    <app-pdf-reader (newSolicitation)=\"newSolicitation($event)\"></app-pdf-reader>\n</div>\n"
 
 /***/ }),
 
@@ -223,11 +237,15 @@ var SolicitationsListComponent = (function () {
         this.isLoadingSolicitations = true;
     }
     SolicitationsListComponent.prototype.ngOnInit = function () {
-        var _this = this;
         this.solicitations = {
             header: ['Requisitante', 'Telefone', 'Data', 'Destino'],
             itemsContent: []
         };
+        this.showSolicitations();
+    };
+    SolicitationsListComponent.prototype.showSolicitations = function () {
+        var _this = this;
+        this.solicitations.itemsContent = [];
         this.formService.solicitationObs.subscribe(function (data) {
             for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
                 var solicitationData = data_1[_i];
@@ -239,13 +257,13 @@ var SolicitationsListComponent = (function () {
     SolicitationsListComponent.prototype.goToFull = function (solicitation) {
         this.router.navigate(['/solicitation', { id: solicitation.id }]);
     };
-    SolicitationsListComponent.prototype.uploadSolicitation = function (fileInput) {
+    SolicitationsListComponent.prototype.newSolicitation = function (value) {
+        this.showSolicitations();
     };
     SolicitationsListComponent.prototype.searchResult = function (value) {
-        console.log(value);
         this.solicitations.itemsContent = [];
-        for (var _i = 0, _a = value.dataList; _i < _a.length; _i++) {
-            var solicitationData = _a[_i];
+        for (var _i = 0, value_1 = value; _i < value_1.length; _i++) {
+            var solicitationData = value_1[_i];
             this.solicitations.itemsContent.push(solicitationData);
         }
     };

@@ -98,7 +98,7 @@ HeaderModule = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["b" /* NgModule */])({
         imports: [
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["a" /* CommonModule */],
-            __WEBPACK_IMPORTED_MODULE_3__angular_material__["m" /* MatToolbarModule */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_material__["o" /* MatToolbarModule */],
             __WEBPACK_IMPORTED_MODULE_4__shared_shared_module__["a" /* SharedModule */]
         ],
         declarations: [__WEBPACK_IMPORTED_MODULE_2__header_component__["a" /* HeaderComponent */]],
@@ -222,7 +222,7 @@ HomeModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_4__angular_material__["d" /* MatButtonModule */],
             __WEBPACK_IMPORTED_MODULE_5__home_routing__["a" /* homeRouting */],
             __WEBPACK_IMPORTED_MODULE_6__header_header_module__["a" /* HeaderModule */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_material__["l" /* MatTabsModule */]
+            __WEBPACK_IMPORTED_MODULE_4__angular_material__["n" /* MatTabsModule */]
         ],
         declarations: [__WEBPACK_IMPORTED_MODULE_2__home_component__["a" /* HomeComponent */]]
     })
