@@ -120,7 +120,7 @@ DriversFormDialogModule = __decorate([
 /***/ "../../../../../src/app/drivers-form/drivers-form.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\">\n  \n  <div class=\"form-header\" fxFlex=\"100\" fxLayout=\"column\" fxLayoutAlign=\" center\">\n    <h2>Registro de Motorista</h2>\n  </div>\n  \n  <form>\n    <div fxLayout=\"column\">\n      <mat-form-field fxFlex=\"100\">\n        <input fxFlex matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\"/>\n      </mat-form-field>\n      <mat-form-field fxFlex>\n        <input matInput placeholder=\"Endereço\" name=\"address\" [(ngModel)]=\"model.adderss\"/>\n      </mat-form-field>\n      \n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\n        <mat-form-field fxFlex>\n          <input type=\"text\" matInput placeholder=\"Telefone\" name=\"phone\" [(ngModel)]=\"model.phone\"/>\n        </mat-form-field>\n        <mat-form-field fxFlex>\n          <input type=\"number\" matInput placeholder=\"Registro\" name=\"registration\" [(ngModel)]=\"model.registration\"/>\n        </mat-form-field>\n      </div>\n\n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\n        <mat-form-field fxFlex>\n          <input matInput placeholder=\"Cpf\" name=\"cpf\" [(ngModel)]=\"model.cpf\"/>\n        </mat-form-field>\n\n        <mat-form-field fxFlex>\n          <input matInput placeholder=\"Cnh\" name=\"cnh\" [(ngModel)]=\"model.cnh\"/>\n        </mat-form-field>\n      </div>\n      \n    </div>\n    <div fxLayoutAlign=\"end\">\n      <button mat-button class=\"mat-raised-button\" color=\"primary\" (click)=\"addNewDriver()\"> Salvar </button>\n      <button mat-button class=\"mat-raised-button\" (click)=\"closeDialog()\"> Cancelar </button>\n    </div>\n    \n  </form>\n  \n</div>\n"
+module.exports = "<div fxLayout=\"column\">\n  \n  <div class=\"form-header\" fxFlex=\"100\" fxLayout=\"column\" fxLayoutAlign=\" center\">\n    <h2>Registro de Motorista</h2>\n  </div>\n  \n  <form>\n    <div fxLayout=\"column\">\n      <mat-form-field fxFlex=\"100\">\n        <input fxFlex matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\"/>\n      </mat-form-field>\n      <mat-form-field fxFlex>\n        <input matInput placeholder=\"Endereço\" name=\"address\" [(ngModel)]=\"model.address\"/>\n      </mat-form-field>\n      \n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\n        <mat-form-field fxFlex>\n          <input type=\"text\" matInput placeholder=\"Telefone\" name=\"phone\" [(ngModel)]=\"model.phone\"/>\n        </mat-form-field>\n        <mat-form-field fxFlex>\n          <input type=\"number\" matInput placeholder=\"Registro\" name=\"registration\" [(ngModel)]=\"model.registration\"/>\n        </mat-form-field>\n      </div>\n\n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\n        <mat-form-field fxFlex>\n          <input matInput placeholder=\"Cpf\" name=\"cpf\" [(ngModel)]=\"model.cpf\"/>\n        </mat-form-field>\n\n        <mat-form-field fxFlex>\n          <input matInput placeholder=\"Cnh\" name=\"cnh\" [(ngModel)]=\"model.cnh\"/>\n        </mat-form-field>\n      </div>\n      \n    </div>\n    <div fxLayoutAlign=\"end\">\n      <button mat-button class=\"mat-raised-button\" color=\"primary\" (click)=\"addNewDriver()\"> Salvar </button>\n      <button mat-button class=\"mat-raised-button\" (click)=\"closeDialog()\"> Cancelar </button>\n    </div>\n    \n  </form>\n  \n</div>\n"
 
 /***/ }),
 
@@ -171,7 +171,6 @@ var DriversFormComponent = (function () {
     DriversFormComponent.prototype.addNewDriver = function () {
         var _this = this;
         this.driverService.create(this.model).subscribe(function (data) {
-            console.log(data);
             _this.onClose.emit();
         });
     };
@@ -264,7 +263,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".mat-card {\n  padding: 5px 0px 5px 0px; }\n  .mat-card:hover {\n    cursor: pointer;\n    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.12), 0 10px 10px rgba(0, 0, 0, 0.24);\n    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }\n\n.mat-button {\n  position: fixed;\n  bottom: 50px;\n  right: 50px; }\n\n.md-content {\n  display: block;\n  max-height: calc(100% - 64px);\n  margin-top: 64px;\n  overflow: auto;\n  overflow-x: hidden;\n  width: 100%; }\n\n.card-container {\n  margin: 5px !important; }\n", ""]);
+exports.push([module.i, ".mat-card {\n  padding: 0; }\n  .mat-card:hover {\n    cursor: pointer;\n    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.12), 0 10px 10px rgba(0, 0, 0, 0.24);\n    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }\n  .mat-card p {\n    margin: 0;\n    padding: 24px 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap; }\n\n.mat-button {\n  position: fixed;\n  bottom: 50px;\n  right: 50px; }\n\n.md-content {\n  display: block;\n  max-height: calc(100% - 64px);\n  margin-top: 64px;\n  overflow: auto;\n  overflow-x: hidden;\n  width: 100%; }\n\n.card-container {\n  margin: 10px !important; }\n", ""]);
 
 // exports
 
@@ -402,58 +401,6 @@ var driversListRoutes = [
 ];
 var driversListRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* RouterModule */].forChild(driversListRoutes);
 //# sourceMappingURL=drivers-list.routing.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/services/driver.service.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__crud_service__ = __webpack_require__("../../../../../src/app/services/crud.service.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DriverService; });
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-var DriverService = (function () {
-    function DriverService(crudService) {
-        this.crudService = crudService;
-        this.driversObs = crudService.get('https://mobilidade-ufcg.herokuapp.com/driver').map(function (response) {
-            var drivers = [];
-            for (var _i = 0, _a = response.dataList; _i < _a.length; _i++) {
-                var driverData = _a[_i];
-                drivers.push(driverData);
-            }
-            return drivers;
-        });
-    }
-    DriverService.prototype.create = function (model) {
-        return this.crudService.post('https://mobilidade-ufcg.herokuapp.com/driver', model);
-    };
-    DriverService.prototype.getById = function (id) {
-        return this.crudService.get('https://mobilidade-ufcg.herokuapp.com/driver/' + id).map(function (response) {
-            var driver;
-            driver = (response.data);
-            return driver;
-        });
-    };
-    return DriverService;
-}());
-DriverService = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__crud_service__["a" /* CrudService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__crud_service__["a" /* CrudService */]) === "function" && _a || Object])
-], DriverService);
-
-var _a;
-//# sourceMappingURL=driver.service.js.map
 
 /***/ })
 

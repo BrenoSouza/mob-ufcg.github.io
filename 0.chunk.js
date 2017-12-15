@@ -32,6 +32,7 @@ var SolicitationParser = (function () {
             solicitation.name = data.name;
             solicitation.arrivalTime = data.arrivalTime;
             solicitation.airCompany = data.airCompany;
+            solicitation.address = data.address;
             solicitation.travelOrigin = data.travelOrigin;
             solicitation.travelDate = data.travelDate;
             solicitation.returnHour = data.returnHour;
@@ -52,6 +53,7 @@ var SolicitationParser = (function () {
     };
     SolicitationParser.parseToJSON = function (solicitation) {
         var outputJSON = {
+            address: solicitation.address,
             arrivalTime: solicitation.arrivalTime,
             departureHour: solicitation.departureHour,
             departurePoint: solicitation.departurePoint,
@@ -146,28 +148,40 @@ var PdfReaderComponent = (function () {
         // service.enviarPdf(this.file)
         this.formService.extractText(formData)
             .subscribe(function (data) {
-            _this.text = data.data;
-            _this.formService.create(_this.processString())
-                .subscribe(function (data1) {
-                var snackBarRef = _this.snackBar.open('Solicitação adicionada!');
-                _this.newSolicitation.emit();
-            }, function (error) {
-                var snackBarRef = _this.snackBar.open('Ocorreu algum problema no envio da solicitação!');
-            });
+            _this.text = data.data[0];
+            _this.processString();
+            _this.processString();
+            if (_this.metadata.requesterSector || _this.metadata.requesterSector !== null) {
+                _this.formService.create(_this.metadata)
+                    .subscribe(function (data1) {
+                    var snackBarRef = _this.snackBar.open('Solicitação adicionada!', 'OK', { duration: 3000 });
+                    _this.newSolicitation.emit();
+                }, function (error) {
+                    var snackBarRef = _this.snackBar.open('Ocorreu algum problema no envio da solicitação!', 'Reenviar', { duration: 3000 });
+                });
+            }
+            else {
+                var snackBarRef = _this.snackBar.open('Ocorreu algum problema no envio da solicitação!', 'Reenviar', { duration: 3000 });
+            }
             _this.isLoadingPDF = false;
         }, function (error) {
             console.log(error);
         });
     };
+    PdfReaderComponent.prototype.isValid = function (texto) {
+        if (texto.indexOf('1. OBJETIVO') === -1 && texto.indexOf('2. DADOS DO PASSAGEIRO') === -1
+            && texto.indexOf('3. DATA/HORA DA VIAGEM') === -1) {
+            return false;
+        }
+        return true;
+    };
     // aqui retorna o objeto contendo as informacoes extraidas do pdf
-    // "Do what you gotta do." - CASTLE, Frank.
     PdfReaderComponent.prototype.processString = function () {
         var str = this.text;
         var vec = str.split('\n');
-        console.log(str);
-        // console.log(vec);
+        console.log(vec);
         var dadosPassageiros = this.getDadosPassageiros(vec);
-        this.metadata.name = dadosPassageiros[0];
+        this.metadata.name = this.getNomeSolicitante(vec);
         this.metadata.phone = dadosPassageiros[1];
         this.metadata.airCompany = 'None';
         this.metadata.departurePoint = 'None';
@@ -177,27 +191,45 @@ var PdfReaderComponent = (function () {
         this.metadata.travelOrigin = 'None';
         this.metadata.id = 0;
         // this.metadata.numeroProcesso    = this.getNumeroProcesso(vec);
-        this.metadata.requesterSector = this.getSetorRequisitante(vec);
+        var reqVector = this.getSetorRequisitante(vec);
+        this.metadata.requesterSector = reqVector[0];
+        this.metadata.requestDate = reqVector[1];
         this.metadata.destination = this.getDestino(vec);
         this.metadata.purpose = this.getObjetivo(vec);
         var datas = this.getDatas(vec);
-        this.metadata.travelDate = '2017-11-24T12:23:41.776Z';
-        this.metadata.returnDate = '2017-11-24T12:23:41.776Z';
+        this.metadata.travelDate = this.transformDate(datas[0]);
+        this.metadata.returnDate = this.transformDate(datas[1]);
         var horarios = this.getHorarios(vec);
-        this.metadata.departureHour = '2017-11-24T12:23:41.776Z';
-        this.metadata.returnHour = '2017-11-24T12:23:41.776Z';
-        this.metadata.adress = this.getEndereco(vec);
+        this.metadata.departureHour = this.transformHour(horarios[0]);
+        this.metadata.returnHour = this.transformHour(horarios[1]);
+        this.metadata.address = this.getEndereco(vec);
         this.metadata.driverSectorResponsibility = this.getSetorResponsavelDiaria(vec);
         this.metadata.requestJustification = this.getJustificativa(vec);
-        // console.log(this.metadata);
+        console.log(this.metadata);
         return this.metadata;
     };
-    PdfReaderComponent.prototype.transformData = function (data) {
+    PdfReaderComponent.prototype.transformHour = function (hour) {
+        return "2000-01-01T" + hour + ":00";
+    };
+    PdfReaderComponent.prototype.transformDate = function (data) {
         var date = data.split('/');
         date.reverse();
-        return date.join('/');
+        return date.join('-') + "T00:00:00";
     };
-    // só loucura daqui pra baixo
+    PdfReaderComponent.prototype.getNomeSolicitante = function (vec) {
+        var first = 'previsto ';
+        var last = 'Brasília';
+        var nomeSolicitanteVec = this.findBetweenVectors(first, last, vec).trim().split(' ');
+        var nomeSolicitante = '';
+        for (var i = 4; i < nomeSolicitanteVec.length; i++) {
+            if (nomeSolicitanteVec[i].endsWith(',')) {
+                nomeSolicitante += nomeSolicitanteVec[i].substr(0, nomeSolicitanteVec[i].length - 1);
+                break;
+            }
+            nomeSolicitante += nomeSolicitanteVec[i] + ' ';
+        }
+        return nomeSolicitante;
+    };
     PdfReaderComponent.prototype.getJustificativa = function (vec) {
         var first = 'PRAZO ';
         var last = 'IMPORTANTE:';
@@ -211,14 +243,19 @@ var PdfReaderComponent = (function () {
         return setor;
     };
     PdfReaderComponent.prototype.getEndereco = function (vec) {
-        var first = '4. ';
-        var last = '5. ';
+        var first = 'Local de';
+        var last = '4. ';
+        var result = '';
         var endereco = this.findBetweenVectors(first, last, vec).trim();
-        // console.log(enderecoVec);
-        if (!endereco) {
-            endereco = 'Reitoria UFCG';
+        if (endereco[8] == 'x') {
+            result = 'Reitoria UFCG';
         }
-        return endereco;
+        else {
+            first = '4. ';
+            last = '5. ';
+            result = this.findBetweenVectors(first, last, vec).trim();
+        }
+        return result;
     };
     PdfReaderComponent.prototype.getHorarios = function (vec) {
         var first = '3. ';
@@ -244,13 +281,19 @@ var PdfReaderComponent = (function () {
     PdfReaderComponent.prototype.getSetorRequisitante = function (vec) {
         var stringToSearch = 'requisitante';
         var setorReqStr = '';
+        var reqDate = '';
+        var ret = [];
         var setorReqVec = vec[this.findInVector(stringToSearch, vec)].split(' ');
         var i = 1;
         while (i < setorReqVec.length && setorReqVec[i] !== 'Data') {
             setorReqStr += setorReqVec[i] + ' ';
             i++;
         }
-        return setorReqStr.trim();
+        reqDate = this.transformDate(setorReqVec[i + 1].trim());
+        setorReqStr = setorReqStr.trim();
+        ret.push(setorReqStr);
+        ret.push(reqDate);
+        return ret;
     };
     PdfReaderComponent.prototype.getDestino = function (vec) {
         var stringToSearch = 'Destino';
@@ -420,6 +463,13 @@ var CrudService = (function () {
             .map(function (res) { return res.json(); })
             .catch(function (error) { return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].throw(error.json() || 'Server error'); });
     };
+    CrudService.prototype.delete = function (url) {
+        var headers = this.interceptor();
+        var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({ headers: headers });
+        return this.http.delete(url, options)
+            .map(function (res) { return res.json(); })
+            .catch(function (error) { return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].throw(error.json() || 'Server error'); });
+    };
     CrudService.prototype.getWithParameter = function (url, obj) {
         var headers = this.interceptor();
         var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({ headers: headers, params: obj });
@@ -443,6 +493,58 @@ CrudService = __decorate([
 
 var _a;
 //# sourceMappingURL=crud.service.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/services/driver.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__crud_service__ = __webpack_require__("../../../../../src/app/services/crud.service.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DriverService; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var DriverService = (function () {
+    function DriverService(crudService) {
+        this.crudService = crudService;
+        this.driversObs = crudService.get('https://mobilidade-ufcg.herokuapp.com/driver').map(function (response) {
+            var drivers = [];
+            for (var _i = 0, _a = response.data; _i < _a.length; _i++) {
+                var driverData = _a[_i];
+                drivers.push(driverData);
+            }
+            return drivers;
+        });
+    }
+    DriverService.prototype.create = function (model) {
+        return this.crudService.post('https://mobilidade-ufcg.herokuapp.com/driver', model);
+    };
+    DriverService.prototype.getById = function (id) {
+        return this.crudService.get('https://mobilidade-ufcg.herokuapp.com/driver/' + id).map(function (response) {
+            var driver;
+            driver = (response.data);
+            return driver;
+        });
+    };
+    return DriverService;
+}());
+DriverService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__crud_service__["a" /* CrudService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__crud_service__["a" /* CrudService */]) === "function" && _a || Object])
+], DriverService);
+
+var _a;
+//# sourceMappingURL=driver.service.js.map
 
 /***/ }),
 
@@ -477,7 +579,7 @@ var FormService = (function () {
         this.crudService = crudService;
         this.solicitationObs = crudService.get('https://mobilidade-ufcg.herokuapp.com/form').map(function (response) {
             var solicitations = [];
-            for (var _i = 0, _a = response.dataList; _i < _a.length; _i++) {
+            for (var _i = 0, _a = response.data; _i < _a.length; _i++) {
                 var solicitationData = _a[_i];
                 solicitations.push(__WEBPACK_IMPORTED_MODULE_3__parsers_solicitation_parser__["a" /* SolicitationParser */].parseToSolicitation(solicitationData));
             }
@@ -490,11 +592,13 @@ var FormService = (function () {
     FormService.prototype.extractText = function (pdf) {
         return this.crudService.postMultiPart('https://mobilidade-ufcg.herokuapp.com/pdf', pdf);
     };
+    FormService.prototype.deleteById = function (id) {
+        return this.crudService.delete('https://mobilidade-ufcg.herokuapp.com/form/' + id);
+    };
     FormService.prototype.getById = function (id) {
         return this.crudService.get('https://mobilidade-ufcg.herokuapp.com/form/' + id).map(function (response) {
             var solicitation;
-            console.log(response);
-            solicitation = __WEBPACK_IMPORTED_MODULE_3__parsers_solicitation_parser__["a" /* SolicitationParser */].parseToSolicitation(response.data);
+            solicitation = __WEBPACK_IMPORTED_MODULE_3__parsers_solicitation_parser__["a" /* SolicitationParser */].parseToSolicitation(response.data[0]);
             return solicitation;
         });
     };
@@ -507,6 +611,110 @@ FormService = __decorate([
 
 var _a, _b;
 //# sourceMappingURL=form.service.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/services/travel.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__crud_service__ = __webpack_require__("../../../../../src/app/services/crud.service.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TravelService; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var TravelService = (function () {
+    function TravelService(crudService) {
+        this.crudService = crudService;
+        this.travelsObs = crudService.get('https://mobilidade-ufcg.herokuapp.com/travel').map(function (response) {
+            var travels = [];
+            for (var _i = 0, _a = response.data; _i < _a.length; _i++) {
+                var travelData = _a[_i];
+                travels.push(travelData);
+            }
+            return travels;
+        });
+    }
+    TravelService.prototype.create = function (form) {
+        return this.crudService.post('https://mobilidade-ufcg.herokuapp.com/travel', form);
+    };
+    TravelService.prototype.getById = function (id) {
+        return this.crudService.get('https://mobilidade-ufcg.herokuapp.com/travel/' + id).map(function (response) {
+            var travel;
+            travel = (response.data);
+            return travel;
+        });
+    };
+    return TravelService;
+}());
+TravelService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__crud_service__["a" /* CrudService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__crud_service__["a" /* CrudService */]) === "function" && _a || Object])
+], TravelService);
+
+var _a;
+//# sourceMappingURL=travel.service.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/services/vehicle.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__crud_service__ = __webpack_require__("../../../../../src/app/services/crud.service.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return VehicleService; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var VehicleService = (function () {
+    function VehicleService(crudService) {
+        this.crudService = crudService;
+        this.vehiclesObs = crudService.get('https://mobilidade-ufcg.herokuapp.com/vehicle').map(function (response) {
+            var vehicles = [];
+            for (var _i = 0, _a = response.data; _i < _a.length; _i++) {
+                var solicitationData = _a[_i];
+                vehicles.push(solicitationData);
+            }
+            return vehicles;
+        });
+    }
+    VehicleService.prototype.create = function (model) {
+        return this.crudService.post('https://mobilidade-ufcg.herokuapp.com/vehicle', model);
+    };
+    VehicleService.prototype.getById = function (id) {
+        return this.crudService.get('https://mobilidade-ufcg.herokuapp.com/vehicle/' + id).map(function (response) {
+            var vehicle;
+            vehicle = (response.data);
+            return vehicle;
+        });
+    };
+    return VehicleService;
+}());
+VehicleService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__crud_service__["a" /* CrudService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__crud_service__["a" /* CrudService */]) === "function" && _a || Object])
+], VehicleService);
+
+var _a;
+//# sourceMappingURL=vehicle.service.js.map
 
 /***/ }),
 

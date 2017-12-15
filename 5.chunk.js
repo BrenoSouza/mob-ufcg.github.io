@@ -3,7 +3,7 @@ webpackJsonp([5],{
 /***/ "../../../../../src/app/header/header.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"header-component-container\">\n  <mat-toolbar color=\"primary\">\n    <div class=\"header-container\" fxLayoutAlign=\"space-between center\" #toolbarEl>\n      <div class=\"img-container\" fxLayoutAlign=\"start center\" fxFlex=\"10\">\n        <div fxFlex fxLayoutAlign=\"center center\">\n          <img style=\"height: 50px\" src=\"assets/logo_ufcg.png\" alt=\"Logo\">\n        </div>\n      </div>    \n      <div class=\"menu-container\" fxLayoutAlign=\"center\" fxFlex>\n        <ul class=\"nav navbar-nav\" fxLayoutAlign=\"center\" fxFlex>\n          <li fxLayoutAlign=\"center\" fxFlex (click)=\"onMenuOption('home/solicitations')\">\n            <a routerLink=\"surveys\" fxLayoutAlign=\"center center\" class=\"target\">Solicitações</a>\n          </li>\n          <li fxLayoutAlign=\"center\" fxFlex>\n            <a routerLink=\"campaigns\" fxLayoutAlign=\"center center\">Viagens</a>\n          </li>\n          <li fxLayoutAlign=\"center\" fxFlex (click)=\"onMenuOption('home/drivers')\">\n            <a routerLink=\"stores\" fxLayoutAlign=\"center center\">Motoristas</a>\n          </li>\n          <li fxLayoutAlign=\"center\" fxFlex (click)=\"onMenuOption('home/cars')\">\n            <a routerLink=\"campaigns\" fxLayoutAlign=\"center center\">Veículos</a>\n          </li>\n        </ul>\n      </div>\n    </div>\n    <button mat-button [matMenuTriggerFor]=\"menu\">\n      <mat-icon>notifications</mat-icon>\n    </button>\n    <button mat-button [matMenuTriggerFor]=\"menu\">\n      <mat-icon>settings</mat-icon>\n    </button>\n    <mat-menu #menu=\"matMenu\" [overlapTrigger]=\"false\">\n      <button mat-menu-item (click)=\"onMenuOption('')\">Sair</button>\n    </mat-menu>\n  </mat-toolbar>\n</div>\n"
+module.exports = "<div class=\"header-component-container\">\n  <mat-toolbar color=\"primary\">\n    <div class=\"header-container\" fxLayoutAlign=\"space-between center\" #toolbarEl>\n      <div class=\"img-container\" fxLayoutAlign=\"start center\" fxFlex=\"10\">\n        <div fxFlex fxLayoutAlign=\"center center\">\n          <img style=\"height: 50px\" src=\"assets/logo_ufcg.png\" alt=\"Logo\">\n        </div>\n      </div>    \n      <div class=\"menu-container\" fxLayoutAlign=\"center\" fxFlex>\n        <ul class=\"nav navbar-nav\" fxLayoutAlign=\"center\" fxFlex>\n          <li fxLayoutAlign=\"center\" fxFlex #solicitationsMenu (click)=\"onMenuClick('solicitations')\">\n            <a routerLink=\"solicitations\" fxLayoutAlign=\"center center\" class=\"target\">Solicitações</a>\n          </li>\n          <li fxLayoutAlign=\"center\" fxFlex #travelsMenu (click)=\"onMenuClick('travels')\">\n            <a routerLink=\"travels\" fxLayoutAlign=\"center center\">Viagens</a>\n          </li>\n          <li fxLayoutAlign=\"center\" fxFlex #driversMenu (click)=\"onMenuClick('drivers')\">\n            <a routerLink=\"drivers\" fxLayoutAlign=\"center center\">Motoristas</a>\n          </li>\n          <li fxLayoutAlign=\"center\" fxFlex #vehiclesMenu (click)=\"onMenuClick('cars')\">\n            <a routerLink=\"vehicles\" fxLayoutAlign=\"center center\">Veículos</a>\n          </li>\n        </ul>\n      </div>\n    </div>\n    <button mat-button [matMenuTriggerFor]=\"menu\">\n      <mat-icon>notifications</mat-icon>\n    </button>\n    <button mat-button [matMenuTriggerFor]=\"menu\">\n      <mat-icon>settings</mat-icon>\n    </button>\n    <mat-menu #menu=\"matMenu\" [overlapTrigger]=\"false\">\n      <button mat-menu-item (click)=\"onMenuOption('')\">Sair</button>\n    </mat-menu>\n  </mat-toolbar>\n</div>\n"
 
 /***/ }),
 
@@ -43,27 +43,87 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var HeaderComponent = (function () {
-    function HeaderComponent(router) {
+var HeaderComponent = HeaderComponent_1 = (function () {
+    function HeaderComponent(router, renderer) {
         this.router = router;
+        this.renderer = renderer;
+        this.activeMenu = '';
+        this.options = {};
     }
     HeaderComponent.prototype.ngOnInit = function () {
+        this.inicializeOptions();
+        this.menuActive();
+    };
+    HeaderComponent.prototype.onMenuClick = function (menuClicked) {
+        if (menuClicked && menuClicked !== this.activeMenu && this.options[menuClicked]) {
+            if (this.options[this.activeMenu]) {
+                this.renderer.removeClass(this.options[this.activeMenu].nativeElement, HeaderComponent_1.ACTIVE_CLASS);
+            }
+            this.activeMenu = menuClicked;
+            this.renderer.addClass(this.options[this.activeMenu].nativeElement, HeaderComponent_1.ACTIVE_CLASS);
+            this.onMenuOption('/home/' + menuClicked);
+        }
+    };
+    HeaderComponent.prototype.inicializeOptions = function () {
+        this.options[HeaderComponent_1.SOLICITATIONS] = this.solicitationsMenu;
+        this.options[HeaderComponent_1.TRAVELS] = this.travelsMenu;
+        this.options[HeaderComponent_1.DRIVERS] = this.driversMenu;
+        this.options[HeaderComponent_1.VEHICLES] = this.vehiclesMenu;
+    };
+    HeaderComponent.prototype.onSubmit = function (navActive) {
+        this.navActive = navActive;
+    };
+    HeaderComponent.prototype.menuActive = function () {
+        if (this.router.url.includes('/home/solicitations')) {
+            this.onMenuClick('solicitations');
+        }
+        else if (this.router.url.includes('/app/survey')) {
+            this.onMenuClick('surveys');
+        }
+        else if (this.router.url.includes('/home/drivers')) {
+            this.onMenuClick('drivers');
+        }
+        else if (this.router.url.includes('/home/vehicles')) {
+            this.onMenuClick('vehicles');
+        }
     };
     HeaderComponent.prototype.onMenuOption = function (path) {
         this.router.navigate([path]);
     };
     return HeaderComponent;
 }());
-HeaderComponent = __decorate([
+HeaderComponent.ACTIVE_CLASS = 'active';
+HeaderComponent.SOLICITATIONS = 'solicitations';
+HeaderComponent.TRAVELS = 'travels';
+HeaderComponent.DRIVERS = 'drivers';
+HeaderComponent.VEHICLES = 'cars';
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_0" /* ViewChild */])('solicitationsMenu'),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */]) === "function" && _a || Object)
+], HeaderComponent.prototype, "solicitationsMenu", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_0" /* ViewChild */])('travelsMenu'),
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */]) === "function" && _b || Object)
+], HeaderComponent.prototype, "travelsMenu", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_0" /* ViewChild */])('driversMenu'),
+    __metadata("design:type", typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */]) === "function" && _c || Object)
+], HeaderComponent.prototype, "driversMenu", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_0" /* ViewChild */])('vehiclesMenu'),
+    __metadata("design:type", typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */]) === "function" && _d || Object)
+], HeaderComponent.prototype, "vehiclesMenu", void 0);
+HeaderComponent = HeaderComponent_1 = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
         selector: 'app-header',
         template: __webpack_require__("../../../../../src/app/header/header.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/header/header.component.scss")]
+        styles: [__webpack_require__("../../../../../src/app/header/header.component.scss")],
+        encapsulation: __WEBPACK_IMPORTED_MODULE_0__angular_core__["X" /* ViewEncapsulation */].None
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */]) === "function" && _f || Object])
 ], HeaderComponent);
 
-var _a;
+var HeaderComponent_1, _a, _b, _c, _d, _e, _f;
 //# sourceMappingURL=header.component.js.map
 
 /***/ }),
@@ -246,7 +306,9 @@ var homeRoutes = [
             { path: '', redirectTo: 'solicitations', pathMatch: 'prefix' },
             { path: 'solicitations', loadChildren: 'app/solicitations-list/solicitations-list.module#SolicitationsListModule' },
             { path: 'drivers', loadChildren: 'app/drivers-list/drivers-list.module#DriversListModule' },
+            { path: 'allocation', loadChildren: 'app/allocation/allocation.module#AllocationModule' },
             { path: 'cars', loadChildren: 'app/cars/cars.module#CarsModule' },
+            { path: 'travels', loadChildren: 'app/travels-list/travels-list.module#TravelsListModule' },
             { path: 'form', loadChildren: 'app/form/form.module#FormModule' },
         ]
     }

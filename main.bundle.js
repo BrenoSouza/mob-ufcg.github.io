@@ -1,9 +1,14 @@
-webpackJsonp([9],{
+webpackJsonp([11],{
 
 /***/ "../../../../../src async recursive":
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
+	"app/allocation/allocation.module": [
+		"../../../../../src/app/allocation/allocation.module.ts",
+		9,
+		0
+	],
 	"app/cars/cars.module": [
 		"../../../../../src/app/cars/cars.module.ts",
 		1,
@@ -16,7 +21,7 @@ var map = {
 	],
 	"app/form/form.module": [
 		"../../../../../src/app/form/form.module.ts",
-		7,
+		8,
 		0
 	],
 	"app/home/home.module": [
@@ -31,12 +36,17 @@ var map = {
 	],
 	"app/solicitation/solicitation.module": [
 		"../../../../../src/app/solicitation/solicitation.module.ts",
-		6,
+		7,
 		0
 	],
 	"app/solicitations-list/solicitations-list.module": [
 		"../../../../../src/app/solicitations-list/solicitations-list.module.ts",
 		3,
+		0
+	],
+	"app/travels-list/travels-list.module": [
+		"../../../../../src/app/travels-list/travels-list.module.ts",
+		6,
 		0
 	]
 };

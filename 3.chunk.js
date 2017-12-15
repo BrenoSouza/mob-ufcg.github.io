@@ -3,7 +3,7 @@ webpackJsonp([3],{
 /***/ "../../../../../src/app/search-form/search-form.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<form fxLayout=\"column\">\n  <mat-card fxLayout=\"column\" style=\"margin-top: 50px\">\n    <div fxLayout=\"row\">\n      <mat-form-field fxFlex=\"30\">\n        <input matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\">\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\n        <input matInput placeholder=\"Destino\" name=\"destination\" [(ngModel)]=\"model.destination\">\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\n        <input matInput [matDatepicker]=\"data_ida\" placeholder=\"Data Ida\" name=\"date_1\" [(ngModel)]=\"model.travelDate\">\n        <mat-datepicker-toggle matSuffix [for]=\"data_ida\"></mat-datepicker-toggle>\n        <mat-datepicker #data_ida></mat-datepicker>\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\n        <input matInput [matDatepicker]=\"data_volta\" placeholder=\"Data Volta\" name=\"date_2\"\n               [(ngModel)]=\"model.returnDate\">\n        <mat-datepicker-toggle matSuffix [for]=\"data_volta\"></mat-datepicker-toggle>\n        <mat-datepicker #data_volta></mat-datepicker>\n      </mat-form-field>\n    </div>\n\n    <div fxLayout=\"row\" fxLayoutAlign=\"center center\">\n      <button mat-raised-button class=\"md-raised\" (click)=\"search()\"> BUSCAR </button>\n    </div>\n\n  </mat-card>\n</form>\n"
+module.exports = "<form fxLayout=\"column\">\n  <mat-card fxLayout=\"column\">\n    <div fxLayout=\"row\">\n      <mat-form-field fxFlex=\"30\">\n        <input matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\">\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\n        <input matInput placeholder=\"Destino\" name=\"destination\" [(ngModel)]=\"model.destination\">\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\n        <input matInput [matDatepicker]=\"data_ida\" placeholder=\"Data Ida\" name=\"date_1\" [(ngModel)]=\"model.travelDate\">\n        <mat-datepicker-toggle matSuffix [for]=\"data_ida\"></mat-datepicker-toggle>\n        <mat-datepicker #data_ida></mat-datepicker>\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\n        <input matInput [matDatepicker]=\"data_volta\" placeholder=\"Data Volta\" name=\"date_2\"\n               [(ngModel)]=\"model.returnDate\">\n        <mat-datepicker-toggle matSuffix [for]=\"data_volta\"></mat-datepicker-toggle>\n        <mat-datepicker #data_volta></mat-datepicker>\n      </mat-form-field>\n\n      <div fxFlex=\"15\" fxLayoutAlign=\"center center\">\n        <button mat-raised-button class=\"md-raised\" (click)=\"search()\"> BUSCAR </button>\n      </div>\n    </div>\n\n  </mat-card>\n</form>\n"
 
 /***/ }),
 
@@ -15,7 +15,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".mat-card {\n  padding: 20px;\n  margin-top: 50px; }\n", ""]);
 
 // exports
 
@@ -255,7 +255,7 @@ var SolicitationsListComponent = (function () {
         });
     };
     SolicitationsListComponent.prototype.goToFull = function (solicitation) {
-        this.router.navigate(['/solicitation', { id: solicitation.id }]);
+        this.router.navigate(['/home/allocation', { id: solicitation.id }]);
     };
     SolicitationsListComponent.prototype.newSolicitation = function (value) {
         this.showSolicitations();
