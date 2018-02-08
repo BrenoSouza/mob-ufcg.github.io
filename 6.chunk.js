@@ -1,13 +1,13 @@
 webpackJsonp([6],{
 
-/***/ "../../../../../src/app/travels-list/travels-list.component.html":
+/***/ "../../../../../src/app/vehicle-request/vehicle-request.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n    <div *ngIf=\"travels\" fxLayoutAlign=\"space-between\">\n        <div *ngFor=\"let col of travels.header\" fxFlex fxLayoutAlign=\"center\">\n            <h4>{{ col }}</h4>\n        </div>\n    </div>\n    \n    <div *ngIf=\"travels\">\n        <mat-card *ngFor=\"let travel of travels.itemsContent\" >\n            <mat-card-content class=\"card-container\" fxLayout=\"column\">\n                <div fxLayoutAlign=\"space-between\">\n                    <div fxFlex fxLayoutAlign=\"center space-between\">\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ travel.form.requesterSector }}</p>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ travel.form.destination }}</p>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ travel.vehicle.brand }}</p>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p> Joao</p>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ travel.travelDate }}</p>\n                        </div>\n                    </div>\n                </div>\n            </mat-card-content>\n        </mat-card>\n    </div>\n<!--     <button class=\"mat-button\" mat-fab color=\"primary\" (click)=\"addNewVehicle()\"><mat-icon>add</mat-icon></button>    \n --></div>"
+module.exports = "<mat-card class=\"full-form-container\" fxLayout=\"column\">\n  <div class=\"form-header\" fxLayout=\"column\" fxLayoutAlign=\" center\">\n    <h5>SERVIÇO PÚBLICO FEDERAL</h5>\n    <h5>UNIVERSIDADE FEDERAL DE CAMPINA GRANDE</h5>\n    <h5>PREFEITURA UNIVERSITÀRIA </h5>\n    <h5>Setor de Transporte</h5>\n    <h3>REQUISIÇÃO DE TRANSPORTE</h3>\n  </div>\n  <form fxLayout=\"column\">\n    <div fxFlex=\"80\" fxLayout=\"column\" fxFlexOffset=\"5\">\n      <div fxLayout=\"row\">\n        <mat-form-field f5Flex=\"50\" fxFlexOffset=\"15\">\n          <input matInput placeholder=\"Setor Requisitante\" name=\"requesterSector\" [(ngModel)]=\"model.requesterSector\">\n        </mat-form-field>\n        <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\n          <input matInput [matDatepicker]=\"data_atual\" placeholder=\"Data\" name=\"date\" [(ngModel)]=\"model.requestDate\" readonly=\"true\">\n          <mat-datepicker-toggle matSuffix [for]=\"data_atual\"></mat-datepicker-toggle>\n          <mat-datepicker #data_atual></mat-datepicker>\n        </mat-form-field>\n      </div>\n      <div>\n        <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\n          <input matInput placeholder=\"Destino\" name=\"destination\" [(ngModel)]=\"model.destination\">\n        </mat-form-field>\n      </div>\n      <div>\n        <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\n          <textarea matInput placeholder=\"Objetivo\" name=\"purpose\" [(ngModel)]=\"model.purpose\"></textarea>\n        </mat-form-field>\n      </div>\n      <div fxLayout=\"row\">\n        <mat-form-field fxFlex=\"50\" fxFlexOffset=\"15\">\n          <input matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\">\n        </mat-form-field>\n        <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\n          <input matInput placeholder=\"Telefone\" name=\"phone\" [(ngModel)]=\"model.phone\">\n        </mat-form-field>\n      </div>\n      <div fxLayout=\"row\">\n        <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\n          <input matInput [matDatepicker]=\"data_viagem\" placeholder=\"Data\" name=\"travelDate\" [(ngModel)]=\"model.travelDate\" readonly=\"true\">\n          <mat-datepicker-toggle matSuffix [for]=\"data_viagem\"></mat-datepicker-toggle>\n          <mat-datepicker #data_viagem></mat-datepicker>\n        </mat-form-field>\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\n          <input matInput placeholder=\"Hora da Saída\"  name=\"departureHour\" [(ngModel)]=\"model.departureHour\">\n        </mat-form-field>\n      </div>\n      <div fxLayout=\"row\">\n        <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\n          <input matInput [matDatepicker]=\"data_regresso\" placeholder=\"Regresso Provável\" name=\"returnDate\" [(ngModel)]=\"model.returnDate\" readonly=\"true\">\n          <mat-datepicker-toggle matSuffix [for]=\"data_regresso\"></mat-datepicker-toggle>\n          <mat-datepicker #data_regresso></mat-datepicker>\n        </mat-form-field>\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\n          <input matInput placeholder=\"Hora\" name=\"returnHour\" [(ngModel)]=\"model.returnHour\">\n        </mat-form-field>\n      </div>\n      <div fxLayout=\"row\">\n        <h3 fxFlex=\"20\" fxFlexOffset=\"15\">Local de Saída:</h3>\n        <mat-checkbox fxFlex=\"20\">Reitoria/UFCG</mat-checkbox>\n        <mat-checkbox fxFlex=\"20\">Residência</mat-checkbox>\n        <mat-checkbox fxFlex=\"20\">Outros*</mat-checkbox>\n      </div>\n      <div>\n        <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\n          <textarea matInput placeholder=\"\" name=\"Address\" [(ngModel)]=\"model.address\"></textarea>\n        </mat-form-field>\n      </div>\n      <div>\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"15\">\n          <input matInput placeholder=\"Horário de chegada do voo/ônibus\" name=\"arrivalTime\" [(ngModel)]=\"model.arrivalTime\">\n        </mat-form-field>\n      </div>\n      <div fxLayout=\"row\">\n        <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\n          <input matInput placeholder=\"Número do voo\" name=\"flightNumber\" [(ngModel)]=\"model.flightNumber\">\n        </mat-form-field>\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\n          <input matInput placeholder=\"Empresa\" name=\"airCompany\" [(ngModel)]=\"model.airCompany\">\n        </mat-form-field>\n      </div>\n      <div>\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"15\">\n          <input matInput placeholder=\"Origem da viagem\" name=\"travelOrigin\" [(ngModel)]=\"model.travelOrigin\">\n        </mat-form-field>\n      </div>\n      <div>\n        <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\n          <input matInput placeholder=\"Setor responsável pelas diárias do motorista\" name=\"driveSectorResponsability\" [(ngModel)]=\"model.driverSectorResponsibility\">\n        </mat-form-field>\n      </div>\n    </div>\n    <div fxLayout=\"row\">\n\n      <button mat-raised-button matTooltip=\"By default, I delay\" color=\"warning\" fxFlex=\"20\" fxFlexOffset=\"15\" mat-button (click)=\"updateForm(model.id)\">Atualizar</button>\n\n      <button mat-raised-button color=\"primary\" fxFlex=\"20\" fxFlexOffset=\"30\" mat-button (click)=\"goBack()\">Voltar</button>\n\n    </div>\n  </form>\n</mat-card>\n"
 
 /***/ }),
 
-/***/ "../../../../../src/app/travels-list/travels-list.component.scss":
+/***/ "../../../../../src/app/vehicle-request/vehicle-request.component.scss":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
@@ -15,7 +15,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".mat-card {\n  padding: 0; }\n  .mat-card:hover {\n    cursor: pointer;\n    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.12), 0 10px 10px rgba(0, 0, 0, 0.24);\n    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }\n  .mat-card .img-container {\n    height: 50px;\n    padding: 7px 0; }\n    .mat-card .img-container img {\n      border-radius: 50%;\n      height: 50px;\n      width: 50px; }\n  .mat-card .is-link {\n    cursor: pointer; }\n  .mat-card p {\n    font-size: 12px;\n    margin: 0;\n    padding: 24px 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap; }\n\n.card-container {\n  margin: 10px 10px 15px 10px !important; }\n\nmat-spinner {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  margin-top: -50px;\n  margin-left: -50px; }\n", ""]);
+exports.push([module.i, "", ""]);
 
 // exports
 
@@ -25,13 +25,13 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ "../../../../../src/app/travels-list/travels-list.component.ts":
+/***/ "../../../../../src/app/vehicle-request/vehicle-request.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_travel_service__ = __webpack_require__("../../../../../src/app/services/travel.service.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TravelsListComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return VehicleRequestComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -43,51 +43,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var TravelsListComponent = (function () {
-    function TravelsListComponent(travelService) {
-        this.travelService = travelService;
+var VehicleRequestComponent = (function () {
+    function VehicleRequestComponent(route) {
+        this.route = route;
     }
-    TravelsListComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.travelService.travelsObs.subscribe(function (data) {
-            _this.travels = {
-                header: ['Setor Requisitante', 'Destino', 'Veículo', 'Motorista', 'Data Ida'],
-                itemsContent: []
-            };
-            for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
-                var travelData = data_1[_i];
-                _this.travels.itemsContent.push(travelData);
-            }
-        });
+    VehicleRequestComponent.prototype.ngOnInit = function () {
     };
-    return TravelsListComponent;
+    return VehicleRequestComponent;
 }());
-TravelsListComponent = __decorate([
+VehicleRequestComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
-        selector: 'app-travels-list',
-        template: __webpack_require__("../../../../../src/app/travels-list/travels-list.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/travels-list/travels-list.component.scss")]
+        selector: 'app-vehicle-request',
+        template: __webpack_require__("../../../../../src/app/vehicle-request/vehicle-request.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/vehicle-request/vehicle-request.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__services_travel_service__["a" /* TravelService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_travel_service__["a" /* TravelService */]) === "function" && _a || Object])
-], TravelsListComponent);
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */]) === "function" && _a || Object])
+], VehicleRequestComponent);
 
 var _a;
-//# sourceMappingURL=travels-list.component.js.map
+//# sourceMappingURL=vehicle-request.component.js.map
 
 /***/ }),
 
-/***/ "../../../../../src/app/travels-list/travels-list.module.ts":
+/***/ "../../../../../src/app/vehicle-request/vehicle-request.module.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("../../../common/@angular/common.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__travels_list_component__ = __webpack_require__("../../../../../src/app/travels-list/travels-list.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__travels_list_rounting__ = __webpack_require__("../../../../../src/app/travels-list/travels-list.rounting.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_shared_module__ = __webpack_require__("../../../../../src/app/shared/shared.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__services_travel_service__ = __webpack_require__("../../../../../src/app/services/travel.service.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TravelsListModule", function() { return TravelsListModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__vehicle_request_component__ = __webpack_require__("../../../../../src/app/vehicle-request/vehicle-request.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__vehicle_request_routing__ = __webpack_require__("../../../../../src/app/vehicle-request/vehicle-request.routing.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VehicleRequestModule", function() { return VehicleRequestModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -98,47 +85,42 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-
-
-var TravelsListModule = (function () {
-    function TravelsListModule() {
+var VehicleRequestModule = (function () {
+    function VehicleRequestModule() {
     }
-    return TravelsListModule;
+    return VehicleRequestModule;
 }());
-TravelsListModule = __decorate([
+VehicleRequestModule = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["b" /* NgModule */])({
         imports: [
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["a" /* CommonModule */],
-            __WEBPACK_IMPORTED_MODULE_3__travels_list_rounting__["a" /* travelsRouting */],
-            __WEBPACK_IMPORTED_MODULE_4__shared_shared_module__["a" /* SharedModule */]
+            __WEBPACK_IMPORTED_MODULE_3__vehicle_request_routing__["a" /* vehicleRequestRouting */]
         ],
-        declarations: [__WEBPACK_IMPORTED_MODULE_2__travels_list_component__["a" /* TravelsListComponent */]],
-        providers: [
-            __WEBPACK_IMPORTED_MODULE_5__services_travel_service__["a" /* TravelService */]
-        ]
+        declarations: [__WEBPACK_IMPORTED_MODULE_2__vehicle_request_component__["a" /* VehicleRequestComponent */]],
+        providers: []
     })
-], TravelsListModule);
+], VehicleRequestModule);
 
-//# sourceMappingURL=travels-list.module.js.map
+//# sourceMappingURL=vehicle-request.module.js.map
 
 /***/ }),
 
-/***/ "../../../../../src/app/travels-list/travels-list.rounting.ts":
+/***/ "../../../../../src/app/vehicle-request/vehicle-request.routing.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__travels_list_component__ = __webpack_require__("../../../../../src/app/travels-list/travels-list.component.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return travelsRouting; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__vehicle_request_component__ = __webpack_require__("../../../../../src/app/vehicle-request/vehicle-request.component.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return vehicleRequestRouting; });
 
 
-var travelsRoutes = [
+var vehicleRequestRoutes = [
     {
-        path: '', component: __WEBPACK_IMPORTED_MODULE_1__travels_list_component__["a" /* TravelsListComponent */]
+        path: '', component: __WEBPACK_IMPORTED_MODULE_1__vehicle_request_component__["a" /* VehicleRequestComponent */]
     }
 ];
-var travelsRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* RouterModule */].forChild(travelsRoutes);
-//# sourceMappingURL=travels-list.rounting.js.map
+var vehicleRequestRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* RouterModule */].forChild(vehicleRequestRoutes);
+//# sourceMappingURL=vehicle-request.routing.js.map
 
 /***/ })
 

@@ -3,7 +3,7 @@ webpackJsonp([4],{
 /***/ "../../../../../src/app/initial/initial.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxFlex=\"100\" fxLayoutAlign=\"center\">\n  <div fxFlex fxLayout=\"column\" fxLayoutAlign=\"space-around center\">\n    <app-login></app-login>\n  </div>\n</div>\n"
+module.exports = "<div fxFlex=\"100\" fxLayoutAlign=\"center\">\r\n  <div fxFlex fxLayout=\"column\" fxLayoutAlign=\"space-around center\">\r\n    <app-login></app-login>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -128,7 +128,7 @@ InitialModule = __decorate([
 var initialRoutes = [
     { path: '', component: __WEBPACK_IMPORTED_MODULE_1__initial_component__["a" /* InitialComponent */] }
 ];
-var initialRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* RouterModule */].forChild(initialRoutes);
+var initialRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* RouterModule */].forChild(initialRoutes);
 //# sourceMappingURL=initial.routing.js.map
 
 /***/ }),
@@ -136,7 +136,7 @@ var initialRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* Router
 /***/ "../../../../../src/app/login/login.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"login-component-container\" fxLayoutAlign=\"center center\">\n  <div>\n    <mat-toolbar color=\"primary\" class=\"login-toolbar\">\n      <div md-dialog-title fxFlex>\n        <div>\n          <div fxFlex fxLayoutAlign=\"center center\">Entrar</div>\n        </div>\n      </div>\n    </mat-toolbar>\n    <mat-card>\n      <div fxLayout=\"column\" fxLayoutAlign=\"space-around\" fxLayoutGap=\"5vh\" class=\"login-content\">\n        <form #element=\"ngForm\">\n          <div md-dialog-content class=\"input-container\">\n            <mat-form-field fxFlex>\n              <input matInput placeholder=\"Email\" name=\"email\">\n            </mat-form-field>\n          </div>\n          <div md-dialog-content class=\"input-container\">\n            <mat-form-field fxFlex>\n              <input matInput placeholder=\"Senha\" name=\"password\" type=\"password\">\n            </mat-form-field>\n          </div>\n          <div md-dialog-actions fxLayoutGap=\"10px\" fxLayoutAlign=\"space-around center\">\n            <button mat-raised-button color=\"primary\" type=\"submit\" (click)=\"login()\">        \n              ENTRAR\n            </button>\n          </div>\n          <div class=\"sign-up-container\">\n            <span>Esqueceu a senha?</span>\n            <a href=\"#\">Recupere.</a>\n          </div>\n        </form>\n      </div>\n    </mat-card>\n  </div>\n</div>\n"
+module.exports = "<div class=\"login-component-container\" fxLayoutAlign=\"center center\">\r\n  <div>\r\n    <mat-toolbar color=\"primary\" class=\"login-toolbar\">\r\n      <div md-dialog-title fxFlex>\r\n        <div>\r\n          <div fxFlex fxLayoutAlign=\"center center\">Entrar</div>\r\n        </div>\r\n      </div>\r\n    </mat-toolbar>\r\n    <mat-card>\r\n      <div fxLayout=\"column\" fxLayoutAlign=\"space-around\" fxLayoutGap=\"5vh\" class=\"login-content\">\r\n        <form #element=\"ngForm\">\r\n          <div md-dialog-content class=\"input-container\">\r\n            <mat-form-field fxFlex>\r\n              <input matInput placeholder=\"Email\" name=\"email\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div md-dialog-content class=\"input-container\">\r\n            <mat-form-field fxFlex>\r\n              <input matInput placeholder=\"Senha\" name=\"password\" type=\"password\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div md-dialog-actions fxLayoutGap=\"10px\" fxLayoutAlign=\"space-around center\">\r\n            <button mat-raised-button color=\"primary\" type=\"submit\" (click)=\"login()\">        \r\n              ENTRAR\r\n            </button>\r\n          </div>\r\n          <div class=\"sign-up-container\">\r\n            <span>Esqueceu a senha?</span>\r\n            <a href=\"#\">Recupere.</a>\r\n          </div>\r\n        </form>\r\n      </div>\r\n    </mat-card>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 

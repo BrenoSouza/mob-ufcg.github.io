@@ -1,4 +1,4 @@
-webpackJsonp([11],{
+webpackJsonp([13],{
 
 /***/ "../../../../../src async recursive":
 /***/ (function(module, exports, __webpack_require__) {
@@ -6,12 +6,7 @@ webpackJsonp([11],{
 var map = {
 	"app/allocation/allocation.module": [
 		"../../../../../src/app/allocation/allocation.module.ts",
-		9,
-		0
-	],
-	"app/cars/cars.module": [
-		"../../../../../src/app/cars/cars.module.ts",
-		1,
+		11,
 		0
 	],
 	"app/drivers-list/drivers-list.module": [
@@ -21,7 +16,7 @@ var map = {
 	],
 	"app/form/form.module": [
 		"../../../../../src/app/form/form.module.ts",
-		8,
+		10,
 		0
 	],
 	"app/home/home.module": [
@@ -34,9 +29,14 @@ var map = {
 		4,
 		0
 	],
+	"app/req-form/req-form.module": [
+		"../../../../../src/app/req-form/req-form.module.ts",
+		9,
+		0
+	],
 	"app/solicitation/solicitation.module": [
 		"../../../../../src/app/solicitation/solicitation.module.ts",
-		7,
+		8,
 		0
 	],
 	"app/solicitations-list/solicitations-list.module": [
@@ -46,7 +46,16 @@ var map = {
 	],
 	"app/travels-list/travels-list.module": [
 		"../../../../../src/app/travels-list/travels-list.module.ts",
-		6,
+		7,
+		0
+	],
+	"app/vehicle-request/vehicle-request.module": [
+		"../../../../../src/app/vehicle-request/vehicle-request.module.ts",
+		6
+	],
+	"app/vehicles/vehicles.module": [
+		"../../../../../src/app/vehicles/vehicles.module.ts",
+		1,
 		0
 	]
 };
@@ -87,6 +96,7 @@ var appRoutes = [
     { path: 'home', loadChildren: 'app/home/home.module#HomeModule' },
     { path: 'form', loadChildren: 'app/form/form.module#FormModule' },
     { path: 'solicitation', loadChildren: 'app/solicitation/solicitation.module#SolicitationModule' },
+    { path: 'req-form', loadChildren: 'app/req-form/req-form.module#ReqFormModule' },
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
@@ -96,9 +106,9 @@ var AppRoutingModule = (function () {
 AppRoutingModule = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_core__["b" /* NgModule */])({
         imports: [
-            __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* RouterModule */].forRoot(appRoutes, { useHash: true }),
+            __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* RouterModule */].forRoot(appRoutes, { useHash: true }),
         ],
-        exports: [__WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* RouterModule */]]
+        exports: [__WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* RouterModule */]]
     })
 ], AppRoutingModule);
 
@@ -109,7 +119,7 @@ AppRoutingModule = __decorate([
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"main-app\">\n    <router-outlet></router-outlet>\n</div>\n"
+module.exports = "<div class=\"main-app\">\r\n    <router-outlet></router-outlet>\r\n</div>\r\n"
 
 /***/ }),
 

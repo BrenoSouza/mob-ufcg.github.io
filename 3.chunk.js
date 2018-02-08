@@ -3,7 +3,7 @@ webpackJsonp([3],{
 /***/ "../../../../../src/app/search-form/search-form.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<form fxLayout=\"column\">\n  <mat-card fxLayout=\"column\">\n    <div fxLayout=\"row\">\n      <mat-form-field fxFlex=\"30\">\n        <input matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\">\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\n        <input matInput placeholder=\"Destino\" name=\"destination\" [(ngModel)]=\"model.destination\">\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\n        <input matInput [matDatepicker]=\"data_ida\" placeholder=\"Data Ida\" name=\"date_1\" [(ngModel)]=\"model.travelDate\">\n        <mat-datepicker-toggle matSuffix [for]=\"data_ida\"></mat-datepicker-toggle>\n        <mat-datepicker #data_ida></mat-datepicker>\n      </mat-form-field>\n\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\n        <input matInput [matDatepicker]=\"data_volta\" placeholder=\"Data Volta\" name=\"date_2\"\n               [(ngModel)]=\"model.returnDate\">\n        <mat-datepicker-toggle matSuffix [for]=\"data_volta\"></mat-datepicker-toggle>\n        <mat-datepicker #data_volta></mat-datepicker>\n      </mat-form-field>\n\n      <div fxFlex=\"15\" fxLayoutAlign=\"center center\">\n        <button mat-raised-button class=\"md-raised\" (click)=\"search()\"> BUSCAR </button>\n      </div>\n    </div>\n\n  </mat-card>\n</form>\n"
+module.exports = "<form fxLayout=\"column\">\r\n  <mat-card fxLayout=\"column\">\r\n    <div fxLayout=\"row\">\r\n      <mat-form-field fxFlex=\"30\">\r\n        <input matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\">\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Destino\" name=\"destination\" [(ngModel)]=\"model.destination\">\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Data Ida\" name=\"date_1\" [(ngModel)]=\"model.travelDate\">\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Data Volta\" name=\"date_2\" [(ngModel)]=\"model.returnDate\">\r\n      </mat-form-field>\r\n\r\n      <div fxFlex=\"15\" fxLayoutAlign=\"center center\">\r\n        <button mat-raised-button class=\"md-raised\" (click)=\"search()\"> BUSCAR </button>\r\n      </div>\r\n    </div>\r\n\r\n  </mat-card>\r\n</form>\r\n"
 
 /***/ }),
 
@@ -48,15 +48,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var SearchFormComponent = (function () {
     function SearchFormComponent(searchService) {
         this.searchService = searchService;
+        this.provisoryHour = ' 03:00:00';
         this.model = new __WEBPACK_IMPORTED_MODULE_2__models_solicitation_model__["a" /* Solicitation */];
-        this.searchResult = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* EventEmitter */]();
+        this.searchResult = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["y" /* EventEmitter */]();
     }
     SearchFormComponent.prototype.ngOnInit = function () {
     };
     SearchFormComponent.prototype.search = function () {
         var _this = this;
+        if (this.model.travelDate) {
+            this.model.travelDate += this.provisoryHour;
+        }
+        if (this.model.returnDate) {
+            this.model.returnDate += this.provisoryHour;
+        }
         this.searchService.searchSolicitation(this.model).subscribe(function (data) {
-            _this.searchResult.emit(data.dataList);
+            _this.searchResult.emit(data.data);
         }, function (error) {
             console.error(error);
         });
@@ -64,7 +71,7 @@ var SearchFormComponent = (function () {
     return SearchFormComponent;
 }());
 __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* Output */])(),
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Output */])(),
     __metadata("design:type", Object)
 ], SearchFormComponent.prototype, "searchResult", void 0);
 SearchFormComponent = __decorate([
@@ -188,7 +195,7 @@ var _a, _b;
 /***/ "../../../../../src/app/solicitations-list/solicitations-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\">\n    <app-search-form (searchResult)=\"searchResult($event)\"></app-search-form>\n    <div *ngIf=\"solicitations\" fxLayoutAlign=\"space-between\">\n        <div *ngFor=\"let col of solicitations.header\" fxFlex fxLayoutAlign=\"center\">\n            <h4>{{ col }}</h4>\n        </div>\n    </div>\n    \n    <div *ngIf=\"!isLoadingSolicitations; else Loading\">            \n        <mat-card *ngFor=\"let solicitation of solicitations.itemsContent\">\n            <mat-card-content class=\"card-container\" fxLayout=\"column\" (click)=\"goToFull(solicitation)\">\n                <div fxLayoutAlign=\"space-between\" fxLayoutGap=\"30px\">\n                    <div fxFlex fxLayoutAlign=\"center space-between\">\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.requesterSector }}</p>\n                        </div>\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.phone }}</p>\n                        </div>\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.requestDate }}</p>\n                        </div>\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\n                            <p>{{ solicitation.destination }}</p>\n                        </div>\n                    </div>\n                </div>\n            </mat-card-content>\n        </mat-card>\n    </div>\n    <ng-template #Loading>\n        <mat-spinner fxFlex color=\"primary\"></mat-spinner>\n    </ng-template>\n    <app-pdf-reader (newSolicitation)=\"newSolicitation($event)\"></app-pdf-reader>\n</div>\n"
+module.exports = "<div fxLayout=\"column\">\r\n    <app-search-form (searchResult)=\"searchResult($event)\"></app-search-form>\r\n    <div *ngIf=\"solicitations\" fxLayoutAlign=\"space-between\">\r\n        <div *ngFor=\"let col of solicitations.header\" fxFlex fxLayoutAlign=\"center\">\r\n            <h4>{{ col }}</h4>\r\n        </div>\r\n    </div>\r\n    \r\n    <div *ngIf=\"!isLoadingSolicitations; else Loading\">            \r\n        <mat-card *ngFor=\"let solicitation of solicitations.itemsContent\">\r\n            <mat-card-content class=\"card-container\" fxLayout=\"column\" (click)=\"goToFull(solicitation)\">\r\n                <div fxLayoutAlign=\"space-between\" fxLayoutGap=\"30px\">\r\n                    <div fxFlex fxLayoutAlign=\"center space-between\">\r\n                        <div fxFlex=\"3\" [ngClass]=\"{'waiting': solicitation.status === 'WAITING', \r\n                        'completed': solicitation.status === 'COMPLETED', 'denied': solicitation.status === 'DENIED'}\">\r\n\r\n                        </div>\r\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\r\n                            <p>{{ solicitation.requesterSector }}</p>\r\n                        </div>\r\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\r\n                            <p>{{ solicitation.phone }}</p>\r\n                        </div>\r\n                        <div fxFlex=\"22\" fxLayoutAlign=\"center center\">\r\n                            <p>{{ solicitation.requestDate }}</p>\r\n                        </div>\r\n                        <div fxFlex=\"25\" fxLayoutAlign=\"center center\">\r\n                            <p>{{ solicitation.destination }}</p>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </mat-card-content>\r\n        </mat-card>\r\n    </div>\r\n    <ng-template #Loading>\r\n        <mat-spinner fxFlex color=\"primary\"></mat-spinner>\r\n    </ng-template>\r\n    <app-pdf-reader (newSolicitation)=\"newSolicitation($event)\"></app-pdf-reader>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -200,7 +207,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".mat-card {\n  padding: 0; }\n  .mat-card:hover {\n    cursor: pointer;\n    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.12), 0 10px 10px rgba(0, 0, 0, 0.24);\n    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }\n  .mat-card .img-container {\n    height: 50px;\n    padding: 7px 0; }\n    .mat-card .img-container img {\n      border-radius: 50%;\n      height: 50px;\n      width: 50px; }\n  .mat-card .is-link {\n    cursor: pointer; }\n  .mat-card p {\n    margin: 0;\n    padding: 24px 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap; }\n\n.card-container {\n  margin: 10px 10px 15px 10px !important; }\n\nmat-spinner {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  margin-top: -50px;\n  margin-left: -50px; }\n", ""]);
+exports.push([module.i, ".mat-card {\n  padding: 0; }\n  .mat-card:hover {\n    cursor: pointer;\n    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.12), 0 10px 10px rgba(0, 0, 0, 0.24);\n    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }\n  .mat-card .img-container {\n    height: 50px;\n    padding: 7px 0; }\n    .mat-card .img-container img {\n      border-radius: 50%;\n      height: 50px;\n      width: 50px; }\n  .mat-card .is-link {\n    cursor: pointer; }\n  .mat-card p {\n    margin: 0;\n    padding: 24px 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap; }\n  .mat-card .completed {\n    background-color: green; }\n  .mat-card .denied {\n    background-color: red; }\n  .mat-card .waiting {\n    background-color: yellow; }\n\n.card-container {\n  margin: 10px 10px 15px 0 !important; }\n\nmat-spinner {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  margin-top: -50px;\n  margin-left: -50px; }\n", ""]);
 
 // exports
 
@@ -255,7 +262,12 @@ var SolicitationsListComponent = (function () {
         });
     };
     SolicitationsListComponent.prototype.goToFull = function (solicitation) {
-        this.router.navigate(['/home/allocation', { id: solicitation.id }]);
+        if (solicitation.status === 'WAITING') {
+            this.router.navigate(['/home/allocation', { id: solicitation.id }]);
+        }
+        else {
+            this.router.navigate(['/home/solicitation', { id: solicitation.id }]);
+        }
     };
     SolicitationsListComponent.prototype.newSolicitation = function (value) {
         this.showSolicitations();
@@ -350,7 +362,7 @@ var solicitationsRoutes = [
         path: '', component: __WEBPACK_IMPORTED_MODULE_1__solicitations_list_component__["a" /* SolicitationsListComponent */]
     }
 ];
-var solicitationsRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* RouterModule */].forChild(solicitationsRoutes);
+var solicitationsRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* RouterModule */].forChild(solicitationsRoutes);
 //# sourceMappingURL=solicitations-list.rounting.js.map
 
 /***/ })

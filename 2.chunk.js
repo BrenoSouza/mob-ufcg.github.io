@@ -60,7 +60,7 @@ DriversFormDialogComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/drivers-form-dialog/drivers-form-dialog.component.html"),
         styles: [__webpack_require__("../../../../../src/app/drivers-form-dialog/drivers-form-dialog.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["k" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["k" /* MatDialogRef */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["n" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["n" /* MatDialogRef */]) === "function" && _a || Object])
 ], DriversFormDialogComponent);
 
 var _a;
@@ -99,7 +99,7 @@ DriversFormDialogModule = __decorate([
         imports: [
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["a" /* CommonModule */],
             __WEBPACK_IMPORTED_MODULE_3__drivers_form_drivers_form_module__["a" /* DriversFormModule */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_material__["m" /* MatDialogModule */]
+            __WEBPACK_IMPORTED_MODULE_4__angular_material__["p" /* MatDialogModule */]
         ],
         declarations: [
             __WEBPACK_IMPORTED_MODULE_2__drivers_form_dialog_component__["a" /* DriversFormDialogComponent */]
@@ -120,7 +120,7 @@ DriversFormDialogModule = __decorate([
 /***/ "../../../../../src/app/drivers-form/drivers-form.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\">\n  \n  <div class=\"form-header\" fxFlex=\"100\" fxLayout=\"column\" fxLayoutAlign=\" center\">\n    <h2>Registro de Motorista</h2>\n  </div>\n  \n  <form>\n    <div fxLayout=\"column\">\n      <mat-form-field fxFlex=\"100\">\n        <input fxFlex matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\"/>\n      </mat-form-field>\n      <mat-form-field fxFlex>\n        <input matInput placeholder=\"Endereço\" name=\"address\" [(ngModel)]=\"model.address\"/>\n      </mat-form-field>\n      \n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\n        <mat-form-field fxFlex>\n          <input type=\"text\" matInput placeholder=\"Telefone\" name=\"phone\" [(ngModel)]=\"model.phone\"/>\n        </mat-form-field>\n        <mat-form-field fxFlex>\n          <input type=\"number\" matInput placeholder=\"Registro\" name=\"registration\" [(ngModel)]=\"model.registration\"/>\n        </mat-form-field>\n      </div>\n\n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\n        <mat-form-field fxFlex>\n          <input matInput placeholder=\"Cpf\" name=\"cpf\" [(ngModel)]=\"model.cpf\"/>\n        </mat-form-field>\n\n        <mat-form-field fxFlex>\n          <input matInput placeholder=\"Cnh\" name=\"cnh\" [(ngModel)]=\"model.cnh\"/>\n        </mat-form-field>\n      </div>\n      \n    </div>\n    <div fxLayoutAlign=\"end\">\n      <button mat-button class=\"mat-raised-button\" color=\"primary\" (click)=\"addNewDriver()\"> Salvar </button>\n      <button mat-button class=\"mat-raised-button\" (click)=\"closeDialog()\"> Cancelar </button>\n    </div>\n    \n  </form>\n  \n</div>\n"
+module.exports = "<div fxLayout=\"column\">\r\n  \r\n  <div class=\"form-header\" fxFlex=\"100\" fxLayout=\"column\" fxLayoutAlign=\" center\">\r\n    <h2>Registro de Motorista</h2>\r\n  </div>\r\n  \r\n  <form>\r\n    <div fxLayout=\"column\">\r\n      <mat-form-field fxFlex=\"100\">\r\n        <input fxFlex matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\"/>\r\n      </mat-form-field>\r\n      <mat-form-field fxFlex>\r\n        <input matInput placeholder=\"Endereço\" name=\"address\" [(ngModel)]=\"model.address\"/>\r\n      </mat-form-field>\r\n      \r\n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\r\n        <mat-form-field fxFlex>\r\n          <input type=\"text\" matInput placeholder=\"Telefone\" name=\"phone\" [(ngModel)]=\"model.phone\"/>\r\n        </mat-form-field>\r\n        <mat-form-field fxFlex>\r\n          <input type=\"number\" matInput placeholder=\"Registro\" name=\"registration\" [(ngModel)]=\"model.registration\"/>\r\n        </mat-form-field>\r\n      </div>\r\n\r\n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\r\n        <mat-form-field fxFlex>\r\n          <input matInput placeholder=\"Cpf\" name=\"cpf\" [(ngModel)]=\"model.cpf\"/>\r\n        </mat-form-field>\r\n\r\n        <mat-form-field fxFlex>\r\n          <input matInput placeholder=\"Cnh\" name=\"cnh\" [(ngModel)]=\"model.cnh\"/>\r\n        </mat-form-field>\r\n      </div>\r\n      \r\n    </div>\r\n    <div fxLayoutAlign=\"end\">\r\n      <button mat-button class=\"mat-raised-button\" color=\"primary\" (click)=\"addNewDriver()\"> Salvar </button>\r\n      <button mat-button class=\"mat-raised-button\" (click)=\"closeDialog()\"> Cancelar </button>\r\n    </div>\r\n    \r\n  </form>\r\n  \r\n</div>\r\n"
 
 /***/ }),
 
@@ -164,7 +164,7 @@ var DriversFormComponent = (function () {
     function DriversFormComponent(driverService) {
         this.driverService = driverService;
         this.model = {};
-        this.onClose = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* EventEmitter */]();
+        this.onClose = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["y" /* EventEmitter */]();
     }
     DriversFormComponent.prototype.ngOnInit = function () {
     };
@@ -180,7 +180,7 @@ var DriversFormComponent = (function () {
     return DriversFormComponent;
 }());
 __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* Output */])(),
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Output */])(),
     __metadata("design:type", Object)
 ], DriversFormComponent.prototype, "onClose", void 0);
 DriversFormComponent = __decorate([
@@ -251,7 +251,7 @@ DriversFormModule = __decorate([
 /***/ "../../../../../src/app/drivers-list/drivers-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n    <div *ngIf=\"drivers\" fxLayoutAlign=\"space-between\">\n        <div *ngFor=\"let col of drivers.header\" fxFlex fxLayoutAlign=\"center\">\n            <h4>{{ col }}</h4>\n        </div>\n    </div>\n    \n    <div *ngIf=\"drivers\">\n        <mat-card *ngFor=\"let driver of drivers.itemsContent\">\n            <mat-card-content class=\"card-container\" fxLayout=\"column\">\n                <div fxLayoutAlign=\"space-between\" fxLayoutGap=\"30px\">\n                    <div fxFlex fxLayoutAlign=\"center space-between\">\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <mat-icon>person</mat-icon>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ driver.name }}</p>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ driver.cpf }}</p>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ driver.cnh }}</p>\n                        </div>\n                        <div fxFlex fxLayoutAlign=\"center center\">\n                            <p>{{ driver.registration }}</p>\n                        </div>\n                    </div>\n                </div>\n            </mat-card-content>\n        </mat-card>\n        <button class=\"mat-button\" mat-fab color=\"primary\" (click)=\"addNewDriver()\"><mat-icon>add</mat-icon></button>    \n    </div>\n</div>"
+module.exports = "<div fxLayout=\"column\">\r\n    <div fxLayoutAlign=\"space-between\">\r\n        <div *ngFor=\"let col of drivers.header\" fxFlex fxLayoutAlign=\"center\">\r\n            <h4>{{ col }}</h4>\r\n        </div>\r\n    </div>\r\n    \r\n    <div *ngIf=\"!isLoadingDrivers; else Loading\">\r\n        <mat-card *ngFor=\"let driver of drivers.itemsContent\">\r\n            <mat-card-content class=\"card-container\" fxLayout=\"column\">\r\n                <div fxLayoutAlign=\"space-between\" fxLayoutGap=\"30px\">\r\n                    <div fxFlex fxLayoutAlign=\"center space-between\">\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <mat-icon>person</mat-icon>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ driver.name }}</p>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ driver.cpf }}</p>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ driver.cnh }}</p>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ driver.registration }}</p>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </mat-card-content>\r\n        </mat-card>\r\n        <button class=\"mat-button\" mat-fab color=\"primary\" (click)=\"addNewDriver()\"><mat-icon>add</mat-icon></button>    \r\n    </div>\r\n    <ng-template #Loading>\r\n        <mat-spinner fxFlex color=\"primary\"></mat-spinner>\r\n    </ng-template>\r\n</div>"
 
 /***/ }),
 
@@ -263,7 +263,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".mat-card {\n  padding: 0; }\n  .mat-card:hover {\n    cursor: pointer;\n    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.12), 0 10px 10px rgba(0, 0, 0, 0.24);\n    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }\n  .mat-card p {\n    margin: 0;\n    padding: 24px 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap; }\n\n.mat-button {\n  position: fixed;\n  bottom: 50px;\n  right: 50px; }\n\n.md-content {\n  display: block;\n  max-height: calc(100% - 64px);\n  margin-top: 64px;\n  overflow: auto;\n  overflow-x: hidden;\n  width: 100%; }\n\n.card-container {\n  margin: 10px !important; }\n", ""]);
+exports.push([module.i, ".mat-card {\n  padding: 0; }\n  .mat-card:hover {\n    cursor: pointer;\n    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.12), 0 10px 10px rgba(0, 0, 0, 0.24);\n    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }\n  .mat-card p {\n    margin: 0;\n    padding: 24px 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap; }\n\n.mat-button {\n  position: fixed;\n  bottom: 50px;\n  right: 50px; }\n\n.md-content {\n  display: block;\n  max-height: calc(100% - 64px);\n  margin-top: 64px;\n  overflow: auto;\n  overflow-x: hidden;\n  width: 100%; }\n\n.card-container {\n  margin: 10px !important; }\n\nmat-spinner {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  margin-top: -50px;\n  margin-left: -50px; }\n", ""]);
 
 // exports
 
@@ -302,22 +302,32 @@ var DriversListComponent = (function () {
         this.driverService = driverService;
         this.router = router;
         this.addDriverDialog = addDriverDialog;
+        this.isLoadingDrivers = true;
     }
     DriversListComponent.prototype.ngOnInit = function () {
+        this.drivers = {
+            header: ['Foto', 'Nome', 'Cpf', 'Cnh', 'Registro'],
+            itemsContent: []
+        };
+        this.showDrivers();
+    };
+    DriversListComponent.prototype.showDrivers = function () {
         var _this = this;
+        this.drivers.itemsContent = [];
         this.driverService.driversObs.subscribe(function (data) {
-            _this.drivers = {
-                header: ['Foto', 'Nome', 'Cpf', 'Cnh', 'Registro'],
-                itemsContent: []
-            };
             for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
                 var driverData = data_1[_i];
                 _this.drivers.itemsContent.push(driverData);
             }
+            _this.isLoadingDrivers = false;
         });
     };
     DriversListComponent.prototype.addNewDriver = function () {
+        var _this = this;
         var loginRef = this.addDriverDialog.open(__WEBPACK_IMPORTED_MODULE_4__drivers_form_dialog_drivers_form_dialog_component__["a" /* DriversFormDialogComponent */]);
+        loginRef.afterClosed().subscribe(function (result) {
+            _this.showDrivers();
+        });
     };
     return DriversListComponent;
 }());
@@ -327,7 +337,7 @@ DriversListComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/drivers-list/drivers-list.component.html"),
         styles: [__webpack_require__("../../../../../src/app/drivers-list/drivers-list.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__services_driver_service__["a" /* DriverService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_driver_service__["a" /* DriverService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["l" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["l" /* MatDialog */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__services_driver_service__["a" /* DriverService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_driver_service__["a" /* DriverService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["o" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["o" /* MatDialog */]) === "function" && _c || Object])
 ], DriversListComponent);
 
 var _a, _b, _c;
@@ -399,7 +409,7 @@ var driversListRoutes = [
         path: '', component: __WEBPACK_IMPORTED_MODULE_1__drivers_list_component__["a" /* DriversListComponent */]
     }
 ];
-var driversListRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* RouterModule */].forChild(driversListRoutes);
+var driversListRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* RouterModule */].forChild(driversListRoutes);
 //# sourceMappingURL=drivers-list.routing.js.map
 
 /***/ })

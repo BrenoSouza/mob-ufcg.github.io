@@ -3,7 +3,7 @@ webpackJsonp([5],{
 /***/ "../../../../../src/app/header/header.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"header-component-container\">\n  <mat-toolbar color=\"primary\">\n    <div class=\"header-container\" fxLayoutAlign=\"space-between center\" #toolbarEl>\n      <div class=\"img-container\" fxLayoutAlign=\"start center\" fxFlex=\"10\">\n        <div fxFlex fxLayoutAlign=\"center center\">\n          <img style=\"height: 50px\" src=\"assets/logo_ufcg.png\" alt=\"Logo\">\n        </div>\n      </div>    \n      <div class=\"menu-container\" fxLayoutAlign=\"center\" fxFlex>\n        <ul class=\"nav navbar-nav\" fxLayoutAlign=\"center\" fxFlex>\n          <li fxLayoutAlign=\"center\" fxFlex #solicitationsMenu (click)=\"onMenuClick('solicitations')\">\n            <a routerLink=\"solicitations\" fxLayoutAlign=\"center center\" class=\"target\">Solicitações</a>\n          </li>\n          <li fxLayoutAlign=\"center\" fxFlex #travelsMenu (click)=\"onMenuClick('travels')\">\n            <a routerLink=\"travels\" fxLayoutAlign=\"center center\">Viagens</a>\n          </li>\n          <li fxLayoutAlign=\"center\" fxFlex #driversMenu (click)=\"onMenuClick('drivers')\">\n            <a routerLink=\"drivers\" fxLayoutAlign=\"center center\">Motoristas</a>\n          </li>\n          <li fxLayoutAlign=\"center\" fxFlex #vehiclesMenu (click)=\"onMenuClick('cars')\">\n            <a routerLink=\"vehicles\" fxLayoutAlign=\"center center\">Veículos</a>\n          </li>\n        </ul>\n      </div>\n    </div>\n    <button mat-button [matMenuTriggerFor]=\"menu\">\n      <mat-icon>notifications</mat-icon>\n    </button>\n    <button mat-button [matMenuTriggerFor]=\"menu\">\n      <mat-icon>settings</mat-icon>\n    </button>\n    <mat-menu #menu=\"matMenu\" [overlapTrigger]=\"false\">\n      <button mat-menu-item (click)=\"onMenuOption('')\">Sair</button>\n    </mat-menu>\n  </mat-toolbar>\n</div>\n"
+module.exports = "<div class=\"header-component-container\">\r\n  <mat-toolbar color=\"primary\">\r\n    <div class=\"header-container\" fxLayoutAlign=\"space-between center\" #toolbarEl>\r\n      <div class=\"img-container\" fxLayoutAlign=\"start center\" fxFlex=\"10\">\r\n        <div fxFlex fxLayoutAlign=\"center center\">\r\n          <img style=\"height: 50px\" src=\"assets/logo_ufcg.png\" alt=\"Logo\">\r\n        </div>\r\n      </div>    \r\n      <div class=\"menu-container\" fxLayoutAlign=\"center\" fxFlex>\r\n        <ul class=\"nav navbar-nav\" fxLayoutAlign=\"center\" fxFlex>\r\n          <li fxLayoutAlign=\"center\" fxFlex #solicitationsMenu (click)=\"onMenuClick('solicitations')\">\r\n            <a routerLink=\"solicitations\" fxLayoutAlign=\"center center\" class=\"target\">Solicitações</a>\r\n          </li>\r\n          <li fxLayoutAlign=\"center\" fxFlex #travelsMenu (click)=\"onMenuClick('travels')\">\r\n            <a routerLink=\"travels\" fxLayoutAlign=\"center center\">Viagens</a>\r\n          </li>\r\n          <li fxLayoutAlign=\"center\" fxFlex #driversMenu (click)=\"onMenuClick('drivers')\">\r\n            <a routerLink=\"drivers\" fxLayoutAlign=\"center center\">Motoristas</a>\r\n          </li>\r\n          <li fxLayoutAlign=\"center\" fxFlex #vehiclesMenu (click)=\"onMenuClick('vehicles')\">\r\n            <a routerLink=\"vehicles\" fxLayoutAlign=\"center center\">Veículos</a>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n    </div>\r\n    <button mat-button [matMenuTriggerFor]=\"menu\">\r\n      <mat-icon>notifications</mat-icon>\r\n    </button>\r\n    <button mat-button [matMenuTriggerFor]=\"menu\">\r\n      <mat-icon>settings</mat-icon>\r\n    </button>\r\n    <mat-menu #menu=\"matMenu\" [overlapTrigger]=\"false\">\r\n      <button mat-menu-item (click)=\"onMenuOption('')\">Sair</button>\r\n    </mat-menu>\r\n  </mat-toolbar>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -63,6 +63,9 @@ var HeaderComponent = HeaderComponent_1 = (function () {
             this.renderer.addClass(this.options[this.activeMenu].nativeElement, HeaderComponent_1.ACTIVE_CLASS);
             this.onMenuOption('/home/' + menuClicked);
         }
+        else if (menuClicked === this.activeMenu) {
+            this.onMenuOption('/home/' + menuClicked);
+        }
     };
     HeaderComponent.prototype.inicializeOptions = function () {
         this.options[HeaderComponent_1.SOLICITATIONS] = this.solicitationsMenu;
@@ -88,6 +91,7 @@ var HeaderComponent = HeaderComponent_1 = (function () {
         }
     };
     HeaderComponent.prototype.onMenuOption = function (path) {
+        console.log(path);
         this.router.navigate([path]);
     };
     return HeaderComponent;
@@ -96,31 +100,31 @@ HeaderComponent.ACTIVE_CLASS = 'active';
 HeaderComponent.SOLICITATIONS = 'solicitations';
 HeaderComponent.TRAVELS = 'travels';
 HeaderComponent.DRIVERS = 'drivers';
-HeaderComponent.VEHICLES = 'cars';
+HeaderComponent.VEHICLES = 'vehicles';
 __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_0" /* ViewChild */])('solicitationsMenu'),
-    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */]) === "function" && _a || Object)
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_8" /* ViewChild */])('solicitationsMenu'),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["j" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["j" /* ElementRef */]) === "function" && _a || Object)
 ], HeaderComponent.prototype, "solicitationsMenu", void 0);
 __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_0" /* ViewChild */])('travelsMenu'),
-    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */]) === "function" && _b || Object)
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_8" /* ViewChild */])('travelsMenu'),
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["j" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["j" /* ElementRef */]) === "function" && _b || Object)
 ], HeaderComponent.prototype, "travelsMenu", void 0);
 __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_0" /* ViewChild */])('driversMenu'),
-    __metadata("design:type", typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */]) === "function" && _c || Object)
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_8" /* ViewChild */])('driversMenu'),
+    __metadata("design:type", typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["j" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["j" /* ElementRef */]) === "function" && _c || Object)
 ], HeaderComponent.prototype, "driversMenu", void 0);
 __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_0" /* ViewChild */])('vehiclesMenu'),
-    __metadata("design:type", typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["o" /* ElementRef */]) === "function" && _d || Object)
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_8" /* ViewChild */])('vehiclesMenu'),
+    __metadata("design:type", typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["j" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["j" /* ElementRef */]) === "function" && _d || Object)
 ], HeaderComponent.prototype, "vehiclesMenu", void 0);
 HeaderComponent = HeaderComponent_1 = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
         selector: 'app-header',
         template: __webpack_require__("../../../../../src/app/header/header.component.html"),
         styles: [__webpack_require__("../../../../../src/app/header/header.component.scss")],
-        encapsulation: __WEBPACK_IMPORTED_MODULE_0__angular_core__["X" /* ViewEncapsulation */].None
+        encapsulation: __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* ViewEncapsulation */].None
     }),
-    __metadata("design:paramtypes", [typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Renderer2 */]) === "function" && _f || Object])
+    __metadata("design:paramtypes", [typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["k" /* Renderer2 */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["k" /* Renderer2 */]) === "function" && _f || Object])
 ], HeaderComponent);
 
 var HeaderComponent_1, _a, _b, _c, _d, _e, _f;
@@ -158,7 +162,7 @@ HeaderModule = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["b" /* NgModule */])({
         imports: [
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["a" /* CommonModule */],
-            __WEBPACK_IMPORTED_MODULE_3__angular_material__["o" /* MatToolbarModule */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_material__["r" /* MatToolbarModule */],
             __WEBPACK_IMPORTED_MODULE_4__shared_shared_module__["a" /* SharedModule */]
         ],
         declarations: [__WEBPACK_IMPORTED_MODULE_2__header_component__["a" /* HeaderComponent */]],
@@ -175,7 +179,7 @@ HeaderModule = __decorate([
 /***/ "../../../../../src/app/home/home.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<app-header class=\"header-container\"></app-header>\n<div class=\"md-content\" fxLayoutAlign=\"center center\">\n  <div fxFlex=\"70\" class=\"container-body\">\n    <router-outlet></router-outlet>\n  </div>\n</div>"
+module.exports = "<app-header class=\"header-container\"></app-header>\r\n<div class=\"md-content\" fxLayoutAlign=\"center center\">\r\n  <div fxFlex=\"90\" class=\"container-body\">\r\n    <router-outlet></router-outlet>\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -222,7 +226,7 @@ var HomeComponent = (function () {
         this.routeLinks = [
             { label: 'Solicitações', link: 'solicitations' },
             { label: 'Motoristas', link: 'drivers' },
-            { label: 'cars', link: 'cars' }
+            { label: 'Veículos', link: 'vehicles' }
         ];
     }
     HomeComponent.prototype.ngOnInit = function () {
@@ -279,10 +283,10 @@ HomeModule = __decorate([
         imports: [
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["a" /* CommonModule */],
             __WEBPACK_IMPORTED_MODULE_3__shared_shared_module__["a" /* SharedModule */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_material__["d" /* MatButtonModule */],
+            __WEBPACK_IMPORTED_MODULE_4__angular_material__["f" /* MatButtonModule */],
             __WEBPACK_IMPORTED_MODULE_5__home_routing__["a" /* homeRouting */],
             __WEBPACK_IMPORTED_MODULE_6__header_header_module__["a" /* HeaderModule */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_material__["n" /* MatTabsModule */]
+            __WEBPACK_IMPORTED_MODULE_4__angular_material__["q" /* MatTabsModule */]
         ],
         declarations: [__WEBPACK_IMPORTED_MODULE_2__home_component__["a" /* HomeComponent */]]
     })
@@ -307,13 +311,15 @@ var homeRoutes = [
             { path: 'solicitations', loadChildren: 'app/solicitations-list/solicitations-list.module#SolicitationsListModule' },
             { path: 'drivers', loadChildren: 'app/drivers-list/drivers-list.module#DriversListModule' },
             { path: 'allocation', loadChildren: 'app/allocation/allocation.module#AllocationModule' },
-            { path: 'cars', loadChildren: 'app/cars/cars.module#CarsModule' },
+            { path: 'solicitation', loadChildren: 'app/solicitation/solicitation.module#SolicitationModule' },
+            { path: 'vehicles', loadChildren: 'app/vehicles/vehicles.module#VehiclesModule' },
             { path: 'travels', loadChildren: 'app/travels-list/travels-list.module#TravelsListModule' },
             { path: 'form', loadChildren: 'app/form/form.module#FormModule' },
+            { path: 'vehicle-request', loadChildren: 'app/vehicle-request/vehicle-request.module#VehicleRequestModule' },
         ]
     }
 ];
-var homeRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["b" /* RouterModule */].forChild(homeRoutes);
+var homeRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* RouterModule */].forChild(homeRoutes);
 //# sourceMappingURL=home.routing.js.map
 
 /***/ })
