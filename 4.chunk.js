@@ -136,7 +136,7 @@ var initialRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* Router
 /***/ "../../../../../src/app/login/login.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"login-component-container\" fxLayoutAlign=\"center center\">\r\n  <div>\r\n    <mat-toolbar color=\"primary\" class=\"login-toolbar\">\r\n      <div md-dialog-title fxFlex>\r\n        <div>\r\n          <div fxFlex fxLayoutAlign=\"center center\">Entrar</div>\r\n        </div>\r\n      </div>\r\n    </mat-toolbar>\r\n    <mat-card>\r\n      <div fxLayout=\"column\" fxLayoutAlign=\"space-around\" fxLayoutGap=\"5vh\" class=\"login-content\">\r\n        <form #element=\"ngForm\">\r\n          <div md-dialog-content class=\"input-container\">\r\n            <mat-form-field fxFlex>\r\n              <input matInput placeholder=\"Email\" name=\"email\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div md-dialog-content class=\"input-container\">\r\n            <mat-form-field fxFlex>\r\n              <input matInput placeholder=\"Senha\" name=\"password\" type=\"password\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div md-dialog-actions fxLayoutGap=\"10px\" fxLayoutAlign=\"space-around center\">\r\n            <button mat-raised-button color=\"primary\" type=\"submit\" (click)=\"login()\">        \r\n              ENTRAR\r\n            </button>\r\n          </div>\r\n          <div class=\"sign-up-container\">\r\n            <span>Esqueceu a senha?</span>\r\n            <a href=\"#\">Recupere.</a>\r\n          </div>\r\n        </form>\r\n      </div>\r\n    </mat-card>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div class=\"login-component-container\" fxLayoutAlign=\"center center\">\r\n  <div>\r\n    <mat-toolbar color=\"primary\" class=\"login-toolbar\">\r\n      <div md-dialog-title fxFlex>\r\n        <div>\r\n          <div fxFlex fxLayoutAlign=\"center center\">Entrar</div>\r\n        </div>\r\n      </div>\r\n    </mat-toolbar>\r\n    <mat-card>\r\n      <div fxLayout=\"column\" fxLayoutAlign=\"space-around\" fxLayoutGap=\"5vh\" class=\"login-content\">\r\n        <form #element=\"ngForm\">\r\n          <div md-dialog-content class=\"input-container\">\r\n            <mat-form-field fxFlex>\r\n              <input matInput placeholder=\"Email\" name=\"email\" [(ngModel)]=\"user.email\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div md-dialog-content class=\"input-container\">\r\n            <mat-form-field fxFlex>\r\n              <input matInput placeholder=\"Senha\" name=\"password\" type=\"password\" [(ngModel)]=\"user.password\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div md-dialog-actions fxLayoutGap=\"10px\" fxLayoutAlign=\"space-around center\">\r\n            <button mat-raised-button color=\"primary\" type=\"submit\" (click)=\"login()\">        \r\n              ENTRAR\r\n            </button>\r\n          </div>\r\n          <div class=\"sign-up-container\">\r\n            <span>Esqueceu a senha?</span>\r\n            <a href=\"#\">Recupere.</a>\r\n          </div>\r\n        </form>\r\n      </div>\r\n    </mat-card>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -164,6 +164,7 @@ module.exports = module.exports.toString();
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_authentication_service__ = __webpack_require__("../../../../../src/app/services/authentication.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -176,14 +177,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var LoginComponent = (function () {
-    function LoginComponent(router) {
+    function LoginComponent(router, authenticationService) {
         this.router = router;
-        this.model = {};
+        this.authenticationService = authenticationService;
+        this.user = {
+            email: '',
+            password: ''
+        };
     }
     LoginComponent.prototype.ngOnInit = function () {
     };
     LoginComponent.prototype.login = function () {
+        //this.authenticationService.login(this.user).subscribe(token => {
+        //  console.log(token);
+        //}, error => {
+        //  console.log(error)
+        //});
         this.router.navigate(['home']);
     };
     return LoginComponent;
@@ -194,10 +205,10 @@ LoginComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/login/login.component.html"),
         styles: [__webpack_require__("../../../../../src/app/login/login.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__services_authentication_service__["a" /* AuthenticationService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_authentication_service__["a" /* AuthenticationService */]) === "function" && _b || Object])
 ], LoginComponent);
 
-var _a;
+var _a, _b;
 //# sourceMappingURL=login.component.js.map
 
 /***/ }),
@@ -212,6 +223,7 @@ var _a;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_shared_module__ = __webpack_require__("../../../../../src/app/shared/shared.module.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_material_toolbar__ = __webpack_require__("../../../material/esm5/toolbar.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__services_authentication_service__ = __webpack_require__("../../../../../src/app/services/authentication.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -219,6 +231,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -241,11 +254,51 @@ LoginModule = __decorate([
         declarations: [__WEBPACK_IMPORTED_MODULE_2__login_component__["a" /* LoginComponent */]],
         exports: [
             __WEBPACK_IMPORTED_MODULE_2__login_component__["a" /* LoginComponent */]
+        ],
+        providers: [
+            __WEBPACK_IMPORTED_MODULE_6__services_authentication_service__["a" /* AuthenticationService */]
         ]
     })
 ], LoginModule);
 
 //# sourceMappingURL=login.module.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/services/authentication.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__crud_service__ = __webpack_require__("../../../../../src/app/services/crud.service.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AuthenticationService; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var AuthenticationService = (function () {
+    function AuthenticationService(crudService) {
+        this.crudService = crudService;
+    }
+    AuthenticationService.prototype.login = function (user) {
+        return this.crudService.post('https://mob-ufcg.herokuapp.com/admin/token', user);
+    };
+    return AuthenticationService;
+}());
+AuthenticationService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__crud_service__["a" /* CrudService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__crud_service__["a" /* CrudService */]) === "function" && _a || Object])
+], AuthenticationService);
+
+var _a;
+//# sourceMappingURL=authentication.service.js.map
 
 /***/ })
 

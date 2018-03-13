@@ -1,4 +1,4 @@
-webpackJsonp([13],{
+webpackJsonp([14],{
 
 /***/ "../../../../../src async recursive":
 /***/ (function(module, exports, __webpack_require__) {
@@ -6,7 +6,7 @@ webpackJsonp([13],{
 var map = {
 	"app/allocation/allocation.module": [
 		"../../../../../src/app/allocation/allocation.module.ts",
-		11,
+		12,
 		0
 	],
 	"app/drivers-list/drivers-list.module": [
@@ -16,7 +16,7 @@ var map = {
 	],
 	"app/form/form.module": [
 		"../../../../../src/app/form/form.module.ts",
-		10,
+		11,
 		0
 	],
 	"app/home/home.module": [
@@ -28,6 +28,10 @@ var map = {
 		"../../../../../src/app/initial/initial.module.ts",
 		4,
 		0
+	],
+	"app/public-info/public-info.module": [
+		"../../../../../src/app/public-info/public-info.module.ts",
+		10
 	],
 	"app/req-form/req-form.module": [
 		"../../../../../src/app/req-form/req-form.module.ts",
@@ -51,7 +55,8 @@ var map = {
 	],
 	"app/vehicle-request/vehicle-request.module": [
 		"../../../../../src/app/vehicle-request/vehicle-request.module.ts",
-		6
+		6,
+		0
 	],
 	"app/vehicles/vehicles.module": [
 		"../../../../../src/app/vehicles/vehicles.module.ts",
@@ -96,7 +101,7 @@ var appRoutes = [
     { path: 'home', loadChildren: 'app/home/home.module#HomeModule' },
     { path: 'form', loadChildren: 'app/form/form.module#FormModule' },
     { path: 'solicitation', loadChildren: 'app/solicitation/solicitation.module#SolicitationModule' },
-    { path: 'req-form', loadChildren: 'app/req-form/req-form.module#ReqFormModule' },
+    { path: 'public-info', loadChildren: 'app/public-info/public-info.module#PublicInfoModule' }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {

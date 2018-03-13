@@ -163,7 +163,7 @@ var VehicleFormComponent = (function () {
         this.model = {};
         this.selectedVehicleStatus = 'BOM';
         this.vehicleStatus = ['BOM', 'REGULAR', 'RUIM'];
-        this.onClose = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["y" /* EventEmitter */]();
+        this.onClose = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* EventEmitter */]();
     }
     VehicleFormComponent.prototype.ngOnInit = function () {
     };
@@ -182,7 +182,7 @@ var VehicleFormComponent = (function () {
     return VehicleFormComponent;
 }());
 __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Output */])(),
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* Output */])(),
     __metadata("design:type", Object)
 ], VehicleFormComponent.prototype, "onClose", void 0);
 VehicleFormComponent = __decorate([

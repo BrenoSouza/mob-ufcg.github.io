@@ -164,7 +164,7 @@ var DriversFormComponent = (function () {
     function DriversFormComponent(driverService) {
         this.driverService = driverService;
         this.model = {};
-        this.onClose = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["y" /* EventEmitter */]();
+        this.onClose = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* EventEmitter */]();
     }
     DriversFormComponent.prototype.ngOnInit = function () {
     };
@@ -180,7 +180,7 @@ var DriversFormComponent = (function () {
     return DriversFormComponent;
 }());
 __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["z" /* Output */])(),
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* Output */])(),
     __metadata("design:type", Object)
 ], DriversFormComponent.prototype, "onClose", void 0);
 DriversFormComponent = __decorate([
