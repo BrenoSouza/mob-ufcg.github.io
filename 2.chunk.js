@@ -60,7 +60,7 @@ DriversFormDialogComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/drivers-form-dialog/drivers-form-dialog.component.html"),
         styles: [__webpack_require__("../../../../../src/app/drivers-form-dialog/drivers-form-dialog.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["n" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["n" /* MatDialogRef */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["p" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["p" /* MatDialogRef */]) === "function" && _a || Object])
 ], DriversFormDialogComponent);
 
 var _a;
@@ -99,7 +99,7 @@ DriversFormDialogModule = __decorate([
         imports: [
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["a" /* CommonModule */],
             __WEBPACK_IMPORTED_MODULE_3__drivers_form_drivers_form_module__["a" /* DriversFormModule */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_material__["p" /* MatDialogModule */]
+            __WEBPACK_IMPORTED_MODULE_4__angular_material__["r" /* MatDialogModule */]
         ],
         declarations: [
             __WEBPACK_IMPORTED_MODULE_2__drivers_form_dialog_component__["a" /* DriversFormDialogComponent */]
@@ -164,7 +164,7 @@ var DriversFormComponent = (function () {
     function DriversFormComponent(driverService) {
         this.driverService = driverService;
         this.model = {};
-        this.onClose = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* EventEmitter */]();
+        this.onClose = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["r" /* EventEmitter */]();
     }
     DriversFormComponent.prototype.ngOnInit = function () {
     };
@@ -180,7 +180,7 @@ var DriversFormComponent = (function () {
     return DriversFormComponent;
 }());
 __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* Output */])(),
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["t" /* Output */])(),
     __metadata("design:type", Object)
 ], DriversFormComponent.prototype, "onClose", void 0);
 DriversFormComponent = __decorate([
@@ -337,7 +337,7 @@ DriversListComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/drivers-list/drivers-list.component.html"),
         styles: [__webpack_require__("../../../../../src/app/drivers-list/drivers-list.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__services_driver_service__["a" /* DriverService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_driver_service__["a" /* DriverService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["o" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["o" /* MatDialog */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__services_driver_service__["a" /* DriverService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_driver_service__["a" /* DriverService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["q" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["q" /* MatDialog */]) === "function" && _c || Object])
 ], DriversListComponent);
 
 var _a, _b, _c;

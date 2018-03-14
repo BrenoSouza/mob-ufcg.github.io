@@ -50,7 +50,7 @@ var SearchFormComponent = (function () {
         this.searchService = searchService;
         this.provisoryHour = ' 03:00:00';
         this.model = new __WEBPACK_IMPORTED_MODULE_2__models_solicitation_model__["a" /* Solicitation */];
-        this.searchResult = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* EventEmitter */]();
+        this.searchResult = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["r" /* EventEmitter */]();
     }
     SearchFormComponent.prototype.ngOnInit = function () {
     };
@@ -71,7 +71,7 @@ var SearchFormComponent = (function () {
     return SearchFormComponent;
 }());
 __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* Output */])(),
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["t" /* Output */])(),
     __metadata("design:type", Object)
 ], SearchFormComponent.prototype, "searchResult", void 0);
 SearchFormComponent = __decorate([
@@ -184,7 +184,7 @@ var SearchService = (function () {
 }());
 SearchService = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__crud_service__["a" /* CrudService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__crud_service__["a" /* CrudService */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__crud_service__["a" /* CrudService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__crud_service__["a" /* CrudService */]) === "function" && _b || Object])
 ], SearchService);
 
 var _a, _b;

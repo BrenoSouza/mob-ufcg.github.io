@@ -3,7 +3,7 @@ webpackJsonp([12],{
 /***/ "../../../../../src/app/allocation/allocation.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card class=\"allocation-stepper\">\r\n  <mat-horizontal-stepper [linear]=\"isLinear\" fxFlex>\r\n    <mat-step>\r\n      <ng-template matStepLabel>Formulário</ng-template>\r\n      <form fxLayout=\"column\">\r\n        <div fxFlex=\"80\" fxLayout=\"column\" fxFlexOffset=\"5\">\r\n          <div fxLayout=\"row\">\r\n            <mat-form-field fxFlex=\"50\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Setor Requisitante\" name=\"requesterSector\" [(ngModel)]=\"model.requesterSector\">\r\n            </mat-form-field>\r\n            <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n              <input matInput placeholder=\"Data da Solicitação\" name=\"date\" [(ngModel)]=\"model.requestDate\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div>\r\n            <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Destino\" name=\"destination\" [(ngModel)]=\"model.destination\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div>\r\n            <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n              <textarea matInput placeholder=\"Objetivo\" name=\"purpose\" [(ngModel)]=\"model.purpose\"></textarea>\r\n            </mat-form-field>\r\n          </div>\r\n          <div fxLayout=\"row\">\r\n            <mat-form-field fxFlex=\"50\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\">\r\n            </mat-form-field>\r\n            <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n              <input matInput placeholder=\"Telefone\" name=\"phone\" [(ngModel)]=\"model.phone\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div fxLayout=\"row\">\r\n            <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Data Ida\" name=\"travelDate\" [(ngModel)]=\"model.travelDate\">\r\n            </mat-form-field>\r\n            <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n              <input matInput placeholder=\"Hora da Saída\"  name=\"departureHour\" [(ngModel)]=\"model.departureHour\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div fxLayout=\"row\">\r\n            <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Regresso Provável\" name=\"returnDate\" [(ngModel)]=\"model.returnDate\">\r\n            </mat-form-field>\r\n            <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n              <input matInput placeholder=\"Hora\" name=\"returnHour\" [(ngModel)]=\"model.returnHour\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div fxLayout=\"row\">\r\n            <h3 fxFlex=\"20\" fxFlexOffset=\"15\">Local de Saída:</h3>\r\n            <mat-checkbox [checked]=\"model.departurePoint === 'Reitoria UFCG'\" (change)=\"changeDeparturePoint('Reitoria UFCG')\" fxFlex=\"20\">Reitoria/UFCG</mat-checkbox>\r\n            <mat-checkbox [checked]=\"model.departurePoint === 'Residência'\" (change)=\"changeDeparturePoint('Residência')\" fxFlex=\"20\">Residência</mat-checkbox>\r\n            <mat-checkbox [checked]=\"model.departurePoint === 'Outros'\"(change)=\"changeDeparturePoint('Outros')\" fxFlex=\"20\">Outros*</mat-checkbox>\r\n          </div>\r\n          <div>\r\n            <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n              <textarea matInput placeholder=\"\" name=\"travelOrigin\" [(ngModel)]=\"model.travelOrigin\"></textarea>\r\n            </mat-form-field>\r\n          </div>\r\n          <div>\r\n            <mat-form-field fxFlex=\"33\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Horário de chegada do voo/ônibus\" name=\"arrivalTime\" [(ngModel)]=\"model.arrivalTime\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div fxLayout=\"row\">\r\n            <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Número do voo\" name=\"flightNumber\" [(ngModel)]=\"model.flightNumber\">\r\n            </mat-form-field>\r\n            <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n              <input matInput placeholder=\"Empresa\" name=\"airCompany\" [(ngModel)]=\"model.airCompany\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div>\r\n            <mat-form-field fxFlex=\"33\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Origem da viagem\" name=\"travelOrigin\" [(ngModel)]=\"model.travelOrigin\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div>\r\n            <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Setor responsável pelas diárias do motorista\" name=\"driveSectorResponsability\" [(ngModel)]=\"model.driverSectorResponsibility\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div>\r\n            <button mat-raised-button fxFlex=\"25\" fxFlexOffset=\"15\" color=\"primary\" (click)=\"updateForm(model.id)\">Atualizar</button>\r\n            <button mat-raised-button fxFlex=\"25\" fxFlexOffset=\"15\" color=\"primary\" (click)=\"removeForm(model.id)\">Deletar</button>\r\n            <button mat-raised-button fxFlex=\"30\" fxFlexOffset=\"15\" matStepperNext color=\"primary\">Próximo</button>\r\n          </div>\r\n        </div>\r\n      </form>\r\n\r\n    </mat-step>\r\n    <mat-step>\r\n      <ng-template matStepLabel>Selecionar Veículo</ng-template>\r\n      <div fxLayoutAlign=\"space-between\">\r\n        <div *ngFor=\"let col of vehiclesHeader\" fxFlex fxLayoutAlign=\"center\">\r\n          <h3>{{ col }}</h3>\r\n        </div>\r\n      </div>\r\n      <div *ngIf=\"availableVehicles\">\r\n        <h4>Disponíveis</h4>\r\n        <mat-card class=\"vehicle-choice\" *ngFor=\"let vehicle of availableVehicles\" >\r\n          <mat-card-content class=\"card-container\" fxLayout=\"column\" (click)=\"selectVehicle(vehicle.id)\">\r\n            <div fxLayoutAlign=\"space-between\">\r\n              <div fxFlex fxLayoutAlign=\"center space-between\" [ngClass]=\"{'selected-option':vehicle.id === selectedVehicle}\">\r\n                <div fxFlex fxLayoutAlign=\"center center\">\r\n                  <p>{{ vehicle.vehicle }}</p>\r\n                </div>\r\n                <div fxFlex fxLayoutAlign=\"center center\">\r\n                  <p>{{ vehicle.plate }}</p>\r\n                </div>\r\n                <div fxFlex fxLayoutAlign=\"center center\">\r\n                  <p>{{ vehicle.brand }}</p>\r\n                </div>\r\n                <div fxFlex fxLayoutAlign=\"center center\">\r\n                  <p>{{ vehicle.capacity }}</p>\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </mat-card-content>\r\n        </mat-card>\r\n      </div>\r\n      <div fxFlex>\r\n        <div *ngIf=\"busyVehicles\">\r\n          <h4>Com viagens no dia</h4>\r\n          <mat-card class=\"vehicle-choice\">\r\n            <mat-card-content class=\"card-container\" fxLayout=\"column\">\r\n                <mat-accordion [multi]=\"false\">\r\n                    <mat-expansion-panel *ngFor=\"let vehicle of busyVehicles\" [ngClass]=\"{'selected-option':vehicle.id === selectedVehicle}\" (click)=\"selectVehicle(vehicle.id)\">\r\n                      <mat-expansion-panel-header (click)=\"showTravels(vehicle.id)\">\r\n                        <mat-panel-title>\r\n                            <div fxFlex=\"100\" fxLayoutAlign=\"space-between\">\r\n                                <div fxFlex fxLayoutAlign=\"center space-between\">\r\n                                  <div fxFlex fxLayoutAlign=\"center center\">\r\n                                    <p>{{ vehicle.vehicle }}</p>\r\n                                  </div>\r\n                                  <div fxFlex fxLayoutAlign=\"center center\">\r\n                                    <p>{{ vehicle.plate }}</p>\r\n                                  </div>\r\n                                  <div fxFlex fxLayoutAlign=\"center center\">\r\n                                    <p>{{ vehicle.brand }}</p>\r\n                                  </div>\r\n                                  <div fxFlex fxLayoutAlign=\"center center\">\r\n                                    <p>{{ vehicle.capacity }}</p>\r\n                                  </div>\r\n                                </div>\r\n                              </div>\r\n                            </mat-panel-title>\r\n                      </mat-expansion-panel-header>\r\n                      \r\n                      Lista de Viagens\r\n                      <mat-card></mat-card>\r\n                    </mat-expansion-panel>\r\n                  </mat-accordion>\r\n              \r\n            </mat-card-content>\r\n          </mat-card>\r\n        </div>\r\n        <button mat-raised-button matStepperPrevious color=\"primary\">Voltar</button>\r\n        <button mat-raised-button matStepperNext color=\"primary\">Próximo</button>\r\n      </div>\r\n    </mat-step>\r\n    <mat-step>\r\n      <ng-template matStepLabel>Selecionar Motorista</ng-template>\r\n      <div>\r\n        <div fxLayoutAlign=\"space-between\">\r\n          <div *ngFor=\"let col of driversHeader\" fxFlex fxLayoutAlign=\"center\">\r\n            <h4>{{ col }}</h4>\r\n          </div>\r\n        </div>\r\n        <div *ngIf=\"drivers\">\r\n          <mat-card *ngFor=\"let driver of drivers\" class=\"vehicle-choice\">\r\n            <mat-card-content class=\"card-container\" fxLayout=\"column\" (click)=\"selectDriver(driver.id)\"  [ngClass]=\"{'selected-option':driver.id === selectedDriver}\">\r\n              <div fxLayoutAlign=\"space-between\" fxLayoutGap=\"30px\">\r\n                <div fxFlex fxLayoutAlign=\"center space-between\">\r\n                  <div fxFlex fxLayoutAlign=\"center center\">\r\n                    <p>{{ driver.name }}</p>\r\n                  </div>\r\n                  <div fxFlex fxLayoutAlign=\"center center\">\r\n                    <p>{{ driver.cpf }}</p>\r\n                  </div>\r\n                  <div fxFlex fxLayoutAlign=\"center center\">\r\n                    <p>{{ driver.cnh }}</p>\r\n                  </div>\r\n                  <div fxFlex fxLayoutAlign=\"center center\">\r\n                    <p>{{ driver.registration }}</p>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n            </mat-card-content>\r\n          </mat-card>\r\n        </div>\r\n        <button mat-raised-button matStepperPrevious color=\"primary\">Voltar</button>\r\n        <button mat-raised-button color=\"primary\" class=\"signup-btn\" (click)=\"confirmTravel()\">Confirmar</button>\r\n      </div>\r\n    </mat-step>\r\n  </mat-horizontal-stepper>\r\n</mat-card>\r\n"
+module.exports = "<mat-card class=\"allocation-stepper\">\r\n  <mat-horizontal-stepper [linear]=\"isLinear\" fxFlex>\r\n    <mat-step>\r\n      <ng-template matStepLabel>Formulário</ng-template>\r\n      <form fxLayout=\"column\">\r\n        <div fxFlex=\"80\" fxLayout=\"column\" fxFlexOffset=\"5\">\r\n          <div fxLayout=\"row\">\r\n            <mat-form-field fxFlex=\"50\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Setor Requisitante\" name=\"requesterSector\" [(ngModel)]=\"model.requesterSector\">\r\n            </mat-form-field>\r\n            <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n              <input matInput placeholder=\"Data da Solicitação\" name=\"date\" [(ngModel)]=\"model.requestDate\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div>\r\n            <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Destino\" name=\"destination\" [(ngModel)]=\"model.destination\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div>\r\n            <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n              <textarea matInput placeholder=\"Objetivo\" name=\"purpose\" [(ngModel)]=\"model.purpose\"></textarea>\r\n            </mat-form-field>\r\n          </div>\r\n          <div fxLayout=\"row\">\r\n            <mat-form-field fxFlex=\"50\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\">\r\n            </mat-form-field>\r\n            <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n              <input matInput placeholder=\"Telefone\" name=\"phone\" [(ngModel)]=\"model.phone\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div fxLayout=\"row\">\r\n            <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Data Ida\" name=\"travelDate\" [(ngModel)]=\"model.travelDate\">\r\n            </mat-form-field>\r\n            <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n              <input matInput placeholder=\"Hora da Saída\"  name=\"departureHour\" [(ngModel)]=\"model.departureHour\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div fxLayout=\"row\">\r\n            <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Regresso Provável\" name=\"returnDate\" [(ngModel)]=\"model.returnDate\">\r\n            </mat-form-field>\r\n            <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n              <input matInput placeholder=\"Hora\" name=\"returnHour\" [(ngModel)]=\"model.returnHour\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div fxLayout=\"row\">\r\n            <h3 fxFlex=\"20\" fxFlexOffset=\"15\">Local de Saída:</h3>\r\n            <mat-checkbox [checked]=\"model.departurePoint === 'Reitoria UFCG'\" (change)=\"changeDeparturePoint('Reitoria UFCG')\" fxFlex=\"20\">Reitoria/UFCG</mat-checkbox>\r\n            <mat-checkbox [checked]=\"model.departurePoint === 'Residência'\" (change)=\"changeDeparturePoint('Residência')\" fxFlex=\"20\">Residência</mat-checkbox>\r\n            <mat-checkbox [checked]=\"model.departurePoint === 'Outros'\"(change)=\"changeDeparturePoint('Outros')\" fxFlex=\"20\">Outros*</mat-checkbox>\r\n          </div>\r\n          <div>\r\n            <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n              <textarea matInput placeholder=\"\" name=\"travelOrigin\" [(ngModel)]=\"model.travelOrigin\"></textarea>\r\n            </mat-form-field>\r\n          </div>\r\n          <div>\r\n            <mat-form-field fxFlex=\"33\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Horário de chegada do voo/ônibus\" name=\"arrivalTime\" [(ngModel)]=\"model.arrivalTime\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div fxLayout=\"row\">\r\n            <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Número do voo\" name=\"flightNumber\" [(ngModel)]=\"model.flightNumber\">\r\n            </mat-form-field>\r\n            <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n              <input matInput placeholder=\"Empresa\" name=\"airCompany\" [(ngModel)]=\"model.airCompany\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div>\r\n            <mat-form-field fxFlex=\"33\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Origem da viagem\" name=\"travelOrigin\" [(ngModel)]=\"model.travelOrigin\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div>\r\n            <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n              <input matInput placeholder=\"Setor responsável pelas diárias do motorista\" name=\"driveSectorResponsability\" [(ngModel)]=\"model.driverSectorResponsibility\">\r\n            </mat-form-field>\r\n          </div>\r\n          <div>\r\n            <button mat-raised-button fxFlex=\"25\" fxFlexOffset=\"15\" color=\"primary\" (click)=\"updateForm(model.id)\">Atualizar</button>\r\n            <button mat-raised-button fxFlex=\"25\" fxFlexOffset=\"15\" color=\"primary\" (click)=\"removeForm(model.id)\">Deletar</button>\r\n            <button mat-raised-button fxFlex=\"30\" fxFlexOffset=\"15\" matStepperNext color=\"primary\">Próximo</button>\r\n          </div>\r\n        </div>\r\n      </form>\r\n      \r\n    </mat-step>\r\n    <mat-step>\r\n      <ng-template matStepLabel>Selecionar Veículo</ng-template>\r\n      <div *ngIf=\"availableVehicles\">\r\n        <div fxLayout=\"row\">\r\n          <mat-toolbar color=\"primary\" fxLayoutAlign=\"center center\">\r\n            <span>Selecione um veículo</span>\r\n          </mat-toolbar>\r\n        </div>\r\n        <div fxLayoutAlign=\"space-between\">\r\n          <div *ngFor=\"let col of vehiclesHeader\" fxFlex fxLayoutAlign=\"center\">\r\n            <h4>{{ col }}</h4>\r\n          </div>\r\n        </div>\r\n        <mat-card class=\"vehicle-choice card card-5\" *ngFor=\"let vehicle of availableVehicles\">\r\n          <mat-card-content class=\"card-container\" fxLayout=\"column\" (click)=\"selectVehicleAvailable(vehicle.id)\">\r\n            <div class=\"vehicle-card\" fxLayoutAlign=\"space-between\" [ngClass]=\"{'selected-option':vehicle.id === selectedVehicleAvailable}\">\r\n              <div fxLayoutAlign=\"center center\">\r\n                <mat-checkbox [checked]=\"vehicle.id === selectedVehicleAvailable\"></mat-checkbox>\r\n              </div>\r\n              <div fxFlex fxLayoutAlign=\"center space-between\">\r\n                <div fxFlex fxLayoutAlign=\"center center\">\r\n                  <p>{{ vehicle.vehicle }}</p>\r\n                </div>\r\n                <div fxFlex fxLayoutAlign=\"center center\">\r\n                  <p>{{ vehicle.plate }}</p>\r\n                </div>\r\n                <div fxFlex fxLayoutAlign=\"center center\">\r\n                  <p>{{ vehicle.brand }}</p>\r\n                </div>\r\n                <div fxFlex fxLayoutAlign=\"center center\">\r\n                  <p>{{ vehicle.capacity }}</p>\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </mat-card-content>\r\n        </mat-card>\r\n      </div>\r\n      <div fxFlex>\r\n        <div *ngIf=\"busyVehicles\">\r\n          <mat-card class=\"vehicle-choice\">\r\n            <mat-card-content class=\"card-container\" fxLayout=\"column\">\r\n              <mat-accordion [multi]=\"false\">\r\n                <mat-expansion-panel *ngFor=\"let vehicle of busyVehicles\" [ngClass]=\"{'selected-option':vehicle.id === selectedVehicleWithTravel}\" (click)=\"selectVehicleWithTravels(vehicle.id)\">\r\n                  <mat-expansion-panel-header (click)=\"showTravels(vehicle.id)\">\r\n                    <mat-panel-title>\r\n                      <div fxFlex=\"100\" fxLayoutAlign=\"space-between\">\r\n                        <div fxFlex fxLayoutAlign=\"center space-between\">\r\n                          <div fxLayoutAlign=\"center center\">\r\n                            <mat-icon>airline_seat_recline_normal</mat-icon>\r\n                          </div>\r\n                          <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ vehicle.vehicle }}</p>\r\n                          </div>\r\n                          <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ vehicle.plate }}</p>\r\n                          </div>\r\n                          <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ vehicle.brand }}</p>\r\n                          </div>\r\n                          <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ vehicle.capacity }}</p>\r\n                          </div>\r\n                        </div>\r\n                      </div>\r\n                    </mat-panel-title>\r\n                  </mat-expansion-panel-header>\r\n                  \r\n                  <div fxLayoutAlign=\"space-between center\">\r\n                    <div fxFlex fxLayoutAlign=\"center\"><h4>Destino</h4></div>\r\n                    <div fxFlex fxLayoutAlign=\"center\"><h4>Motorista</h4></div>\r\n                    <div fxFlex fxLayoutAlign=\"center\"><h4>Retorno</h4></div>\r\n                  </div>\r\n                  <mat-card class=\"travels-vehicles\" *ngFor=\"let travel of travelsByVehicle\" (click)=\"selectTravel(travel, travel.id, travel.form[0])\">\r\n                    <div fxFlex fxLayoutAlign=\"center space-between\" >\r\n                      <mat-checkbox [checked]=\"travel.id === selectedTravelID\"></mat-checkbox>\r\n                      <div fxFlex fxLayoutAlign=\"center center\">\r\n                        <p>{{ travel.form[0].destination }}</p>\r\n                      </div>\r\n                      <div fxFlex fxLayoutAlign=\"center center\">\r\n                        <p>{{travel.driver.name}}</p>\r\n                      </div>\r\n                      <div fxFlex fxLayoutAlign=\"center center\">\r\n                        <p>{{ travel.travelDate }}</p>\r\n                      </div>\r\n                    </div>\r\n                  </mat-card>\r\n                </mat-expansion-panel>\r\n              </mat-accordion>\r\n              \r\n            </mat-card-content>\r\n          </mat-card>\r\n        </div>\r\n        <button mat-raised-button matStepperPrevious color=\"primary\">Voltar</button>\r\n        <button mat-raised-button matStepperNext color=\"primary\">Próximo</button>\r\n      </div>\r\n    </mat-step>\r\n    <mat-step>\r\n      <ng-template matStepLabel>Selecionar Motorista</ng-template>\r\n      <div *ngIf=\"!isCarona\">\r\n        <div fxLayoutAlign=\"space-between\">\r\n          <div *ngFor=\"let col of driversHeader\" fxFlex fxLayoutAlign=\"center\">\r\n            <h4>{{ col }}</h4>\r\n          </div>\r\n        </div>\r\n        <div *ngIf=\"drivers\">\r\n          <mat-card *ngFor=\"let driver of drivers\" class=\"vehicle-choice\">\r\n            <mat-card-content class=\"card-container\" fxLayout=\"column\" (click)=\"selectDriver(driver.id)\"  [ngClass]=\"{'selected-option':driver.id === selectedDriver}\">\r\n              <div fxLayoutAlign=\"space-between\" fxLayoutGap=\"30px\">\r\n                <div fxFlex fxLayoutAlign=\"center space-between\">\r\n                  <div fxFlex fxLayoutAlign=\"center center\">\r\n                    <p>{{ driver.name }}</p>\r\n                  </div>\r\n                  <div fxFlex fxLayoutAlign=\"center center\">\r\n                    <p>{{ driver.cpf }}</p>\r\n                  </div>\r\n                  <div fxFlex fxLayoutAlign=\"center center\">\r\n                    <p>{{ driver.cnh }}</p>\r\n                  </div>\r\n                  <div fxFlex fxLayoutAlign=\"center center\">\r\n                    <p>{{ driver.registration }}</p>\r\n                  </div>\r\n                </div>\r\n              </div>\r\n            </mat-card-content>\r\n          </mat-card>\r\n        </div>\r\n      </div>\r\n      <div *ngIf=\"isCarona\" fxLayoutAlign=\"center\" fxLayout=\"column\">\r\n        <div fxLayoutAlign=\"center\">\r\n          <h1>Essa viagem será alocada como Carona</h1>\r\n        </div>\r\n        <mat-card class=\"full-form-container\" fxLayout=\"column\" *ngIf=\"isCarona\">\r\n          <form fxLayout=\"column\">\r\n            <div fxFlex=\"80\" fxLayout=\"column\" fxFlexOffset=\"5\">\r\n              <div fxLayout=\"row\">\r\n                <mat-form-field fxFlex=\"50\" fxFlexOffset=\"15\">\r\n                  <input matInput placeholder=\"Setor Requisitante\" name=\"requesterSector2\" [(ngModel)]=\"model.requesterSector\">\r\n                </mat-form-field>\r\n                <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n                  <input matInput placeholder=\"Data\" name=\"date2\" [(ngModel)]=\"formCarona.requestDate\" readonly=\"true\">\r\n                </mat-form-field>\r\n              </div>\r\n              <div>\r\n                <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n                  <input matInput placeholder=\"Destino\" name=\"destination2\" [(ngModel)]=\"formCarona.destination\">\r\n                </mat-form-field>\r\n              </div>\r\n              <div>\r\n                <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n                  <textarea matInput placeholder=\"Objetivo\" name=\"purpose2\" [(ngModel)]=\"formCarona.purpose\"></textarea>\r\n                </mat-form-field>\r\n              </div>\r\n              <div fxLayout=\"row\">\r\n                <mat-form-field fxFlex=\"50\" fxFlexOffset=\"15\">\r\n                  <input matInput placeholder=\"Nome\" name=\"name2\" [(ngModel)]=\"formCarona.name\">\r\n                </mat-form-field>\r\n                <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n                  <input matInput placeholder=\"Telefone\" name=\"phone2\" [(ngModel)]=\"formCarona.phone\">\r\n                </mat-form-field>\r\n              </div>\r\n              <div fxLayout=\"row\">\r\n                <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n                  <input matInput placeholder=\"Data\" name=\"travelDate2\" [(ngModel)]=\"formCarona.travelDate\" readonly=\"true\">\r\n                </mat-form-field>\r\n                <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n                  <input matInput placeholder=\"Hora da Saída\"  name=\"departureHour2\" [(ngModel)]=\"formCarona.departureHour\">\r\n                </mat-form-field>\r\n              </div>\r\n              <div fxLayout=\"row\">\r\n                <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n                  <input matInput placeholder=\"Regresso Provável\" name=\"returnDate2\" [(ngModel)]=\"formCarona.returnDate\" readonly=\"true\">\r\n                </mat-form-field>\r\n                <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n                  <input matInput placeholder=\"Hora\" name=\"returnHour2\" [(ngModel)]=\"formCarona.returnHour\">\r\n                </mat-form-field>\r\n              </div>\r\n              <div fxLayout=\"row\">\r\n                <h3 fxFlex=\"20\" fxFlexOffset=\"15\">Local de Saída:</h3>\r\n                <mat-checkbox fxFlex=\"20\">Reitoria/UFCG</mat-checkbox>\r\n                <mat-checkbox fxFlex=\"20\">Residência</mat-checkbox>\r\n                <mat-checkbox fxFlex=\"20\">Outros*</mat-checkbox>\r\n              </div>\r\n              <div>\r\n                <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n                  <textarea matInput placeholder=\"\" name=\"Address2\" [(ngModel)]=\"formCarona.address\"></textarea>\r\n                </mat-form-field>\r\n              </div>\r\n              <div>\r\n                <mat-form-field fxFlex=\"33\" fxFlexOffset=\"15\">\r\n                  <input matInput placeholder=\"Horário de chegada do voo/ônibus\" name=\"arrivalTime2\" [(ngModel)]=\"formCarona.arrivalTime\">\r\n                </mat-form-field>\r\n              </div>\r\n              <div fxLayout=\"row\">\r\n                <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n                  <input matInput placeholder=\"Número do voo\" name=\"flightNumber2\" [(ngModel)]=\"formCarona.flightNumber\">\r\n                </mat-form-field>\r\n                <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n                  <input matInput placeholder=\"Empresa\" name=\"airCompany2\" [(ngModel)]=\"formCarona.airCompany\">\r\n                </mat-form-field>\r\n              </div>\r\n              <div>\r\n                <mat-form-field fxFlex=\"33\" fxFlexOffset=\"15\">\r\n                  <input matInput placeholder=\"Origem da viagem\" name=\"travelOrigin2\" [(ngModel)]=\"formCarona.travelOrigin\">\r\n                </mat-form-field>\r\n              </div>\r\n              <div>\r\n                <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n                  <input matInput placeholder=\"Setor responsável pelas diárias do motorista\" name=\"driveSectorResponsability2\" [(ngModel)]=\"formCarona.driverSectorResponsibility\">\r\n                </mat-form-field>\r\n              </div>\r\n            </div>\r\n          </form>\r\n        </mat-card>\r\n      </div>\r\n      \r\n      <button mat-raised-button matStepperPrevious color=\"primary\">Voltar</button>\r\n      <button mat-raised-button color=\"primary\" class=\"signup-btn\" (click)=\"confirmTravel()\">Confirmar</button>\r\n    </mat-step>\r\n  </mat-horizontal-stepper>\r\n  <button class=\"mat-button\" mat-fab (click)=\"openDialog()\"><mat-icon>not_interested</mat-icon></button>    \r\n</mat-card>\r\n"
 
 /***/ }),
 
@@ -15,7 +15,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".allocation-stepper {\n  margin-top: 5%; }\n  .allocation-stepper button {\n    margin-top: 30px; }\n\n.selected-option {\n  background-color: #a2c0df; }\n\n.vehicle-choice {\n  padding: 0;\n  border-style: ridge; }\n  .vehicle-choice:hover {\n    cursor: pointer; }\n  .vehicle-choice .img-container {\n    height: 50px;\n    padding: 7px 0; }\n    .vehicle-choice .img-container img {\n      border-radius: 50%;\n      height: 50px;\n      width: 50px; }\n  .vehicle-choice p {\n    margin: 0;\n    padding: 24px 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap; }\n", ""]);
+exports.push([module.i, ".allocation-stepper {\n  margin-top: 5%; }\n  .allocation-stepper button {\n    margin-top: 30px; }\n\n.selected-option {\n  background-color: #d4e4f3; }\n\n.vehicle-choice {\n  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);\n  padding: 0;\n  border: 20px;\n  margin: 15px 0 15px 0; }\n  .vehicle-choice .mat-expansion-panel-header {\n    padding: 0 12px 0 12px; }\n  .vehicle-choice mat-expansion-panel-body {\n    overflow: hidden; }\n  .vehicle-choice .vehicle-card:hover {\n    cursor: pointer; }\n  .vehicle-choice .img-container {\n    height: 50px;\n    padding: 7px 0; }\n    .vehicle-choice .img-container img {\n      border-radius: 50%;\n      height: 50px;\n      width: 50px; }\n  .vehicle-choice .mat-checkbox {\n    margin-left: 4px; }\n  .vehicle-choice p {\n    margin: 0;\n    padding: 24px 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap; }\n\n.travels-vehicles {\n  padding: 15px; }\n  .travels-vehicles:hover {\n    cursor: pointer; }\n  .travels-vehicles p {\n    padding: 2px;\n    font-size: 14px; }\n\n.toolbar-vehicles-travels {\n  margin-top: 20px; }\n\nh4 {\n  margin: 5px; }\n\n.mat-button {\n  background-color: #E68364;\n  position: fixed;\n  bottom: 50px;\n  right: 30px; }\n", ""]);
 
 // exports
 
@@ -54,8 +54,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var AllocationComponent = (function () {
-    function AllocationComponent(travelService, route, formService, vehicleService, driverService, snackBar, router) {
+    function AllocationComponent(travelService, route, formService, vehicleService, driverService, snackBar, router, dialog) {
         this.travelService = travelService;
         this.route = route;
         this.formService = formService;
@@ -63,6 +64,7 @@ var AllocationComponent = (function () {
         this.driverService = driverService;
         this.snackBar = snackBar;
         this.router = router;
+        this.dialog = dialog;
         this.model = {};
         this.isLinear = false;
         this.checked = false;
@@ -74,7 +76,11 @@ var AllocationComponent = (function () {
         this.vehiclesHeader = ['Veículo', 'Placa', 'Marca', 'Capacidade'];
         this.drivers = [];
         this.driversHeader = ['Nome', 'Cpf', 'Cnh', 'Registro'];
-        this.provisoryDateHour = '01/01/2018 ';
+        this.selectedVehicleAvailable = -1;
+        this.selectedTravel = {};
+        this.selectedTravelID = -1;
+        this.isCarona = false;
+        this.formCarona = {};
         this.id = this.route.snapshot.params['id'];
     }
     AllocationComponent.prototype.ngOnInit = function () {
@@ -83,39 +89,50 @@ var AllocationComponent = (function () {
             _this.model = data;
             _this.model.departureHour = data.departureHour.slice(11);
             _this.model.returnHour = data.returnHour.slice(11);
-            _this.vehicleService.getVehiclesWithTravels(_this.model.travelDate).subscribe(function (data2) {
-                for (var _i = 0, data2_1 = data2; _i < data2_1.length; _i++) {
-                    var vehicleData = data2_1[_i];
-                    _this.busyVehicles.push(vehicleData);
-                }
-            });
+            _this.getVehiclesWithTravels();
+            _this.getAvailableVehicles();
+            _this.getAllDrivers();
         }, function (error) {
             console.error(error);
         });
-        this.vehicleService.getAvailables(this.id).subscribe(function (data) {
-            for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
-                var vehicleData = data_1[_i];
-                _this.availableVehicles.push(vehicleData);
-            }
-        });
-        this.vehicleService.vehiclesObs.subscribe(function (data) {
-            for (var _i = 0, data_2 = data; _i < data_2.length; _i++) {
-                var vehicleData = data_2[_i];
-                _this.vehicles.push(vehicleData);
-            }
-        });
+    };
+    AllocationComponent.prototype.getAllDrivers = function () {
+        var _this = this;
         this.driverService.driversObs.subscribe(function (data) {
-            for (var _i = 0, data_3 = data; _i < data_3.length; _i++) {
-                var driverData = data_3[_i];
-                _this.drivers.push(driverData);
-            }
+            _this.drivers = data;
+        });
+    };
+    AllocationComponent.prototype.getAvailableVehicles = function () {
+        var _this = this;
+        this.vehicleService.getAvailables(this.id).subscribe(function (data) {
+            _this.availableVehicles = data;
+        });
+    };
+    AllocationComponent.prototype.getVehiclesWithTravels = function () {
+        var _this = this;
+        this.vehicleService.getVehiclesWithTravels(this.model.travelDate).subscribe(function (data2) {
+            _this.busyVehicles = data2;
         });
     };
     AllocationComponent.prototype.selectDriver = function (id) {
         this.selectedDriver = id;
     };
-    AllocationComponent.prototype.selectVehicle = function (id) {
-        this.selectedVehicle = id;
+    AllocationComponent.prototype.selectVehicleAvailable = function (id) {
+        this.isCarona = false;
+        this.selectedVehicleWithTravel = -1;
+        this.selectedTravelID = -1;
+        this.selectedTravel = {};
+        if (this.selectedVehicleAvailable === -1 || this.selectedVehicleAvailable !== id) {
+            this.selectedVehicleAvailable = id;
+        }
+        else {
+            this.selectedVehicleAvailable = -1;
+        }
+    };
+    AllocationComponent.prototype.selectVehicleWithTravels = function (id) {
+        this.isCarona = true;
+        this.selectedVehicleAvailable = -1;
+        this.selectedVehicleWithTravel = id;
     };
     AllocationComponent.prototype.updateForm = function () {
         var _this = this;
@@ -128,25 +145,47 @@ var AllocationComponent = (function () {
         form.departureHour = form.travelDate;
         this.formService.update(id, form).subscribe(function (data) {
             var snackBarRef = _this.snackBar.open('Solicitação atualizada!', 'OK', { duration: 5000 });
-            console.log(data);
+            _this.getAvailableVehicles();
+            _this.getVehiclesWithTravels();
         }, function (error) {
             var snackBarRef = _this.snackBar.open(error.errors[0], 'ENVIAR NOVAMENTE', { duration: 5000 });
-            console.log(error);
         });
     };
     AllocationComponent.prototype.confirmTravel = function () {
         var _this = this;
-        var form = {
-            formId: +this.id,
-            vehicle: this.selectedVehicle,
-            driver: this.selectedDriver
-        };
-        this.travelService.create(form).subscribe(function (data) {
-            var snackBarRef = _this.snackBar.open('Solicitação aceita e viagem confirmada!', 'OK', { duration: 5000 });
-            _this.router.navigate(['/home/travels']);
-        }, function (error) {
-            var snackBarRef = _this.snackBar.open(error.errors[0], 'ENVIAR NOVAMENTE', { duration: 5000 });
-        });
+        var form;
+        if (this.selectedVehicleWithTravel !== -1) {
+            if (this.selectedTravelID !== -1) {
+                form = {
+                    formId: +this.id,
+                    tarvelId: this.selectedTravelID
+                };
+                this.selectedVehicle = this.selectedVehicleWithTravel;
+                this.travelService.ride(form).subscribe(function (data) {
+                    var snackBarRef = _this.snackBar.open('Solicitação aceita e a carona foi confirmada!', 'OK', { duration: 5000 });
+                    _this.router.navigate(['/home/travels']);
+                }, function (error) {
+                    var snackBarRef = _this.snackBar.open(error.errors[0], 'ENVIAR NOVAMENTE', { duration: 5000 });
+                });
+            }
+            else {
+                var snackBarRef = this.snackBar.open('A viagem de carona não foi selecionada', 'OK', { duration: 15000 });
+            }
+        }
+        else {
+            form = {
+                formId: +this.id,
+                vehicle: this.selectedVehicle,
+                driver: this.selectedDriver
+            };
+            this.selectedVehicle = this.selectedVehicleAvailable;
+            this.travelService.create(form).subscribe(function (data) {
+                var snackBarRef = _this.snackBar.open('Solicitação aceita e viagem confirmada!', 'OK', { duration: 5000 });
+                _this.router.navigate(['/home/travels']);
+            }, function (error) {
+                var snackBarRef = _this.snackBar.open(error.errors[0], 'ENVIAR NOVAMENTE', { duration: 5000 });
+            });
+        }
     };
     AllocationComponent.prototype.changeDeparturePoint = function (point) {
         if (point !== this.model.departurePoint) {
@@ -164,15 +203,40 @@ var AllocationComponent = (function () {
     };
     AllocationComponent.prototype.showTravels = function (id) {
         var _this = this;
-        console.log(id, this.model.travelDate);
         this.travelsByVehicle = [];
-        this.vehicleService.getTravelsFromVehicles(this.id, this.model.travelDate).subscribe(function (data) {
-            for (var _i = 0, data_4 = data; _i < data_4.length; _i++) {
-                var vehicleData = data_4[_i];
-                _this.travelsByVehicle.push(vehicleData);
-            }
+        this.vehicleService.getTravelsFromVehicles(id, this.model.travelDate).subscribe(function (data) {
+            _this.travelsByVehicle = data;
         });
-        console.log(this.travelsByVehicle);
+    };
+    AllocationComponent.prototype.selectTravel = function (travel, id, model) {
+        if (this.selectedTravelID === -1) {
+            this.formCarona = model;
+            this.selectedTravel = travel;
+            this.selectedTravelID = id;
+        }
+        else {
+            this.selectedTravelID = -1;
+            this.formCarona = {};
+            this.selectedTravel = {};
+        }
+    };
+    AllocationComponent.prototype.deniedForm = function (justification) {
+        var _this = this;
+        var form = {
+            justificationDeniel: justification
+        };
+        this.formService.denied(this.id, form).subscribe(function (data) {
+            var snackBarRef = _this.snackBar.open('Solicitação foi bloqueada!', 'OK', { duration: 5000 });
+            _this.router.navigate(['/home/solicitations']);
+        }, function (error) {
+            var snackBarRef = _this.snackBar.open(error.errors[0], 'ENVIAR NOVAMENTE', { duration: 5000 });
+        });
+    };
+    AllocationComponent.prototype.openDialog = function () {
+        var deniedJustification = prompt('Qual o motivo de bloquear esta solicitação?');
+        if (deniedJustification !== null) {
+            this.deniedForm(deniedJustification);
+        }
     };
     return AllocationComponent;
 }());
@@ -182,10 +246,10 @@ AllocationComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/allocation/allocation.component.html"),
         styles: [__webpack_require__("../../../../../src/app/allocation/allocation.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__services_travel_service__["a" /* TravelService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_travel_service__["a" /* TravelService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__services_form_service__["a" /* FormService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_form_service__["a" /* FormService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_4__services_vehicle_service__["a" /* VehicleService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__services_vehicle_service__["a" /* VehicleService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_5__services_driver_service__["a" /* DriverService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__services_driver_service__["a" /* DriverService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_6__angular_material__["m" /* MatSnackBar */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__angular_material__["m" /* MatSnackBar */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */]) === "function" && _g || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__services_travel_service__["a" /* TravelService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_travel_service__["a" /* TravelService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__services_form_service__["a" /* FormService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_form_service__["a" /* FormService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_4__services_vehicle_service__["a" /* VehicleService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__services_vehicle_service__["a" /* VehicleService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_5__services_driver_service__["a" /* DriverService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__services_driver_service__["a" /* DriverService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_6__angular_material__["o" /* MatSnackBar */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__angular_material__["o" /* MatSnackBar */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["c" /* Router */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_6__angular_material__["q" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__angular_material__["q" /* MatDialog */]) === "function" && _h || Object])
 ], AllocationComponent);
 
-var _a, _b, _c, _d, _e, _f, _g;
+var _a, _b, _c, _d, _e, _f, _g, _h;
 //# sourceMappingURL=allocation.component.js.map
 
 /***/ }),
@@ -233,7 +297,7 @@ AllocationModule = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["b" /* NgModule */])({
         imports: [
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["a" /* CommonModule */],
-            __WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MatStepperModule */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_material__["m" /* MatStepperModule */],
             __WEBPACK_IMPORTED_MODULE_4__shared_shared_module__["a" /* SharedModule */],
             __WEBPACK_IMPORTED_MODULE_5__allocation_routing__["a" /* allocationRouting */],
             __WEBPACK_IMPORTED_MODULE_8__angular_forms__["a" /* FormsModule */]

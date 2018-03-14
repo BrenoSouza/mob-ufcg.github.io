@@ -31,7 +31,8 @@ var map = {
 	],
 	"app/public-info/public-info.module": [
 		"../../../../../src/app/public-info/public-info.module.ts",
-		10
+		10,
+		0
 	],
 	"app/req-form/req-form.module": [
 		"../../../../../src/app/req-form/req-form.module.ts",

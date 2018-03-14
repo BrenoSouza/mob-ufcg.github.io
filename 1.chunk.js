@@ -60,7 +60,7 @@ VehicleFormDialogComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/vehicles/vehicle-form-dialog/vehicle-form-dialog.component.html"),
         styles: [__webpack_require__("../../../../../src/app/vehicles/vehicle-form-dialog/vehicle-form-dialog.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["n" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["n" /* MatDialogRef */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["p" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["p" /* MatDialogRef */]) === "function" && _a || Object])
 ], VehicleFormDialogComponent);
 
 var _a;
@@ -163,7 +163,7 @@ var VehicleFormComponent = (function () {
         this.model = {};
         this.selectedVehicleStatus = 'BOM';
         this.vehicleStatus = ['BOM', 'REGULAR', 'RUIM'];
-        this.onClose = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* EventEmitter */]();
+        this.onClose = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["r" /* EventEmitter */]();
     }
     VehicleFormComponent.prototype.ngOnInit = function () {
     };
@@ -182,7 +182,7 @@ var VehicleFormComponent = (function () {
     return VehicleFormComponent;
 }());
 __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["x" /* Output */])(),
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["t" /* Output */])(),
     __metadata("design:type", Object)
 ], VehicleFormComponent.prototype, "onClose", void 0);
 VehicleFormComponent = __decorate([

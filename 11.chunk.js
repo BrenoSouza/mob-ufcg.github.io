@@ -117,7 +117,7 @@ FormModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_3__form_routing__["a" /* formRouting */],
             __WEBPACK_IMPORTED_MODULE_4__shared_shared_module__["a" /* SharedModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_forms__["a" /* FormsModule */],
-            __WEBPACK_IMPORTED_MODULE_7__angular_material__["a" /* MatStepperModule */],
+            __WEBPACK_IMPORTED_MODULE_7__angular_material__["m" /* MatStepperModule */],
         ],
         declarations: [__WEBPACK_IMPORTED_MODULE_2__form_component__["a" /* FormComponent */]],
         providers: [

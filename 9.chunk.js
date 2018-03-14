@@ -117,8 +117,8 @@ ReqFormModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_6__req_form_routing__["a" /* reqFormRouting */],
             __WEBPACK_IMPORTED_MODULE_3__shared_shared_module__["a" /* SharedModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_forms__["a" /* FormsModule */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_material__["a" /* MatStepperModule */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_material__["b" /* MatListModule */]
+            __WEBPACK_IMPORTED_MODULE_4__angular_material__["m" /* MatStepperModule */],
+            __WEBPACK_IMPORTED_MODULE_4__angular_material__["n" /* MatListModule */]
         ],
         exports: [__WEBPACK_IMPORTED_MODULE_2__req_form_component__["a" /* ReqFormComponent */]],
         declarations: [__WEBPACK_IMPORTED_MODULE_2__req_form_component__["a" /* ReqFormComponent */]],
