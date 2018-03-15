@@ -3,7 +3,7 @@ webpackJsonp([4],{
 /***/ "../../../../../src/app/initial/initial.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxFlex=\"100\" fxLayoutAlign=\"center\">\r\n  <div fxFlex fxLayout=\"column\" fxLayoutAlign=\"space-around center\">\r\n    <app-login></app-login>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div fxFlex=\"100\" fxLayoutAlign=\"center\">\r\n  <div fxFlex fxLayout=\"column\" fxLayoutAlign=\"space-around center\">\r\n    <app-login></app-login>\r\n  </div>\r\n</div>\r\n<button class=\"mat-button\" mat-fab color=\"primary\" (click)=\"gotToPublic()\"><mat-icon>list</mat-icon></button>    \r\n"
 
 /***/ }),
 
@@ -15,7 +15,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".mat-button {\n  position: fixed;\n  bottom: 50px;\n  right: 50px; }\n", ""]);
 
 // exports
 
@@ -54,6 +54,9 @@ var InitialComponent = (function () {
         this.router.navigate(['solicitations']);
     };
     InitialComponent.prototype.ngOnInit = function () {
+    };
+    InitialComponent.prototype.gotToPublic = function () {
+        this.router.navigate(['public-info']);
     };
     return InitialComponent;
 }());
@@ -165,6 +168,7 @@ module.exports = module.exports.toString();
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_authentication_service__ = __webpack_require__("../../../../../src/app/services/authentication.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -178,14 +182,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var LoginComponent = (function () {
-    function LoginComponent(router, authenticationService) {
+    function LoginComponent(router, authenticationService, snackBar) {
         this.router = router;
         this.authenticationService = authenticationService;
+        this.snackBar = snackBar;
         this.user = {
             email: '',
             password: ''
         };
+        this.email = 'admin@ufcg.edu.br';
+        this.password = 'transportesufcg';
     }
     LoginComponent.prototype.ngOnInit = function () {
     };
@@ -195,7 +203,13 @@ var LoginComponent = (function () {
         //}, error => {
         //  console.log(error)
         //});
-        this.router.navigate(['home']);
+        if (this.password === this.user.password && this.email === this.user.email) {
+            this.router.navigate(['home']);
+        }
+        else {
+            var snackBarRef = this.snackBar.open('EMAIL OU SENHA NÃO CONFEREM!', 'OK', { duration: 5000 });
+            this.user.password = '';
+        }
     };
     return LoginComponent;
 }());
@@ -205,10 +219,10 @@ LoginComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/login/login.component.html"),
         styles: [__webpack_require__("../../../../../src/app/login/login.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__services_authentication_service__["a" /* AuthenticationService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_authentication_service__["a" /* AuthenticationService */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__services_authentication_service__["a" /* AuthenticationService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_authentication_service__["a" /* AuthenticationService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["o" /* MatSnackBar */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["o" /* MatSnackBar */]) === "function" && _c || Object])
 ], LoginComponent);
 
-var _a, _b;
+var _a, _b, _c;
 //# sourceMappingURL=login.component.js.map
 
 /***/ }),

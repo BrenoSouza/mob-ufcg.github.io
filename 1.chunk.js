@@ -15,7 +15,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".mat-dialog-container {\n  padding: 0px !important; }\n\nmat-dialog-container {\n  padding: 0; }\n", ""]);
 
 // exports
 
@@ -58,7 +58,8 @@ VehicleFormDialogComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
         selector: 'app-vehicle-form-dialog',
         template: __webpack_require__("../../../../../src/app/vehicles/vehicle-form-dialog/vehicle-form-dialog.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/vehicles/vehicle-form-dialog/vehicle-form-dialog.component.scss")]
+        styles: [__webpack_require__("../../../../../src/app/vehicles/vehicle-form-dialog/vehicle-form-dialog.component.scss")],
+        encapsulation: __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* ViewEncapsulation */].None
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["p" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["p" /* MatDialogRef */]) === "function" && _a || Object])
 ], VehicleFormDialogComponent);
@@ -117,7 +118,7 @@ VehicleFormDialogModule = __decorate([
 /***/ "../../../../../src/app/vehicles/vehicle-form/vehicle-form.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--VEÍCULO\r\nANO\r\nPLACA\r\nMARCA-->\r\n<!--EST. DE-->\r\n\r\n<!--CONSERVAÇÃO-->\r\n\r\n<!--COMBÚSTIVEL\tCOR-->\r\n<!--CAPAC. DE-->\r\n\r\n<!--PASSAGEIROS-->\r\n\r\n<div fxLayout=\"column\">\r\n\r\n  <div class=\"form-header\" fxFlex=\"100\" fxLayout=\"column\" fxLayoutAlign=\" center\">\r\n    <h2>Registro de veículos</h2>\r\n  </div>\r\n\r\n  <form>\r\n    <div fxLayout=\"row\">\r\n      <mat-form-field fxFlex=\"25\">\r\n        <input matInput placeholder=\"Veículo\" name=\"vehicle\" [(ngModel)]=\"model.vehicle\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex=\"25\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Marca\" name=\"brand\" [(ngModel)]=\"model.brand\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Placa\" name=\"plate\" [(ngModel)]=\"model.plate\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex fxFlexOffset=\"5\">\r\n        <input type=\"number\" matInput placeholder=\"Ano\" name=\"year\" [(ngModel)]=\"model.year\"/>\r\n      </mat-form-field>\r\n    </div>\r\n\r\n    <div fxLayout=\"row\">\r\n      <mat-form-field fxFlex=\"25\">\r\n        <input matInput placeholder=\"Estado de conservação\" name=\"conservationState\" [(ngModel)]=\"model.conservationState\"/>\r\n      </mat-form-field>\r\n\r\n\r\n      <mat-form-field fxFlex=\"25\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Combustível\" name=\"fuel\" [(ngModel)]=\"model.fuel\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Cor\" name=\"color\" [(ngModel)]=\"model.color\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex fxFlexOffset=\"5\">\r\n        <input type=\"number\" matInput placeholder=\"Número de passageiros\" name=\"capacity\" [(ngModel)]=\"model.capacity\"/>\r\n      </mat-form-field>\r\n    </div>\r\n\r\n    <div fxLayoutAlign=\"end\">\r\n      <button mat-button class=\"mat-raised-button\" color=\"primary\" (click)=\"createNewVehicle()\"> Salvar </button>\r\n      <button mat-button class=\"mat-raised-button\" (click)=\"closeDialog()\"> Cancelar </button>\r\n    </div>\r\n\r\n  </form>\r\n\r\n</div>\r\n"
+module.exports = "<!--VEÍCULO\r\nANO\r\nPLACA\r\nMARCA-->\r\n<!--EST. DE-->\r\n\r\n<!--CONSERVAÇÃO-->\r\n\r\n<!--COMBÚSTIVEL\tCOR-->\r\n<!--CAPAC. DE-->\r\n\r\n<!--PASSAGEIROS-->\r\n\r\n<div fxLayout=\"column\">\r\n\r\n  <mat-toolbar color=\"primary\">\r\n      <div md-dialog-title fxFlex>\r\n          <div>\r\n              <div fxFlex fxLayoutAlign=\"center center\">Registro de Veículo</div>\r\n          </div>\r\n      </div>\r\n  </mat-toolbar>\r\n\r\n  <form class=\"form-new-vehicle\">\r\n    <div fxLayout=\"row\">\r\n      <mat-form-field fxFlex=\"25\">\r\n        <input matInput placeholder=\"Veículo\" name=\"vehicle\" [(ngModel)]=\"model.vehicle\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex=\"25\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Marca\" name=\"brand\" [(ngModel)]=\"model.brand\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Placa\" name=\"plate\" [(ngModel)]=\"model.plate\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex fxFlexOffset=\"5\">\r\n        <input type=\"number\" matInput placeholder=\"Ano\" name=\"year\" [(ngModel)]=\"model.year\"/>\r\n      </mat-form-field>\r\n    </div>\r\n\r\n    <div fxLayout=\"row\">\r\n      <mat-form-field fxFlex=\"25\">\r\n        <input matInput placeholder=\"Estado de conservação\" name=\"conservationState\" [(ngModel)]=\"model.conservationState\"/>\r\n      </mat-form-field>\r\n\r\n\r\n      <mat-form-field fxFlex=\"25\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Combustível\" name=\"fuel\" [(ngModel)]=\"model.fuel\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n        <input matInput placeholder=\"Cor\" name=\"color\" [(ngModel)]=\"model.color\"/>\r\n      </mat-form-field>\r\n\r\n      <mat-form-field fxFlex fxFlexOffset=\"5\">\r\n        <input type=\"number\" matInput placeholder=\"Número de passageiros\" name=\"capacity\" [(ngModel)]=\"model.capacity\"/>\r\n      </mat-form-field>\r\n    </div>\r\n\r\n    <div fxLayoutAlign=\"end\">\r\n      <button mat-button class=\"mat-raised-button\" color=\"primary\" (click)=\"createNewVehicle()\"> Salvar </button>\r\n      <button mat-button class=\"mat-raised-button\" (click)=\"closeDialog()\"> Cancelar </button>\r\n    </div>\r\n\r\n  </form>\r\n\r\n</div>\r\n"
 
 /***/ }),
 
@@ -129,7 +130,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".form-new-vehicle {\n  padding: 10px; }\n", ""]);
 
 // exports
 

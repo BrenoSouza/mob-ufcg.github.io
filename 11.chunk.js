@@ -1,13 +1,13 @@
 webpackJsonp([11],{
 
-/***/ "../../../../../src/app/form/form.component.html":
+/***/ "../../../../../src/app/public-info/public-info.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card fxLayout=\"column\" style=\"width:100%\">\r\n  <div class=\"form-header\" fxFlex=\"100\" fxLayout=\"column\" fxLayoutAlign=\" center\">\r\n    <h6>SERVIÇO PÚBLICO FEDERAL</h6>\r\n    <h5>UNIVERSIDADE FEDERAL DE CAMPINA GRANDE</h5>\r\n    <h5>PREFEITURA UNIVERSITÀRIA </h5>\r\n    <h2>Setor de Transporte</h2>\r\n    <h2>SOLICITAÇÃO DE TRANSPORTE</h2>\r\n  </div>\r\n  <!-- <form (ngSubmit)=\"solicitation()\" #element=\"ngForm\" fxLayout=\"column\">a\r\n    <div fxFlex=\"80\" fxLayout=\"column\" fxFlexOffset=\"5\">\r\n      <div fxLayout=\"row\">\r\n        <mat-form-field fxFlex=\"50\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Setor Requisitante\" name=\"requesterSector\" [(ngModel)]=\"model.requesterSector\" #requesterSector=\"ngModel\">\r\n        </mat-form-field>\r\n        <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n          <input matInput [matDatepicker]=\"data_atual\" placeholder=\"Data\" name=\"date\" [(ngModel)]=\"model.date\" #date=\"ngModel\">\r\n          <mat-datepicker-toggle matSuffix [for]=\"data_atual\"></mat-datepicker-toggle>\r\n          <mat-datepicker #data_atual></mat-datepicker>\r\n        </mat-form-field>\r\n      </div>\r\n      <div>\r\n        <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Destino\" name=\"destination\" [(ngModel)]=\"model.destination\" #destination=\"ngModel\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div>\r\n        <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n          <textarea matInput placeholder=\"Objetivo\" name=\"purpose\" [(ngModel)]=\"model.purpose\" #purpose=\"ngModel\"></textarea>\r\n        </mat-form-field>\r\n      </div>\r\n      <div fxLayout=\"row\">\r\n        <mat-form-field fxFlex=\"50\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\" #name=\"ngModel\">\r\n        </mat-form-field>\r\n        <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n          <input matInput placeholder=\"Telefone\" name=\"phone\" [(ngModel)]=\"model.phone\" #phone=\"ngModel\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div fxLayout=\"row\">\r\n        <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n          <input matInput [matDatepicker]=\"data_viagem\" placeholder=\"Data\" name=\"travelDate\" [(ngModel)]=\"model.travelDate\" #travelDate=\"ngModel\">\r\n          <mat-datepicker-toggle matSuffix [for]=\"data_viagem\"></mat-datepicker-toggle>\r\n          <mat-datepicker #data_viagem></mat-datepicker>\r\n        </mat-form-field>\r\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n          <input matInput placeholder=\"Hora da Saída\"  name=\"departureHour\" [(ngModel)]=\"model.departureHour\" #departureHour=\"ngModel\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div fxLayout=\"row\">\r\n        <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n          <input matInput [matDatepicker]=\"data_regresso\" placeholder=\"Regresso Provável\" name=\"returnDate\" [(ngModel)]=\"model.returnDate\" #returnDate=\"ngModel\">\r\n          <mat-datepicker-toggle matSuffix [for]=\"data_regresso\"></mat-datepicker-toggle>\r\n          <mat-datepicker #data_regresso></mat-datepicker>\r\n        </mat-form-field>\r\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n          <input matInput placeholder=\"Hora\" name=\"returnHour\" [(ngModel)]=\"model.returnHour\" #returnHour=\"ngModel\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div fxLayout=\"row\">\r\n        <h3 fxFlex=\"20\" fxFlexOffset=\"15\">Local de Saída:</h3>\r\n        <mat-checkbox fxFlex=\"20\">Reitoria/UFCG</mat-checkbox>\r\n        <mat-checkbox fxFlex=\"20\">Residência</mat-checkbox>\r\n        <mat-checkbox fxFlex=\"20\">Outros*</mat-checkbox>\r\n      </div>\r\n      <div>\r\n        <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n          <textarea matInput placeholder=\"\" name=\"travelOrigin\" [(ngModel)]=\"model.travelOrigin\" #travelOrigin=\"ngModel\"></textarea>\r\n        </mat-form-field>\r\n      </div>\r\n      <div>\r\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Horário de chegada do voo/ônibus\" name=\"arrivalTime\" [(ngModel)]=\"model.arrivalTime\" #arrivalTime=\"ngModel\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div fxLayout=\"row\">\r\n        <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Número do voo\" name=\"flightNumber\" [(ngModel)]=\"model.flightNumber\" #flightNumber=\"ngModel\">\r\n        </mat-form-field>\r\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n          <input matInput placeholder=\"Empresa\" name=\"airCompany\" [(ngModel)]=\"model.airCompany\" #airCompany=\"ngModel\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div>\r\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Origem da viagem\" name=\"travelOrigin\" [(ngModel)]=\"model.travelOrigin\" #travelOrigin=\"ngModel\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div>\r\n        <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Setor responsável pelas diárias do motorista\" name=\"driveSectorResponsability\" [(ngModel)]=\"model.driverSectorResponsibility\" #driverSectorResponsability=\"ngModel\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div md-dialog-actions fxLayoutAlign=\"center center\">\r\n        <button mat-raised-button color=\"primary\" type=\"submit\" class=\"signup-btn\">Solicitar</button>\r\n      </div>\r\n    </div>\r\n  </form>   -->\r\n\r\n  <mat-horizontal-stepper [linear]=\"isLinear\" fxFlex>\r\n    <mat-step>\r\n      <form>\r\n        <ng-template matStepLabel>Dados do Solicitante</ng-template>\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex=\"70\">\r\n            <input matInput placeholder=\"Setor Requisitante\" name=\"requesterSector\" [(ngModel)]=\"model.requesterSector\">\r\n          </mat-form-field>\r\n          <mat-form-field fxFlex fxFlexOffset=\"5\">\r\n            <input matInput [matDatepicker]=\"data_atual10\" placeholder=\"Data\" name=\"date\" [(ngModel)]=\"model.date\">\r\n            <mat-datepicker-toggle matSuffix [for]=\"data_atual10\"></mat-datepicker-toggle>\r\n            <mat-datepicker #data_atual10></mat-datepicker>\r\n          </mat-form-field>\r\n        </div>\r\n        <div>\r\n          <mat-form-field fxFlex>\r\n            <textarea matInput placeholder=\"Objetivo\" name=\"purpose\" [(ngModel)]=\"model.purpose\" #purpose=\"ngModel\"></textarea>\r\n          </mat-form-field>\r\n        </div>\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex=\"70\">\r\n            <input matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\">\r\n          </mat-form-field>\r\n          <mat-form-field fxFlex fxFlexOffset=\"5\">\r\n            <input matInput placeholder=\"Telefone\" name=\"phone\" [(ngModel)]=\"model.phone\">\r\n          </mat-form-field>\r\n        </div>\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex>\r\n            <input matInput placeholder=\"Email\" name=\"email\" [(ngModel)]=\"model.email\">\r\n          </mat-form-field>\r\n        </div>\r\n        <div>\r\n          <button mat-raised-button matStepperNext color=\"primary\">Próximo</button>\r\n        </div>\r\n      </form>\r\n    </mat-step>\r\n    <mat-step>\r\n      <form fxLayout=\"column\">\r\n        <ng-template matStepLabel>Dados da Viagem</ng-template>\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex>\r\n            <input fxFlex matInput placeholder=\"Destino\" name=\"destination\" [(ngModel)]=\"model.destination\">\r\n          </mat-form-field>\r\n        </div>\r\n        <div fxLayout=\"row\" fxLayoutAlign=\"space-between center\">\r\n          <h4>Local de Saída:</h4>\r\n          <mat-checkbox>Reitoria/UFCG</mat-checkbox>\r\n          <mat-checkbox>Residência</mat-checkbox>\r\n          <mat-checkbox [(ngModel)]=\"checked\" name=\"outros\">Outros*</mat-checkbox>\r\n        </div>\r\n        <div *ngIf=\"checked\">\r\n          <mat-form-field fxFlex>\r\n            <textarea matInput placeholder=\"\" ></textarea>\r\n          </mat-form-field>\r\n        </div>\r\n        <div fxLayout=\"row\">\r\n            <mat-form-field fxFlex>\r\n              <input matInput [matDatepicker]=\"data_viagem1\" placeholder=\"Data Viagem\" name=\"travelDate\" [(ngModel)]=\"model.travelDate\" #travelDate=\"ngModel\">\r\n              <mat-datepicker-toggle matSuffix [for]=\"data_viagem1\"></mat-datepicker-toggle>\r\n              <mat-datepicker #data_viagem1></mat-datepicker>\r\n            </mat-form-field>\r\n            <mat-form-field fxFlex fxFlexOffset=\"5\">\r\n              <input matInput placeholder=\"Hora da Saída\"  name=\"departureHour\" [(ngModel)]=\"model.departureHour\" #departureHour=\"ngModel\">\r\n            </mat-form-field>\r\n        </div>\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex>\r\n            <input matInput [matDatepicker]=\"data_regresso1\" placeholder=\"Regresso Provável\" name=\"returnDate\" [(ngModel)]=\"model.returnDate\" #returnDate=\"ngModel\">\r\n            <mat-datepicker-toggle matSuffix [for]=\"data_regresso1\"></mat-datepicker-toggle>\r\n            <mat-datepicker #data_regresso1></mat-datepicker>\r\n          </mat-form-field>\r\n          <mat-form-field fxFlex fxFlexOffset=\"5\">\r\n            <input matInput placeholder=\"Hora Regresso\" name=\"returnHour\" [(ngModel)]=\"model.returnHour\" #returnHour=\"ngModel\">\r\n          </mat-form-field>\r\n        </div>\r\n        <div fxLayout=\"row\" fxFlexOffset=\"2\">\r\n            <mat-checkbox [(ngModel)]=\"terminal\" name=\"terminal\">Necessário apanhar no Aeroporto/Rodoviária</mat-checkbox>\r\n        </div>\r\n        <div fxLayout=\"row\" *ngIf=\"terminal\">\r\n          <mat-form-field fxFlex>\r\n            <input matInput placeholder=\"Horário de chegada do voo/ônibus\" name=\"arrivalTime\" [(ngModel)]=\"model.arrivalTime\" #arrivalTime=\"ngModel\">\r\n          </mat-form-field>\r\n        </div>\r\n        <div fxLayout=\"row\" *ngIf=\"terminal\">\r\n          <mat-form-field fxFlex>\r\n            <input matInput placeholder=\"Número do voo\" name=\"flightNumber\" [(ngModel)]=\"model.flightNumber\" #flightNumber=\"ngModel\">\r\n          </mat-form-field>\r\n          <mat-form-field fxFlex fxFlexOffset=\"1\">\r\n            <input matInput placeholder=\"Empresa\" name=\"airCompany\" [(ngModel)]=\"model.airCompany\" #airCompany=\"ngModel\">\r\n          </mat-form-field>\r\n        </div>\r\n        <div fxFlex *ngIf=\"terminal\" fxFlexOffset=\"1\">\r\n          <mat-form-field fxFlex>\r\n            <input matInput placeholder=\"Origem da viagem\" name=\"travelOrigin\" [(ngModel)]=\"model.travelOrigin\" #travelOrigin=\"ngModel\">\r\n          </mat-form-field>\r\n        </div>\r\n        <div fxFlex fxFlexOffset=\"10\">\r\n          <button mat-raised-button matStepperPrevious color=\"primary\">Voltar</button>\r\n          <button mat-raised-button matStepperNext color=\"primary\">Próximo</button>\r\n        </div>\r\n      </form>\r\n    </mat-step>\r\n    <mat-step>\r\n      <ng-template matStepLabel>Enviar</ng-template>\r\n      <div>\r\n        <button mat-raised-button matStepperPrevious>Voltar</button>\r\n        <button mat-raised-button color=\"primary\" class=\"signup-btn\" (click)=\"solicitation()\">Solicitar</button>\r\n      </div>\r\n    </mat-step>\r\n  </mat-horizontal-stepper>\r\n</mat-card>\r\n"
+module.exports = "<mat-toolbar color=\"primary\" fxLayoutAlign=\"center center\">\r\n  <span>CRONOGRAMA DE VIAGENS</span>\r\n</mat-toolbar>\r\n\r\n<div fxLayout=\"column\">\r\n    <div fxLayoutAlign=\"space-between\">\r\n        <div><h4>Status</h4></div>\r\n        <div *ngFor=\"let col of header\" fxFlex fxLayoutAlign=\"center\">\r\n            <h4>{{ col }}</h4>\r\n        </div>\r\n    </div>\r\n    \r\n    <div class=\"public-card\" *ngIf=\"!isLoadingTravels; else Loading\">\r\n        <mat-card *ngFor=\"let travel of travels\">\r\n            <mat-card-content class=\"card-container\" fxLayout=\"column\" *ngIf=\"travel.status !== 'COMPLETED'\">\r\n                <div fxLayoutAlign=\"space-between\">\r\n                    <div fxFlex fxLayoutAlign=\"center space-between\">\r\n                        <div fxFlex=\"3\" fxLayoutAlign=\"center\"  [ngClass]=\"{'PLANNED': travel.status === 'PLANNED', \r\n                        'HAPPENING': travel.status === 'HAPPENING', 'COMPLETED': travel.status === 'COMPLETED'}\">\r\n                            <div fxFlexAlign=\"center\">\r\n                                <mat-icon class=\"icon-color\" *ngIf=\"travel.status === 'HAPPENING'\">alarm_on</mat-icon>\r\n                                <mat-icon class=\"icon-color\" *ngIf=\"travel.status === 'COMPLETED'\">done</mat-icon>\r\n                                <mat-icon class=\"icon-color\" *ngIf=\"travel.status === 'PLANNED'\">alarm</mat-icon>\r\n                            </div>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ travel.form[0].driverSectorResponsibility }}</p>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ travel.form[0].destination }}</p>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ travel.vehicle.vehicle }}</p>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{ travel.travelDate.slice(0,16)}}h</p>\r\n                        </div>\r\n                        <div fxFlex fxLayoutAlign=\"center center\">\r\n                            <p>{{travel.returnDate.slice(0,16)}}h</p>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </mat-card-content>\r\n        </mat-card>\r\n    </div>\r\n    <ng-template #Loading>\r\n        <mat-spinner fxFlex color=\"primary\"></mat-spinner>\r\n    </ng-template>\r\n<!--     <button class=\"mat-button\" mat-fab color=\"primary\" (click)=\"addNewVehicle()\"><mat-icon>add</mat-icon></button>    \r\n --></div>\r\n"
 
 /***/ }),
 
-/***/ "../../../../../src/app/form/form.component.scss":
+/***/ "../../../../../src/app/public-info/public-info.component.scss":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
@@ -15,7 +15,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "h1, h2, h3, h4, h5, h6 {\n  margin: 3px; }\n\nmat-card {\n  background-color: #f7f4f4; }\n", ""]);
+exports.push([module.i, ".mat-header {\n  padding-top: 8px;\n  padding-bottom: 8px; }\n\n.mat-card {\n  padding: 0; }\n  .mat-card:hover {\n    cursor: pointer;\n    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.12), 0 10px 10px rgba(0, 0, 0, 0.24);\n    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }\n  .mat-card .img-container {\n    height: 50px;\n    padding: 7px 0; }\n    .mat-card .img-container img {\n      border-radius: 50%;\n      height: 50px;\n      width: 50px; }\n  .mat-card .is-link {\n    cursor: pointer; }\n  .mat-card p {\n    font-size: 12px;\n    margin: 0;\n    padding: 24px 0;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap; }\n  .mat-card .PLANNED {\n    background-color: #F4D03F; }\n  .mat-card .HAPPENING {\n    background-color: #a0a0f7; }\n  .mat-card .COMPLETED {\n    background-color: #87D37C; }\n  .mat-card .icon-color {\n    color: white; }\n  .mat-card .card-container {\n    margin: 10px 10px 15px 0 !important; }\n\nmat-spinner {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  margin-top: -50px;\n  margin-left: -50px; }\n\n.public-card {\n  margin-left: 10px;\n  margin-right: 10px; }\n", ""]);
 
 // exports
 
@@ -25,13 +25,14 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ "../../../../../src/app/form/form.component.ts":
+/***/ "../../../../../src/app/public-info/public-info.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_form_service__ = __webpack_require__("../../../../../src/app/services/form.service.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FormComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_vehicle_service__ = __webpack_require__("../../../../../src/app/services/vehicle.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_travel_service__ = __webpack_require__("../../../../../src/app/services/travel.service.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PublicInfoComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -43,54 +44,64 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var FormComponent = (function () {
-    function FormComponent(formService) {
-        this.formService = formService;
-        this.model = {};
-        this.isLinear = false;
-        this.checked = false;
-        this.terminal = false;
+
+var PublicInfoComponent = (function () {
+    function PublicInfoComponent(vehicleService, travelService) {
+        this.vehicleService = vehicleService;
+        this.travelService = travelService;
+        this.header = ['Setor Requisitante', 'Destino', 'Veículo', 'Data Ida', 'Data Volta'];
+        this.model = { car: '', dataIni: '', dataFim: '' };
+        this.carList = [];
+        this.onGoingTravels = [];
+        this.plannedTravels = [];
+        this.travels = [];
     }
-    FormComponent.prototype.ngOnInit = function () {
+    PublicInfoComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.vehicleService.vehiclesObs.subscribe(function (data) {
+            _this.carList = data;
+        });
+        this.showTravels();
     };
-    FormComponent.prototype.solicitation = function () {
-        this.formService.create(this.model)
-            .subscribe(function (data) {
-            console.log(data);
+    PublicInfoComponent.prototype.showTravels = function () {
+        var _this = this;
+        this.travelService.getAllTravels().subscribe(function (data) {
+            _this.travels = data;
         }, function (error) {
-            console.log(error);
+            console.error(error);
         });
     };
-    return FormComponent;
+    return PublicInfoComponent;
 }());
-FormComponent = __decorate([
+PublicInfoComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
-        selector: 'app-form',
-        template: __webpack_require__("../../../../../src/app/form/form.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/form/form.component.scss")]
+        selector: 'app-public-info',
+        template: __webpack_require__("../../../../../src/app/public-info/public-info.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/public-info/public-info.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__services_form_service__["a" /* FormService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_form_service__["a" /* FormService */]) === "function" && _a || Object])
-], FormComponent);
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__services_vehicle_service__["a" /* VehicleService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_vehicle_service__["a" /* VehicleService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__services_travel_service__["a" /* TravelService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_travel_service__["a" /* TravelService */]) === "function" && _b || Object])
+], PublicInfoComponent);
 
-var _a;
-//# sourceMappingURL=form.component.js.map
+var _a, _b;
+//# sourceMappingURL=public-info.component.js.map
 
 /***/ }),
 
-/***/ "../../../../../src/app/form/form.module.ts":
+/***/ "../../../../../src/app/public-info/public-info.module.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("../../../common/@angular/common.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__form_component__ = __webpack_require__("../../../../../src/app/form/form.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__form_routing__ = __webpack_require__("../../../../../src/app/form/form.routing.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__public_info_component__ = __webpack_require__("../../../../../src/app/public-info/public-info.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__public_info_routing__ = __webpack_require__("../../../../../src/app/public-info/public-info.routing.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_shared_module__ = __webpack_require__("../../../../../src/app/shared/shared.module.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__services_form_service__ = __webpack_require__("../../../../../src/app/services/form.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__services_vehicle_service__ = __webpack_require__("../../../../../src/app/services/vehicle.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FormModule", function() { return FormModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__services_travel_service__ = __webpack_require__("../../../../../src/app/services/travel.service.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PublicInfoModule", function() { return PublicInfoModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -105,47 +116,51 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-var FormModule = (function () {
-    function FormModule() {
+
+var PublicInfoModule = (function () {
+    function PublicInfoModule() {
     }
-    return FormModule;
+    return PublicInfoModule;
 }());
-FormModule = __decorate([
+PublicInfoModule = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["b" /* NgModule */])({
         imports: [
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["a" /* CommonModule */],
-            __WEBPACK_IMPORTED_MODULE_3__form_routing__["a" /* formRouting */],
             __WEBPACK_IMPORTED_MODULE_4__shared_shared_module__["a" /* SharedModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_forms__["a" /* FormsModule */],
-            __WEBPACK_IMPORTED_MODULE_7__angular_material__["m" /* MatStepperModule */],
+            __WEBPACK_IMPORTED_MODULE_3__public_info_routing__["a" /* publicInfoRouting */],
+            __WEBPACK_IMPORTED_MODULE_7__angular_material__["a" /* MatInputModule */],
+            __WEBPACK_IMPORTED_MODULE_7__angular_material__["b" /* MatSelectModule */],
+            __WEBPACK_IMPORTED_MODULE_7__angular_material__["c" /* MatToolbarModule */]
         ],
-        declarations: [__WEBPACK_IMPORTED_MODULE_2__form_component__["a" /* FormComponent */]],
+        declarations: [__WEBPACK_IMPORTED_MODULE_2__public_info_component__["a" /* PublicInfoComponent */]],
         providers: [
-            __WEBPACK_IMPORTED_MODULE_6__services_form_service__["a" /* FormService */]
+            __WEBPACK_IMPORTED_MODULE_6__services_vehicle_service__["a" /* VehicleService */],
+            __WEBPACK_IMPORTED_MODULE_8__services_travel_service__["a" /* TravelService */]
         ]
     })
-], FormModule);
+], PublicInfoModule);
 
-//# sourceMappingURL=form.module.js.map
+//# sourceMappingURL=public-info.module.js.map
 
 /***/ }),
 
-/***/ "../../../../../src/app/form/form.routing.ts":
+/***/ "../../../../../src/app/public-info/public-info.routing.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__form_component__ = __webpack_require__("../../../../../src/app/form/form.component.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return formRouting; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__public_info_component__ = __webpack_require__("../../../../../src/app/public-info/public-info.component.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return publicInfoRouting; });
 
 
-var formRoutes = [
+var publicInfoRoutes = [
     {
-        path: '', component: __WEBPACK_IMPORTED_MODULE_1__form_component__["a" /* FormComponent */]
+        path: '', component: __WEBPACK_IMPORTED_MODULE_1__public_info_component__["a" /* PublicInfoComponent */]
     }
 ];
-var formRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* RouterModule */].forChild(formRoutes);
-//# sourceMappingURL=form.routing.js.map
+var publicInfoRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* RouterModule */].forChild(publicInfoRoutes);
+//# sourceMappingURL=public-info.routing.js.map
 
 /***/ })
 

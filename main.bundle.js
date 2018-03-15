@@ -6,7 +6,7 @@ webpackJsonp([14],{
 var map = {
 	"app/allocation/allocation.module": [
 		"../../../../../src/app/allocation/allocation.module.ts",
-		12,
+		6,
 		0
 	],
 	"app/drivers-list/drivers-list.module": [
@@ -16,7 +16,7 @@ var map = {
 	],
 	"app/form/form.module": [
 		"../../../../../src/app/form/form.module.ts",
-		11,
+		12,
 		0
 	],
 	"app/home/home.module": [
@@ -31,17 +31,17 @@ var map = {
 	],
 	"app/public-info/public-info.module": [
 		"../../../../../src/app/public-info/public-info.module.ts",
-		10,
+		11,
 		0
 	],
 	"app/req-form/req-form.module": [
 		"../../../../../src/app/req-form/req-form.module.ts",
-		9,
+		10,
 		0
 	],
 	"app/solicitation/solicitation.module": [
 		"../../../../../src/app/solicitation/solicitation.module.ts",
-		8,
+		9,
 		0
 	],
 	"app/solicitations-list/solicitations-list.module": [
@@ -51,12 +51,12 @@ var map = {
 	],
 	"app/travels-list/travels-list.module": [
 		"../../../../../src/app/travels-list/travels-list.module.ts",
-		7,
+		8,
 		0
 	],
 	"app/vehicle-request/vehicle-request.module": [
 		"../../../../../src/app/vehicle-request/vehicle-request.module.ts",
-		6,
+		7,
 		0
 	],
 	"app/vehicles/vehicles.module": [

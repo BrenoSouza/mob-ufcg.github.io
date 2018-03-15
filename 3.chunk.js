@@ -57,10 +57,14 @@ var SearchFormComponent = (function () {
     SearchFormComponent.prototype.search = function () {
         var _this = this;
         if (this.model.travelDate) {
-            this.model.travelDate += this.provisoryHour;
+            if (this.model.travelDate.length < 11) {
+                this.model.travelDate += this.provisoryHour;
+            }
         }
         if (this.model.returnDate) {
-            this.model.returnDate += this.provisoryHour;
+            if (this.model.returnDate.length < 11) {
+                this.model.returnDate += this.provisoryHour;
+            }
         }
         this.searchService.searchSolicitation(this.model).subscribe(function (data) {
             _this.searchResult.emit(data.data);
@@ -164,18 +168,6 @@ var SearchService = (function () {
         this.crudService = crudService;
     }
     SearchService.prototype.searchSolicitation = function (model) {
-        if (model.travelDate) {
-            model.travelDate = new Date(model.travelDate).toISOString();
-        }
-        else {
-            model.travelDate = '';
-        }
-        if (model.returnDate) {
-            model.returnDate = new Date(model.returnDate).toISOString();
-        }
-        else {
-            model.returnDate = '';
-        }
         return this.crudService.getWithParameter('https://mobilidade-ufcg.herokuapp.com/form/search', model).map(function (response) {
             return response;
         });

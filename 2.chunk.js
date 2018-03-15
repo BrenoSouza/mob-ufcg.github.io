@@ -15,7 +15,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".mat-dialog-container {\n  padding: 0px !important; }\n\nmat-dialog-container {\n  padding: 0; }\n", ""]);
 
 // exports
 
@@ -58,7 +58,8 @@ DriversFormDialogComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
         selector: 'app-drivers-form-dialog',
         template: __webpack_require__("../../../../../src/app/drivers-form-dialog/drivers-form-dialog.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/drivers-form-dialog/drivers-form-dialog.component.scss")]
+        styles: [__webpack_require__("../../../../../src/app/drivers-form-dialog/drivers-form-dialog.component.scss")],
+        encapsulation: __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* ViewEncapsulation */].None
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["p" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["p" /* MatDialogRef */]) === "function" && _a || Object])
 ], DriversFormDialogComponent);
@@ -120,7 +121,7 @@ DriversFormDialogModule = __decorate([
 /***/ "../../../../../src/app/drivers-form/drivers-form.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div fxLayout=\"column\">\r\n  \r\n  <div class=\"form-header\" fxFlex=\"100\" fxLayout=\"column\" fxLayoutAlign=\" center\">\r\n    <h2>Registro de Motorista</h2>\r\n  </div>\r\n  \r\n  <form>\r\n    <div fxLayout=\"column\">\r\n      <mat-form-field fxFlex=\"100\">\r\n        <input fxFlex matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\"/>\r\n      </mat-form-field>\r\n      <mat-form-field fxFlex>\r\n        <input matInput placeholder=\"Endereço\" name=\"address\" [(ngModel)]=\"model.address\"/>\r\n      </mat-form-field>\r\n      \r\n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\r\n        <mat-form-field fxFlex>\r\n          <input type=\"text\" matInput placeholder=\"Telefone\" name=\"phone\" [(ngModel)]=\"model.phone\"/>\r\n        </mat-form-field>\r\n        <mat-form-field fxFlex>\r\n          <input type=\"number\" matInput placeholder=\"Registro\" name=\"registration\" [(ngModel)]=\"model.registration\"/>\r\n        </mat-form-field>\r\n      </div>\r\n\r\n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\r\n        <mat-form-field fxFlex>\r\n          <input matInput placeholder=\"Cpf\" name=\"cpf\" [(ngModel)]=\"model.cpf\"/>\r\n        </mat-form-field>\r\n\r\n        <mat-form-field fxFlex>\r\n          <input matInput placeholder=\"Cnh\" name=\"cnh\" [(ngModel)]=\"model.cnh\"/>\r\n        </mat-form-field>\r\n      </div>\r\n      \r\n    </div>\r\n    <div fxLayoutAlign=\"end\">\r\n      <button mat-button class=\"mat-raised-button\" color=\"primary\" (click)=\"addNewDriver()\"> Salvar </button>\r\n      <button mat-button class=\"mat-raised-button\" (click)=\"closeDialog()\"> Cancelar </button>\r\n    </div>\r\n    \r\n  </form>\r\n  \r\n</div>\r\n"
+module.exports = "<div fxLayout=\"column\">\r\n  \r\n    <mat-toolbar color=\"primary\">\r\n        <div md-dialog-title fxFlex>\r\n            <div>\r\n                <div fxFlex fxLayoutAlign=\"center center\">Registro de Motorista</div>\r\n            </div>\r\n        </div>\r\n    </mat-toolbar>\r\n  \r\n  <form class=\"form-new-driver\">\r\n    <div fxLayout=\"column\">\r\n      <div>\r\n      <mat-form-field fxFlex=\"100\">\r\n        <input fxFlex matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\"/>\r\n      </mat-form-field>\r\n    </div>\r\n        <div>\r\n      <mat-form-field fxFlex>\r\n        <input matInput placeholder=\"Endereço\" name=\"address\" [(ngModel)]=\"model.address\"/>\r\n      </mat-form-field>\r\n      </div>\r\n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\r\n        <mat-form-field fxFlex>\r\n          <input type=\"text\" matInput placeholder=\"Telefone\" name=\"phone\" [(ngModel)]=\"model.phone\"/>\r\n        </mat-form-field>\r\n        <mat-form-field fxFlex>\r\n          <input type=\"number\" matInput placeholder=\"Registro\" name=\"registration\" [(ngModel)]=\"model.registration\"/>\r\n        </mat-form-field>\r\n      </div>\r\n\r\n      <div fxLayout=\"row\" fxLayoutGap=\"10px\">\r\n        <mat-form-field fxFlex>\r\n          <input matInput placeholder=\"Cpf\" name=\"cpf\" [(ngModel)]=\"model.cpf\"/>\r\n        </mat-form-field>\r\n\r\n        <mat-form-field fxFlex>\r\n          <input matInput placeholder=\"Cnh\" name=\"cnh\" [(ngModel)]=\"model.cnh\"/>\r\n        </mat-form-field>\r\n      </div>\r\n      \r\n    </div>\r\n    <div fxLayoutAlign=\"end\">\r\n      <button mat-button class=\"mat-raised-button\" color=\"primary\" (click)=\"addNewDriver()\"> Salvar </button>\r\n      <button mat-button class=\"mat-raised-button\" (click)=\"closeDialog()\"> Cancelar </button>\r\n    </div>\r\n    \r\n  </form>\r\n  \r\n</div>\r\n"
 
 /***/ }),
 
@@ -132,7 +133,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".form-new-driver {\n  padding: 10px; }\n", ""]);
 
 // exports
 

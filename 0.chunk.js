@@ -54,6 +54,7 @@ var SolicitationParser = (function () {
             solicitation.status = data.status;
             solicitation.justificationDeniel = data.justificationDeniel;
             solicitation.ride = data.ride;
+            solicitation.register = data.register;
             return solicitation;
         }
         else {
@@ -703,7 +704,7 @@ var TravelService = (function () {
         });
     };
     TravelService.prototype.getAllTravels = function () {
-        return this.crudService.get('https://mobilidade-ufcg.herokuapp.com/public/Travel').map(function (response) {
+        return this.crudService.get('https://mobilidade-ufcg.herokuapp.com/public/travel').map(function (response) {
             var travel;
             travel = (response.data);
             return travel;
@@ -769,7 +770,9 @@ var VehicleService = (function () {
         });
     };
     VehicleService.prototype.getVehiclesWithTravels = function (date) {
-        date += ' 11:11:11';
+        if (date.length < 12) {
+            date += ' 11:11:11';
+        }
         return this.crudService.getWithParameter('https://mobilidade-ufcg.herokuapp.com/vehicle/vehicleUnavailable', { dateTravel: date }).map(function (response) {
             var vehicle;
             vehicle = (response.data);

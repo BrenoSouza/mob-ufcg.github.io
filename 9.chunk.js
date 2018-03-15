@@ -1,13 +1,13 @@
 webpackJsonp([9],{
 
-/***/ "../../../../../src/app/req-form/req-form.component.html":
+/***/ "../../../../../src/app/solicitation/solicitation.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card fxLayout=\"column\" style=\"width:100%\">\r\n  <div class=\"form-header\" fxFlex=\"100\" fxLayout=\"column\" fxLayoutAlign=\" center\">\r\n    <h2>REQUISIÇÃO DE TRANSPORTE</h2>\r\n  </div>\r\n\r\n  <mat-horizontal-stepper [linear]=\"isLinear\" fxFlex>\r\n    <mat-step>\r\n      <form>\r\n        <ng-template matStepLabel>Dados da Requisição</ng-template>\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex=\"70\">\r\n            <input matInput placeholder=\"Setor Requisitante\" name=\"requesterSector\" [(ngModel)]=\"model.requesterSector\">\r\n          </mat-form-field>\r\n          <mat-form-field fxFlex fxFlexOffset=\"5\">\r\n            <input matInput [matDatepicker]=\"data_atual10\" placeholder=\"Data\" name=\"date\" [(ngModel)]=\"model.date\">\r\n            <mat-datepicker-toggle matSuffix [for]=\"data_atual10\"></mat-datepicker-toggle>\r\n            <mat-datepicker #data_atual10></mat-datepicker>\r\n          </mat-form-field>\r\n        </div>\r\n        <div>\r\n          <mat-form-field fxFlex>\r\n            <textarea matInput placeholder=\"Objetivo\" name=\"purpose\" [(ngModel)]=\"model.purpose\" #purpose=\"ngModel\"></textarea>\r\n          </mat-form-field>\r\n        </div>\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex=\"45\">\r\n            <input matInput placeholder=\"Destino/Cidade\" name=\"name\" [(ngModel)]=\"model.destination\">\r\n          </mat-form-field>\r\n          <mat-form-field fxFlex=\"45\" fxFlexOffset=\"10\">\r\n            <input matInput placeholder=\"Local de saída\" name=\"phone\" [(ngModel)]=\"model.departurePoint\">\r\n          </mat-form-field>\r\n        </div>\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex=\"20\">\r\n            <input matInput [matDatepicker]=\"data_partida\" placeholder=\"Data de partida\" name=\"date\" [(ngModel)]=\"model.travelDate\">\r\n            <mat-datepicker-toggle matSuffix [for]=\"data_partida\"></mat-datepicker-toggle>\r\n            <mat-datepicker #data_partida></mat-datepicker>\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"20\" fxFlexOffset=\"5\">\r\n            <input matInput [matDatepicker]=\"data_chegada\" placeholder=\"Data de chegada\" name=\"date\" [(ngModel)]=\"model.returnDate\">\r\n            <mat-datepicker-toggle matSuffix [for]=\"data_chegada\"></mat-datepicker-toggle>\r\n            <mat-datepicker #data_chegada></mat-datepicker>\r\n          </mat-form-field>\r\n\r\n\r\n          <mat-form-field fxFlex=\"20\" fxFlexOffset=\"10\">\r\n            <input matInput placeholder=\"Hora de chegada\" name=\"phone\" [(ngModel)]=\"model.departureHour\">\r\n          </mat-form-field>\r\n\r\n\r\n          <mat-form-field fxFlex=\"20\" fxFlexOffset=\"5\">\r\n            <input matInput placeholder=\"Hora de partida\" name=\"phone\" [(ngModel)]=\"model.returnHour\">\r\n          </mat-form-field>\r\n\r\n        </div>\r\n\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex>\r\n            <input matInput placeholder=\"Setor responsável pela diária\" name=\"driverSectorResponsability\" [(ngModel)]=\"model.driverSectorResponsability\">\r\n          </mat-form-field>\r\n        </div> <br>\r\n\r\n        <div>\r\n          <button mat-raised-button matStepperNext color=\"primary\">Próximo</button>\r\n        </div>\r\n      </form>\r\n\r\n    </mat-step>\r\n    <mat-step>\r\n      <form fxLayout=\"column\">\r\n        <ng-template matStepLabel>Dados do Veículo</ng-template>\r\n\r\n\r\n        <!--SAIDA DO VEICULO-->\r\n        <div fxLayout=\"row\">\r\n          <h3 fxFlex> Saída do veículo:</h3>\r\n        </div>\r\n\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex=\"30\">\r\n            <input matInput [matDatepicker]=\"data_partida_veiculo\" placeholder=\"Data\" name=\"vehicleExitDate\" [(ngModel)]=\"model.vehicleExitDate\">\r\n            <mat-datepicker-toggle matSuffix [for]=\"data_partida_veiculo\"></mat-datepicker-toggle>\r\n            <mat-datepicker #data_partida_veiculo></mat-datepicker>\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n            <input fxFlex matInput placeholder=\"Hora\" name=\"vehicleExitHour\" [(ngModel)]=\"model.vehicleExitHour\">\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n            <input fxFlex matInput placeholder=\"KM\" name=\"kilometer\" [(ngModel)]=\"model.vehicleKilometer\">\r\n          </mat-form-field>\r\n\r\n        </div>\r\n\r\n        <!--ABASTECIMENTO DO VEICULO 01-->\r\n        <div fxLayout=\"row\">\r\n          <h3 fxFlex> Abastecimento do veículo:</h3>\r\n        </div>\r\n\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex=\"30\">\r\n            <input matInput [matDatepicker]=\"data_abastecimento_01\" placeholder=\"Data\" name=\"vehicleFuelDate01\" [(ngModel)]=\"model.vehicleFuelDate01\">\r\n            <mat-datepicker-toggle matSuffix [for]=\"data_abastecimento_01\"></mat-datepicker-toggle>\r\n            <mat-datepicker #data_abastecimento_01></mat-datepicker>\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n            <input fxFlex matInput placeholder=\"Local\" name=\"vehicleFuelPlace01\" [(ngModel)]=\"model.vehicleFuelPlace01\">\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n            <input fxFlex matInput placeholder=\"Quantidade\" name=\"vehicleFuelQuantity01\" [(ngModel)]=\"model.vehicleFuelQuantity01\">\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n            <input fxFlex matInput placeholder=\"KM\" name=\"fuelKilometer01\" [(ngModel)]=\"model.vehicleFuelKilometer01\">\r\n          </mat-form-field>\r\n\r\n        </div>\r\n\r\n        <!--ABASTECIMENTO DO VEICULO 01-->\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex=\"30\">\r\n            <input matInput [matDatepicker]=\"data_abastecimento_02\" placeholder=\"Data\" name=\"vehicleFuelDate01\" [(ngModel)]=\"model.vehicleFuelDate02\">\r\n            <mat-datepicker-toggle matSuffix [for]=\"data_abastecimento_02\"></mat-datepicker-toggle>\r\n            <mat-datepicker #data_abastecimento_02></mat-datepicker>\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n            <input fxFlex matInput placeholder=\"Local\" name=\"vehicleFuelPlace02\" [(ngModel)]=\"model.vehicleFuelPlace02\">\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n            <input fxFlex matInput placeholder=\"Quantidade\" name=\"vehicleFuelQuantity02\" [(ngModel)]=\"model.vehicleFuelQuantity02\">\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n            <input fxFlex matInput placeholder=\"KM\" name=\"fuelKilometer02\" [(ngModel)]=\"model.vehicleFuelKilometer02\">\r\n          </mat-form-field>\r\n\r\n        </div>\r\n\r\n\r\n        <!--Chegada DO VEICULO 01-->\r\n        <div fxLayout=\"row\">\r\n          <h3 fxFlex> Chegada do veículo:</h3>\r\n        </div>\r\n\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex=\"30\">\r\n            <input matInput [matDatepicker]=\"data_vehicle_return\" placeholder=\"Data\" name=\"vehicleReturnDate\" [(ngModel)]=\"model.vehicleReturnDate\">\r\n            <mat-datepicker-toggle matSuffix [for]=\"data_vehicle_return\"></mat-datepicker-toggle>\r\n            <mat-datepicker #data_vehicle_return></mat-datepicker>\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n            <input fxFlex matInput placeholder=\"Hora\" name=\"vehicleReturnHour\" [(ngModel)]=\"model.vehicleReturnHour\">\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n            <input fxFlex matInput placeholder=\"KM\" name=\"vehicleReturnKM\" [(ngModel)]=\"model.vehicleReturnKM\">\r\n          </mat-form-field>\r\n\r\n        </div>\r\n\r\n\r\n        <!--RECOLHIMENTO DO VEICULO 01-->\r\n        <div fxLayout=\"row\">\r\n          <h3 fxFlex> Recolhimento do veículo:</h3>\r\n        </div>\r\n\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex=\"30\">\r\n            <input matInput [matDatepicker]=\"data_vehicle_rendezvous\" placeholder=\"Data\" name=\"vehicleRendezvousDate\" [(ngModel)]=\"model.vehicleRendezvousDate\">\r\n            <mat-datepicker-toggle matSuffix [for]=\"data_vehicle_rendezvous\"></mat-datepicker-toggle>\r\n            <mat-datepicker #data_vehicle_rendezvous></mat-datepicker>\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n            <input fxFlex matInput placeholder=\"Hora\" name=\"vehicleRendezvousHour\" [(ngModel)]=\"model.vehicleRendezvousHour\">\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n            <input fxFlex matInput placeholder=\"KM\" name=\"vehicleRendezvousKM\" [(ngModel)]=\"model.vehicleRendezvousKM\">\r\n          </mat-form-field>\r\n\r\n        </div>\r\n\r\n\r\n        <!--RECOLHIMENTO DO VEICULO 01-->\r\n        <div fxLayout=\"row\">\r\n          <h3 fxFlex> Observações:</h3>\r\n        </div>\r\n\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex>\r\n          <textarea matInput placeholder=\"Observações\" name=\"notes\" [(ngModel)]=\"model.notes\" #notes=\"ngModel\"></textarea>\r\n          </mat-form-field>\r\n        </div>\r\n\r\n      </form>\r\n\r\n      <br>\r\n      <div fxFlex>\r\n        <button mat-raised-button matStepperPrevious color=\"primary\">Voltar</button>\r\n        <button mat-raised-button matStepperNext color=\"primary\">Próximo</button>\r\n      </div>\r\n\r\n    </mat-step>\r\n\r\n\r\n    <mat-step>\r\n      <ng-template matStepLabel>Motorista </ng-template>\r\n      <form>\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex=\"30\">\r\n            <input matInput placeholder=\"Motorista\" name=\"driver\" [(ngModel)]=\"model.driver\">\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n            <input matInput placeholder=\"Veículo\" name=\"vehicle\" [(ngModel)]=\"model.vehicle\">\r\n          </mat-form-field>\r\n\r\n          <mat-form-field fxFlex=\"30\" fxFlexOffset=\"5\">\r\n            <input matInput placeholder=\"Placa\" name=\"vehiclePlate\" [(ngModel)]=\"model.vehiclePlate\">\r\n          </mat-form-field>\r\n        </div>\r\n\r\n\r\n        <div fxLayout=\"row\">\r\n          <mat-form-field fxFlex>\r\n            <textarea matInput placeholder=\"Observações\" name=\"notes2\" [(ngModel)]=\"model.notes2\" #notes2=\"ngModel\"></textarea>\r\n          </mat-form-field>\r\n        </div>\r\n      </form>\r\n\r\n      <div>\r\n        <button mat-raised-button matStepperPrevious color=\"primary\">Voltar</button>\r\n      </div>\r\n\r\n    </mat-step>\r\n\r\n  </mat-horizontal-stepper>\r\n\r\n</mat-card>\r\n\r\n"
+module.exports = "<mat-card class=\"full-form-container\" *ngIf=\"model.justificationDeniel !== null\">\r\n  <h3>Essa solicitação foi bloqueada</h3>\r\n  <h5>Justificativa: {{model.justificationDeniel}}</h5>\r\n</mat-card>\r\n<mat-card class=\"full-form-container\" *ngIf=\"model.ride\" fxLayoutAlign=\"center center\">\r\n  <h3>Essa solicitação foi aceita como uma carona</h3>\r\n</mat-card>\r\n<mat-card class=\"full-form-container\" fxLayout=\"column\" *ngIf=\"!isLoading; else Loading\">\r\n  <div class=\"form-header\" fxLayout=\"column\" fxLayoutAlign=\" center\">\r\n    <h6>SERVIÇO PÚBLICO FEDERAL</h6>\r\n    <h5>UNIVERSIDADE FEDERAL DE CAMPINA GRANDE</h5>\r\n    <h5>PREFEITURA UNIVERSITÀRIA </h5>\r\n    <h2>Setor de Transporte</h2>\r\n    <h2>SOLICITAÇÃO DE TRANSPORTE</h2>\r\n    <h2>{{model.register}}/{{model.travelDate.slice(6, 10)}}</h2>\r\n  </div>\r\n  <form fxLayout=\"column\">\r\n    <div fxFlex=\"80\" fxLayout=\"column\" fxFlexOffset=\"5\">\r\n      <div fxLayout=\"row\">\r\n        <mat-form-field fxFlex=\"50\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Setor Requisitante\" name=\"requesterSector\" [(ngModel)]=\"model.requesterSector\">\r\n        </mat-form-field>\r\n        <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n          <input matInput placeholder=\"Data\" name=\"date\" [(ngModel)]=\"model.requestDate\" readonly=\"true\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div>\r\n        <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Destino\" name=\"destination\" [(ngModel)]=\"model.destination\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div>\r\n        <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n          <textarea matInput placeholder=\"Objetivo\" name=\"purpose\" [(ngModel)]=\"model.purpose\"></textarea>\r\n        </mat-form-field>\r\n      </div>\r\n      <div fxLayout=\"row\">\r\n        <mat-form-field fxFlex=\"50\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Nome\" name=\"name\" [(ngModel)]=\"model.name\">\r\n        </mat-form-field>\r\n        <mat-form-field fxFlex=\"15\" fxFlexOffset=\"5\">\r\n          <input matInput placeholder=\"Telefone\" name=\"phone\" [(ngModel)]=\"model.phone\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div fxLayout=\"row\">\r\n        <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Data\" name=\"travelDate\" [(ngModel)]=\"model.travelDate\" readonly=\"true\">\r\n        </mat-form-field>\r\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n          <input matInput placeholder=\"Hora da Saída\"  name=\"departureHour\" [(ngModel)]=\"model.departureHour\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div fxLayout=\"row\">\r\n        <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Regresso Provável\" name=\"returnDate\" [(ngModel)]=\"model.returnDate\" readonly=\"true\">\r\n        </mat-form-field>\r\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n          <input matInput placeholder=\"Hora\" name=\"returnHour\" [(ngModel)]=\"model.returnHour\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div fxLayout=\"row\">\r\n        <h3 fxFlex=\"20\" fxFlexOffset=\"15\">Local de Saída:</h3>\r\n        <mat-checkbox fxFlex=\"20\">Reitoria/UFCG</mat-checkbox>\r\n        <mat-checkbox fxFlex=\"20\">Residência</mat-checkbox>\r\n        <mat-checkbox fxFlex=\"20\">Outros*</mat-checkbox>\r\n      </div>\r\n      <div>\r\n        <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n          <textarea matInput placeholder=\"\" name=\"Address\" [(ngModel)]=\"model.address\"></textarea>\r\n        </mat-form-field>\r\n      </div>\r\n      <div>\r\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Horário de chegada do voo/ônibus\" name=\"arrivalTime\" [(ngModel)]=\"model.arrivalTime\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div fxLayout=\"row\">\r\n        <mat-form-field fxFlex=\"32\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Número do voo\" name=\"flightNumber\" [(ngModel)]=\"model.flightNumber\">\r\n        </mat-form-field>\r\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"5\">\r\n          <input matInput placeholder=\"Empresa\" name=\"airCompany\" [(ngModel)]=\"model.airCompany\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div>\r\n        <mat-form-field fxFlex=\"33\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Origem da viagem\" name=\"travelOrigin\" [(ngModel)]=\"model.travelOrigin\">\r\n        </mat-form-field>\r\n      </div>\r\n      <div>\r\n        <mat-form-field fxFlex=\"70\" fxFlexOffset=\"15\">\r\n          <input matInput placeholder=\"Setor responsável pelas diárias do motorista\" name=\"driveSectorResponsability\" [(ngModel)]=\"model.driverSectorResponsibility\">\r\n        </mat-form-field>\r\n      </div>\r\n    </div>\r\n    <div fxLayout=\"row\">\r\n\r\n      <button mat-raised-button matTooltip=\"By default, I delay\" color=\"warning\"\r\n              fxFlex=\"20\" fxFlexOffset=\"15\" mat-button *ngIf=\"!isCompleted\"\r\n              (click)=\"updateForm(model.id)\">Atualizar</button>\r\n\r\n      <button mat-raised-button color=\"primary\" *ngIf=\"!isCompleted\" fxFlex=\"20\" fxFlexOffset=\"30\" mat-button (click)=\"goBack()\">Voltar</button>\r\n\r\n      <button mat-raised-button color=\"primary\" *ngIf=\"isCompleted\" fxFlex=\"30\" fxFlexOffset=\"35\" mat-button (click)=\"goBack()\">Voltar</button>\r\n\r\n    </div>\r\n  </form>\r\n</mat-card>\r\n\r\n<ng-template *ngIf=\"isLoading\">\r\n  <mat-spinner fxFlex color=\"primary\"></mat-spinner>\r\n</ng-template>\r\n"
 
 /***/ }),
 
-/***/ "../../../../../src/app/req-form/req-form.component.scss":
+/***/ "../../../../../src/app/solicitation/solicitation.component.scss":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
@@ -15,7 +15,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, "h1, h2, h3, h4, h5, h6 {\n  margin: 3px; }\n\n.full-form-container {\n  margin: 2% 10% 2% 10%; }\n\nmat-spinner {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  margin-top: -50px;\n  margin-left: -50px; }\n", ""]);
 
 // exports
 
@@ -25,13 +25,14 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ "../../../../../src/app/req-form/req-form.component.ts":
+/***/ "../../../../../src/app/solicitation/solicitation.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_form_service__ = __webpack_require__("../../../../../src/app/services/form.service.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ReqFormComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_form_service__ = __webpack_require__("../../../../../src/app/services/form.service.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SolicitationComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -43,54 +44,76 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var ReqFormComponent = (function () {
-    function ReqFormComponent(formService) {
+
+var SolicitationComponent = (function () {
+    function SolicitationComponent(router, route, formService) {
+        this.router = router;
+        this.route = route;
         this.formService = formService;
         this.model = {};
-        this.isLinear = false;
-        this.checked = false;
-        this.terminal = false;
+        this.id = this.route.snapshot.params["id"];
+        this.isLoading = true;
     }
-    ReqFormComponent.prototype.ngOnInit = function () {
+    SolicitationComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.formService.getById(this.id).subscribe(function (data) {
+            _this.model = data;
+            _this.isLoading = false;
+            if (data.status === "COMPLETED" || data.status === "DENIED") {
+                _this.isCompleted = true;
+            }
+        }, function (error) {
+            console.error(error);
+        });
     };
-    ReqFormComponent.prototype.solicitation = function () {
-        this.formService.create(this.model)
-            .subscribe(function (data) {
+    SolicitationComponent.prototype.deleteForm = function (id) {
+        this.formService.deleteById(id).subscribe(function (data) {
             console.log(data);
         }, function (error) {
             console.log(error);
         });
     };
-    return ReqFormComponent;
+    SolicitationComponent.prototype.goBack = function () {
+        this.router.navigate(["/home/solicitations"]);
+    };
+    SolicitationComponent.prototype.updateForm = function (id) {
+        var _this = this;
+        this.isLoading = true;
+        this.formService.update(id, this.model).subscribe(function (data) {
+            _this.isLoading = false;
+        }, function (error) {
+            console.log(error);
+        });
+    };
+    return SolicitationComponent;
 }());
-ReqFormComponent = __decorate([
+SolicitationComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
-        selector: 'app-req-form',
-        template: __webpack_require__("../../../../../src/app/req-form/req-form.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/req-form/req-form.component.scss")]
+        selector: "app-solicitation",
+        template: __webpack_require__("../../../../../src/app/solicitation/solicitation.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/solicitation/solicitation.component.scss")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__services_form_service__["a" /* FormService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_form_service__["a" /* FormService */]) === "function" && _a || Object])
-], ReqFormComponent);
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__services_form_service__["a" /* FormService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_form_service__["a" /* FormService */]) === "function" && _c || Object])
+], SolicitationComponent);
 
-var _a;
-//# sourceMappingURL=req-form.component.js.map
+var _a, _b, _c;
+//# sourceMappingURL=solicitation.component.js.map
 
 /***/ }),
 
-/***/ "../../../../../src/app/req-form/req-form.module.ts":
+/***/ "../../../../../src/app/solicitation/solicitation.module.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("../../../common/@angular/common.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__req_form_component__ = __webpack_require__("../../../../../src/app/req-form/req-form.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__solicitation_component__ = __webpack_require__("../../../../../src/app/solicitation/solicitation.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_shared_module__ = __webpack_require__("../../../../../src/app/shared/shared.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__req_form_routing__ = __webpack_require__("../../../../../src/app/req-form/req-form.routing.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__services_form_service__ = __webpack_require__("../../../../../src/app/services/form.service.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReqFormModule", function() { return ReqFormModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__solicitation_rounting__ = __webpack_require__("../../../../../src/app/solicitation/solicitation.rounting.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__services_form_service__ = __webpack_require__("../../../../../src/app/services/form.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SolicitationModule", function() { return SolicitationModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -104,50 +127,46 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-
-var ReqFormModule = (function () {
-    function ReqFormModule() {
+var SolicitationModule = (function () {
+    function SolicitationModule() {
     }
-    return ReqFormModule;
+    return SolicitationModule;
 }());
-ReqFormModule = __decorate([
+SolicitationModule = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["b" /* NgModule */])({
         imports: [
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["a" /* CommonModule */],
-            __WEBPACK_IMPORTED_MODULE_6__req_form_routing__["a" /* reqFormRouting */],
             __WEBPACK_IMPORTED_MODULE_3__shared_shared_module__["a" /* SharedModule */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_forms__["a" /* FormsModule */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_material__["m" /* MatStepperModule */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_material__["n" /* MatListModule */]
+            __WEBPACK_IMPORTED_MODULE_4__solicitation_rounting__["a" /* solicitationRouting */],
+            __WEBPACK_IMPORTED_MODULE_6__angular_forms__["a" /* FormsModule */]
         ],
-        exports: [__WEBPACK_IMPORTED_MODULE_2__req_form_component__["a" /* ReqFormComponent */]],
-        declarations: [__WEBPACK_IMPORTED_MODULE_2__req_form_component__["a" /* ReqFormComponent */]],
+        declarations: [__WEBPACK_IMPORTED_MODULE_2__solicitation_component__["a" /* SolicitationComponent */]],
         providers: [
-            __WEBPACK_IMPORTED_MODULE_7__services_form_service__["a" /* FormService */]
+            __WEBPACK_IMPORTED_MODULE_5__services_form_service__["a" /* FormService */]
         ]
     })
-], ReqFormModule);
+], SolicitationModule);
 
-//# sourceMappingURL=req-form.module.js.map
+//# sourceMappingURL=solicitation.module.js.map
 
 /***/ }),
 
-/***/ "../../../../../src/app/req-form/req-form.routing.ts":
+/***/ "../../../../../src/app/solicitation/solicitation.rounting.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__req_form_component__ = __webpack_require__("../../../../../src/app/req-form/req-form.component.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return reqFormRouting; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__solicitation_component__ = __webpack_require__("../../../../../src/app/solicitation/solicitation.component.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return solicitationRouting; });
 
 
-var reqFormRoutes = [
+var solicitationRoutes = [
     {
-        path: '', component: __WEBPACK_IMPORTED_MODULE_1__req_form_component__["a" /* ReqFormComponent */]
+        path: '', component: __WEBPACK_IMPORTED_MODULE_1__solicitation_component__["a" /* SolicitationComponent */]
     }
 ];
-var reqFormRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* RouterModule */].forChild(reqFormRoutes);
-//# sourceMappingURL=req-form.routing.js.map
+var solicitationRouting = __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* RouterModule */].forChild(solicitationRoutes);
+//# sourceMappingURL=solicitation.rounting.js.map
 
 /***/ })
 
